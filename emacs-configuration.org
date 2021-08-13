@@ -2682,6 +2682,21 @@ Instead of the above let's use a package:
 (use-package! org-auto-tangle
   :defer t
   :hook (org-mode . org-auto-tangle-mode))
+
+#+end_src
+
+I have some personal information in some of my configuration files. ~org-crypt~ takes care of this at the header level, useful for public files. Some of this information, however, is embedded in code, and I want to be able to tangle those files still. [[https://ag91.github.io/blog/2020/10/30/org-crypt-and-tangling-source-blocks/][Some code from Andrea]] helps us:
+#+begin_src elisp
+(defun ag/reveal-and-move-back ()
+  (org-reveal)
+  (goto-char ag/old-point))
+(defun ag/org-reveal-after-save-on ()
+  (setq ag/old-point (point))
+  (add-hook 'after-save-hook 'ag/reveal-and-move-back))
+(defun ag/org-reveal-after-save-off ()
+  (remove-hook 'after-save-hook 'ag/reveal-and-move-back))
+(add-hook 'org-babel-pre-tangle-hook 'ag/org-reveal-after-save-on)
+(add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
 #+end_src
 
 A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][fix]] for the ="Don’t know how to format org-mode code"= [[https://github.com/hlissner/doom-emacs/issues/4129][error]] in Doom. No longer needed
