@@ -229,8 +229,8 @@ Core files for a doom config. The installation script will identify these and in
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-;(setq user-full-name "Daniel"
-      ;user-mail-address (password-store-get "Email/personal/hotmail"))
+(setq user-full-name "Daniel"
+      user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -245,8 +245,8 @@ Core files for a doom config. The installation script will identify these and in
 
 (setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
 ;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
-      ;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
-      ;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
+;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
+;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
 ;; (after! doom-themes
 ;;   (setq doom-themes-enable-bold t
 ;;         doom-themes-enable-italic t))
@@ -267,6 +267,7 @@ Core files for a doom config. The installation script will identify these and in
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+
 <<frame transparency>>
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -290,16 +291,11 @@ Core files for a doom config. The installation script will identify these and in
 ;; Data read from process - default too low for lsp
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-;; May need to play with this
+;; TODO lsp enhancements:
 ;; (setq lsp-idle-delay 0.500)
 
 ;; (setq lsp-log-io nil) ; if set to true can cause a performance hit
 
-;; Some custom binds
-;; (map! :leader
-;;   (:prefix-map ("c" . "code")
-;;     :desc "Comment" "l" #'
-;;   ))
 (setq +zen-text-scale 0.6)
 
 ;;taken from https://tecosaur.github.io/emacs-config/config.html#writeroom
@@ -316,40 +312,28 @@ Core files for a doom config. The installation script will identify these and in
               (when (eq major-mode 'org-mode)
                 (setq-local display-line-numbers -display-line-numbers)
                 (when -org-indent-mode
-                  (org-indent-mode 1)))))
-
-  ;; (add-hook 'writeroom-mode-hook
-  )
+                  (org-indent-mode 1))))))
 
 (use-package! focus
   :after writeroom-mode
   :config
-(add-to-list 'focus-mode-to-thing '(writeroom-mode . paragraph)))
+  (add-to-list 'focus-mode-to-thing '(writeroom-mode . paragraph)))
 ;; (add-hook 'write-room-mode-hook #'line-number-mode-hook)
 
 (use-package! undo-tree
-  ;; :demand t
   :config
   (global-undo-tree-mode)
   (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+  (setq undo-tree-history-directory-alist '(("." . "~/.doom.d/undo"))))
 
 (setq tab-bar-mode t)
-;; Because elisp in a snippet complains??
-;; (setq warning-supre)
-
 
 (setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode))
-  ;; Bookmarks file location
-  (setq bookmark-default-file "~/org/bookmarks")
-  (setq bookmark-save-flag 1) ;; save after every change
+;; Bookmarks file location
+(setq bookmark-default-file "~/org/bookmarks")
+(setq bookmark-save-flag 1) ;; save after every change
 
 (setq evil-escape-mode nil)
-;; (setq global-visual-line-mode t)
-;; ;; (setq auto-fill-mode nil)
-;; (remove-hook 'org-mode-hook #'auto-fill-mode)
-;; (add-hook 'org-mode-hook #'visual-line-mode)
-;; (add-hook 'visual-line-mode-hook #'org-brain-visualize-mode)
 
 ;; (use-package! helm-posframe
 ;;   :after helm
@@ -2763,20 +2747,6 @@ Let's write a function that
 :END:
 #+BEGIN_SRC elisp :noweb-ref exwm main
   :config
-  ;; make sure that displaying transient states gets the keyboard input.
-  ;; Borrowed from: https://github.com/abo-abo/hydra/issues/232
-  ;; (define-advice hydra-set-transient-map (:around (fun keymap on-exit &optional foreign-keys) exwm-passthrough)
-  ;;   (setq exwm-input-line-mode-passthrough t)
-  ;;   (let ((on-exit (lexical-let ((on-exit on-exit))
-  ;;                    (lambda ()
-  ;;                      (setq exwm-input-line-mode-passthrough nil)
-  ;;                      (when on-exit (funcall on-exit))))))
-  ;;     (funcall fun keymap on-exit foreign-keys)))
-
-  ;; (exwm-input-set-key (kbd "<s-return>")
-  ;; (lambda ()
-  ;; (interactive)
-  ;; (start-process-shell-command exwm-terminal-command nil exwm-terminal-command)))
 
 ;; <<exwm-class-hook>>
 
@@ -3755,14 +3725,10 @@ xdg-mime default emacsclient.desktop application/pdf
 
 Then set frame transparency:
 #+begin_src elisp :noweb yes :noweb-ref frame transparency
-;; (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 (defconst doom-frame-transparency 94)
 (set-frame-parameter (selected-frame) 'alpha doom-frame-transparency)
 (add-to-list 'default-frame-alist `(alpha . ,doom-frame-transparency))
+
 #+end_src
 
 * Academic workflow
