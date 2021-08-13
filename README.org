@@ -1,0 +1,10 @@
+#+BRAIN_CHILDREN: supermemo_config guix-configurations desktop-environment emacs-configuration incremental-literate
+#+TITLE: System
+
+This is a literate programming document detailing my GNU/Linux + Emacs setup. It tangles out to various system configuration files.
+A major source for this process is Howard Abrams' [[http://howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]] series. Also useful are the source files from his [[https://www.youtube.com/watch?v=dljNabciEGg&t=143s][video]], found [[https://github.com/howardabrams/literate-devops-demo][here]].
+
+Of note is the ~org-mime-org-subtree-htmlize~ command from =org-plus-contrib=, which allows a buffer or subtree to be automagically turned into an html email and opened ready for sending (comments and all) in mu4e.
+
+In the case of editing external files that might then need to be =detangled=, instead of using the ~org-babel-detangle~ function we use mtkeman's [[https://github.com/mtekman/org-tanglesync.el][org-tanglesync.el]], which allows a more sophisticated detangling process via diffing.
+

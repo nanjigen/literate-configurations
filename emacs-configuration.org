@@ -1,0 +1,4002 @@
+#+BRAIN_PARENTS: system
+#+TITLE: Doom Emacs Configuration
+#+auto_tangle: t
+
+Doom is currently used because of its OOB vim focus and performance. Eventually I'd like to build a EFS config but that would consume a lot of time.
+
+* Main doom config
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 10:59]
+:ID:       7f0433a1-486a-4042-976b-64ebc3a2abe4
+:END:
+Core files for a doom config. The installation script will identify these and install modules based on the init file.
+
+** init
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:16]
+:ID:       c155e8b5-b80f-4dc2-864a-1c9a57c03608
+:header-args: :tangle ~/.doom.d/init.el
+:END:
+
+#+begin_src elisp
+  ;;; init.el -*- lexical-binding: t; -*-
+
+  ;; This file controls what Doom modules are enabled and what order they load in.
+  ;; Remember to run 'doom sync' after modifying it!
+
+  ;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+  ;;      documentation. There you'll find information about all of Doom's modules
+  ;;      and what flags they support.
+
+  ;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+  ;;      'C-c g k' for non-vim users) to view its documentation. This works on
+  ;;      flags as well (those symbols that start with a plus).
+  ;;
+  ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
+  ;;      directory (for easy access to its source code).
+
+  (doom! :input
+         ;;chinese
+         ;;japanese
+
+         :completion
+         company           ; the ultimate code completion backend
+         helm              ; the *other* search engine for love and life
+         ;;ido               ; the other *other* search engine...
+         ivy               ; a search engine for love and life
+
+         :desktop
+         exwm
+
+         :ui
+         ;;deft              ; notational velocity for Emacs
+         doom              ; what makes DOOM look the way it does
+         doom-dashboard    ; a nifty splash screen for Emacs
+         doom-quit         ; DOOM quit-message prompts when you quit Emacs
+         ;;fill-column       ; a `fill-column' indicator
+         hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+         hydra
+         ;;indent-guides     ; highlighted indent columns
+         modeline          ; snazzy, Atom-inspired modeline, plus API
+         nav-flash         ; blink the current line after jumping
+         ;;neotree           ; a project drawer, like NERDTree for vim
+         ophints           ; highlight the region an operation acts on
+         (popup +defaults)   ; tame sudden yet inevitable temporary windows
+         ligatures       ; replace bits of code with pretty symbols
+         ;;tabs              ; an tab bar for Emacs
+         treemacs          ; a project drawer, like neotree but cooler
+         unicode           ; extended unicode support for various languages
+         vc-gutter         ; vcs diff in the fringe
+         vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+         window-select     ; visually switch windows
+         workspaces        ; tab emulation, persistence & separate workspaces
+         zen               ; distraction-free coding or writing
+
+         :editor
+         (evil +everywhere); come to the dark side, we have cookies
+         file-templates    ; auto-snippets for empty files
+         fold              ; (nigh) universal code folding
+         (format +onsave)  ; automated prettiness
+         ;;god               ; run Emacs commands without modifier keys
+         ;;lispy             ; vim for lisp, for people who don't like vim
+         ;;multiple-cursors  ; editing in many places at once
+         ;;objed             ; text object editing for the innocent
+         ;;parinfer          ; turn lisp into python, sort of
+         ;;rotate-text       ; cycle region at point between text candidates
+         snippets          ; my elves. They type so I don't have to
+         word-wrap         ; soft wrapping with language-aware indent
+
+         :emacs
+         dired             ; making dired pretty [functional]
+         electric          ; smarter, keyword-based electric-indent
+         ibuffer         ; interactive buffer management
+         vc                ; version-control and Emacs, sitting in a tree
+
+         :term
+         eshell            ; a consistent, cross-platform shell (WIP)
+         ;;shell             ; a terminal REPL for Emacs
+         ;;term              ; terminals in Emacs
+         vterm             ; another terminals in Emacs
+
+         :checkers
+         syntax              ; tasing you for every semicolon you forget
+         (spell             ; tasing you for misspelling mispelling
+         +aspell)
+         grammar           ; tasing grammar mistake every you make
+
+         :tools
+         ;;ansible
+         ;;debugger          ; FIXME stepping through code, to help you add bugs
+         ;;direnv
+         ;;docker
+         editorconfig      ; let someone else argue about tabs vs spaces
+         ein               ; tame Jupyter notebooks with emacs
+         (eval +overlay)     ; run code, run (also, repls)
+         ;;gist              ; interacting with github gists
+         (lookup              ; navigate your code and its documentation
+          +dictionary
+          +docsets)
+         ;;lsp
+         ;;macos             ; MacOS-specific commands
+         magit             ; a git porcelain for Emacs
+         ;;make              ; run make tasks from Emacs
+         pass              ; password manager for nerds
+         pdf               ; pdf enhancements
+         ;;prodigy           ; FIXME managing external services & code builders
+         ;;rgb               ; creating color strings
+         ;;terraform         ; infrastructure as code
+         ;;tmux              ; an API for interacting with tmux
+         ;;upload            ; map local to remote projects via ssh/ftp
+
+         :lang
+         ;;agda              ; types of types of types of types...
+         ;;assembly          ; assembly for fun or debugging
+         ;;cc                ; C/C++/Obj-C madness
+         ;;clojure           ; java with a lisp
+         common-lisp       ; if you've seen one lisp, you've seen them all
+         ;;coq               ; proofs-as-programs
+         ;;crystal           ; ruby at the speed of c
+         ;; csharp            ; unity, .NET, and mono shenanigans
+         data              ; config/data formats
+         ;;elixir            ; erlang done right
+         ;;elm               ; care for a cup of TEA?
+         emacs-lisp        ; drown in parentheses
+         ;;erlang            ; an elegant language for a more civilized age
+         ;;ess               ; emacs speaks statistics
+         ;;faust             ; dsp, but you get to keep your soul
+         ;;fsharp           ; ML stands for Microsoft's Language
+         ;;fstar             ; (dependent) types and (monadic) effects and Z3
+         ;;go                ; the hipster dialect
+         ;;(haskell +dante)  ; a language that's lazier than I am
+         ;;hy                ; readability of scheme w/ speed of python
+         ;;idris             ;
+         ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+         ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+         ;;julia             ; a better, faster MATLAB
+         ;;kotlin            ; a better, slicker Java(Script)
+         latex             ; writing papers in Emacs has never been so fun
+         ;;lean
+         ;;factor
+         ledger            ; an accounting system in Emacs
+         lua               ; one-based indices? one-based indices
+         markdown          ; writing docs for people to ignore
+         ;;nim               ; python + lisp at the speed of c
+         ;; nix               ; I hereby declare "nix geht mehr!"
+         ;;ocaml             ; an objective camel
+         (org              ; organize your plain life in plain text
+          +brain           ; make your brain huge with org-mode
+          +dragndrop       ; drag & drop files/images into org buffers
+          ;;+hugo            ; use Emacs for hugo blogging
+          ;; +ipython        ; ipython/jupyter support for babel (deprecated??)
+          +jupyter        ; ipython/jupyter support for babel
+          +journal
+          +pretty
+          +noter           ; Keeps notes in sync with a document.
+          +pandoc          ; export-with-pandoc support
+          +pomodoro        ; be fruitful with the tomato technique
+          +present)        ; using org-mode for presentations
+          org-private
+         ;;perl              ; write code no one else can comprehend
+         ;;php               ; perl's insecure younger brother
+         plantuml          ; diagrams for confusing people more
+         ;;purescript        ; javascript, but functional
+         python            ; beautiful is better than ugly
+         ;;qt                ; the 'cutest' gui framework ever
+         ;;racket            ; a DSL for DSLs
+         ;;rest              ; Emacs as a REST client
+         ;;rst               ; ReST in peace
+         ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+         ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+         ;;scala             ; java, but good
+         (scheme            ; a fully conniving family of lisps
+         +guile)
+         sh                ; she sells {ba,z,fi}sh shells on the C xor
+         ;;solidity          ; do you need a blockchain? No.
+         ;;swift             ; who asked for emoji variables?
+         ;;terra             ; Earth and Moon in alignment for performance.
+         ;;web               ; the tubes
+
+         :email
+         (mu4e +gmail)
+         ;;notmuch
+         ;;(wanderlust +gmail)
+
+         :app
+         calendar
+         ;;irc               ; how neckbeards socialize
+         (rss +org)        ; emacs as an RSS reader
+         ;;twitter           ; twitter client https://twitter.com/vnought
+
+         :config
+         ;;literate
+         (default +bindings +smartparens))
+
+#+end_src
+
+** config
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:16]
+:ID:       35d3976a-3ece-4843-bc62-40a6e21cf2d1
+:header-args: :tangle ~/.doom.d/config.el :noweb yes
+:END:
+
+#+begin_src elisp
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+;(setq user-full-name "Daniel"
+      ;user-mail-address (password-store-get "Email/personal/hotmail"))
+
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+
+(setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
+;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
+      ;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
+      ;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
+;; (after! doom-themes
+;;   (setq doom-themes-enable-bold t
+;;         doom-themes-enable-italic t))
+;; (custom-set-faces
+;;  '((font-lock-comment-face :)))
+
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-one)
+
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+(setq user-home-directory "~/")
+
+(setq ispell-dictionary "en")
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+<<frame transparency>>
+
+;; Here are some additional functions/macros that could help you configure Doom:
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; This will open documentation for it, including demos of how they are used.
+;;
+;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; they are implemented.
+
+;; If this isn't set EXWM quadruples its memory usage
+(setq gc-cons-threshold 100000000)
+;; Data read from process - default too low for lsp
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+;; May need to play with this
+;; (setq lsp-idle-delay 0.500)
+
+;; (setq lsp-log-io nil) ; if set to true can cause a performance hit
+
+;; Some custom binds
+;; (map! :leader
+;;   (:prefix-map ("c" . "code")
+;;     :desc "Comment" "l" #'
+;;   ))
+(setq +zen-text-scale 0.6)
+
+;;taken from https://tecosaur.github.io/emacs-config/config.html#writeroom
+(after! writeroom-mode
+  (add-hook 'writeroom-mode-hook
+            (defun +zen-cleaner-org ()
+              (when (and (eq major-mode 'org-mode) writeroom-mode)
+                (setq-local -display-line-numbers display-line-numbers
+                            display-line-numbers nil)
+                (setq-local -org-indent-mode org-indent-mode)
+                (org-indent-mode -1))))
+  (add-hook 'writeroom-mode-disable-hook
+            (defun +zen-dirty-org ()
+              (when (eq major-mode 'org-mode)
+                (setq-local display-line-numbers -display-line-numbers)
+                (when -org-indent-mode
+                  (org-indent-mode 1)))))
+
+  ;; (add-hook 'writeroom-mode-hook
+  )
+
+(use-package! focus
+  :after writeroom-mode
+  :config
+(add-to-list 'focus-mode-to-thing '(writeroom-mode . paragraph)))
+;; (add-hook 'write-room-mode-hook #'line-number-mode-hook)
+
+(use-package! undo-tree
+  ;; :demand t
+  :config
+  (global-undo-tree-mode)
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+
+(setq tab-bar-mode t)
+;; Because elisp in a snippet complains??
+;; (setq warning-supre)
+
+
+(setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode))
+  ;; Bookmarks file location
+  (setq bookmark-default-file "~/org/bookmarks")
+  (setq bookmark-save-flag 1) ;; save after every change
+
+(setq evil-escape-mode nil)
+;; (setq global-visual-line-mode t)
+;; ;; (setq auto-fill-mode nil)
+;; (remove-hook 'org-mode-hook #'auto-fill-mode)
+;; (add-hook 'org-mode-hook #'visual-line-mode)
+;; (add-hook 'visual-line-mode-hook #'org-brain-visualize-mode)
+
+;; (use-package! helm-posframe
+;;   :after helm
+;;   :custom-face (internal-border ((t (:background "#c678dd"))))
+;;   :config
+;; (setq helm-posframe-poshandler 'posframe-poshandler-frame-center)
+;; (setq helm-posframe-parameters '((parent-frame nil)
+;;                                  (left-fringe . 10)
+;;                                  (right-fringe . 10)))
+;; (helm-posframe-enable)
+;; )
+
+;; (use-package! ivy-posframe
+;;   :after ivy
+;;   :custom-face (internal-border ((t (:background "#c678dd"))))
+;;   :config
+;; (setq ivy-posframe-poshandler 'posframe-poshandler-frame-center)
+;; (setq ivy-posframe-parameters '((parent-frame nil)
+;;                                  (left-fringe . 10)
+;;                                  (right-fringe . 10)))
+;; (ivy-posframe-mode 1)
+;; )
+
+(setq scrot-local-path "~/Pictures/screenshots")
+(setq eww-download-directory "~/Downloads/eww")
+#+end_src
+
+Begin experimenting with lookup
+#+begin_src elisp
+#+end_src
+
+#+begin_src elisp
+;; (map! "<f8>" #'scrot)
+(setq display-battery-mode nil)
+
+(load! "+mail")
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
+
+;; (after! persp-mode
+;; (add-hook 'exwm-mode #'doom-mark-buffer-as-real-h))
+
+;; File handling
+(use-package! openwith
+  :defer-incrementally t
+  :config
+  (setq openwith-associations '(("\\.odt\\'" "libreoffice" (file))
+                                ("\\.mp4\\'" "mpv" (file))
+                                ("\\.avi\\'" "mpv" (file))
+                                ("\\.webm\\'" "mpv" (file))
+                                ("\\.mov\\'" "mpv" (file))
+                                ("\\.m4v\\'" "mpv" (file))
+                                ("\\.mkv\\'" "mpv" (file))
+                                ("\\.mp3\\'" "mpv" (file))
+                                ("\\.mpg\\'" "mpv" (file)))))
+  (openwith-mode t)
+
+;; (use-package! pocket-reader
+;; :defer-incrementally t)
+
+;; Calendar
+(use-package! password-store
+  :init
+  (setq auth-sources '(password-store
+                       "~/.authinfo.gpg")))
+
+                                        ;(use-package! auth-source-pass)
+                                        ;(auth-source-pass-enable)
+
+;; (use-package! emms-setup
+;;   :config
+;;   (emms-all)
+;;   (setq emms-player-list '(emms-player-mpv)))
+
+(use-package! subed
+  :config
+  (add-hook 'subed-mode-hook 'save-place-local-mode))
+
+(use-package! mpv
+  :defer-incrementally t
+  :config
+  (org-add-link-type "mpv" #'mpv-play)
+  (defun org-mpv-complete-link (&optional arg)
+    (replace-regexp-in-string
+     "file:" "mpv:"
+     (org-file-complete-link arg)
+     t t)))
+
+(defun my-fetch-password (&rest params)
+  (require 'auth-source)
+  (let ((match (car (apply #'auth-source-search params))))
+    (if match
+        (let ((secret (plist-get match :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      (error "Password not found for %S" params))))
+
+(defun my-nickserv-password (server)
+  (my-fetch-password :user "vrika" :host "irc.libera.chat"))
+
+(set-irc-server! "irc.libera.chat"
+  '(:tls t
+    :port 6697
+    :nick "vrika"
+    :sasl-password my-nickserver-password
+    :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese")))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (focus darkroom symbol-navigation-hydra org-sidebar link-hint))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+end_src
+
+** packages
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:16]
+:ID:       784ab14a-2e81-4994-8427-992af538de14
+:header-args: :tangle ~/.doom.d/packages.el
+:END:
+
+#+begin_src elisp
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+
+;; To install a package with Doom you must declare them here, run 'doom sync' on
+;; the command line, then restart Emacs for the changes to take effect.
+;; Alternatively, use M-x doom/reload.
+;;
+;; WARNING: Disabling core packages listed in ~/.emacs.d/core/packages.el may
+;; have nasty side-effects and is not recommended.
+
+
+;; All of Doom's packages are pinned to a specific commit, and updated from
+;; release to release. To un-pin all packages and live on the edge, do:
+;(unpin! t)
+
+;; ...but to unpin a single package:
+;(unpin! pinned-package)
+;; Use it to unpin multiple packages
+;(unpin! pinned-package another-pinned-package)
+
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
+
+;; To install a package directly from a particular repo, you'll need to specify
+;; a `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+
+;; If you'd like to disable a package included with Doom, for whatever reason,
+;; you can do so here with the `:disable' property:
+;(package! builtin-package :disable t)
+
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+(package! openwith)
+(package! pocket-reader)
+(package! htmlize)
+(package! w3m)
+(package! focus)
+(package! burly)
+(package! undo-tree)
+(package! helm-posframe)
+(package! ivy-posframe)
+(package! ranger)
+(package! mpv)
+(package! emms)
+(package! polymode)
+(package! guix)
+;; (package! emms-helm)
+;; (package! emms-org)
+;; (package! emms-player-simple-mpv)
+(package! subed :recipe
+  (:host github
+   :repo "rndusr/subed"
+   :files ("subed/*.el")))
+;; (package! emms-player-mpv-jp-radios)
+;; (package! auth-pass)
+#+end_src
+
+* org
+:PROPERTIES:
+:CREATED:  [2020-09-29 Tue 14:43]
+:ID:       c9b40e11-602f-413e-b3fa-133d964f5a6e
+:header-args:elisp: :noweb yes :mkdirp yes
+:END:
+** org related packages
+:PROPERTIES:
+:CREATED:  [2020-11-16 Mon 18:45]
+:ID:       440d64be-53c3-4a18-a170-690cbfbb8d6f
+:END:
+
+#+BEGIN_SRC elisp :tangle ~/.doom.d/modules/lang/org-private/packages.el
+;; -*- no-byte-compile: t; -*-
+;;; desktop/lang/org-private/packages.el
+
+;; (package! org-plus-contrib)
+(package! org-brain :recipe
+  (:host github
+   :repo "Kungsgeten/org-brain"))
+(package! org-auto-tangle :recipe
+  (:host github
+   :repo "yilkalargaw/org-auto-tangle"))
+(package! org-ql)
+(package! org-appear)
+(package! org-web-tools)
+(package! org-super-agenda)
+(package! org-superstar)
+(package! org-pdftools)
+(package! org-noter-pdftools)
+(package! org-sidebar)
+(package! org-media-note :recipe
+  (:host github
+   :repo "yuchen-lea/org-media-note"))
+;; (package! org-expiry :recipe
+;;   (:host github
+;;    :repo "tkf/org-mode"
+;;    :files ("contrib/lisp/org-expiry.el")))
+(package! org-expiry :recipe
+  (:host github
+   :repo "emacs-straight/org-mode"
+   :files ("contrib/lisp/org-expiry.el")))
+(package! org-pomodoro)
+(package! toc-mode)
+(package! persistent-scratch)
+(package! org-ref)
+(package! helm-bibtex)
+(package! helm-lib-babel)
+(package! powerthesaurus)
+(package! ox-reveal)
+(package! org-drill)
+(package! org-cliplink)
+(package! ascii-art-to-unicode)
+(package! link-hint)
+(package! major-mode-hydra)
+(package! abridge-diff)
+#+END_SRC
+
+** Org ricing
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:30]
+:ID:       0af5adb9-5c1c-4899-bc92-22dd9c70b1f2
+:END:
+Let's start with fontification and other org ricing.
+#+begin_src elisp :noweb-ref org-ricing
+;;; lang/org-private/config.el -*- lexical-binding: t; -*-
+
+;; org mode
+(after! org
+  :init
+  (setq org-archive-location (concat org-directory "archive/archive.org::* From %s"))
+
+  :config
+  (setq org-superstar-headline-bullets-list '("› "))
+  (setq org-startup-indented t
+        org-clock-idle-time 5
+        ;; org-bullets-bullet-list '("› ")
+        org-ellipsis "  "
+        org-pretty-entities t
+        org-hide-emphasis-markers t
+        org-agenda-block-separator ""
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t
+        org-catch-invisible-edits 'show-and-error
+        org-cycle-separator-lines 0
+        org-tags-column -79
+        org-modules '(org-habit))
+ ;; org-bibtex
+ ;; org-docview
+ ;; org-info
+ (setq org-image-actual-width (/ (display-pixel-width) 3))
+
+  (add-hook 'org-mode-hook (lambda ()
+                             "Beautify Org Checkbox Symbol"
+                             (push '("[ ]" .  "☐") prettify-symbols-alist)
+                             (push '("[X]" . "☑" ) prettify-symbols-alist)
+                             (push '("[-]" . "❍" ) prettify-symbols-alist)
+                             (prettify-symbols-mode)))
+
+  (add-hook! 'org-mode-hook #'doom-disable-line-numbers-h)
+
+  (defface org-checkbox-done-text
+    '((t (:foreground "#71696A")))
+    "Face for the text part of a checked org-mode checkbox.")
+  (add-to-list 'org-modules 'org-checklist)
+
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-preceding-days 14
+        ;; org-habit-following-days 1
+        org-habit-graph-column 80
+        org-habit-show-habits-only-for-today t
+        ;; org-habit-show-all-today t)
+        )
+
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "#ffb86c" :weight bold)
+                ("NEXT" :foreground "#8be9fd" :weight bold)
+                ("DONE" :foreground "#6272a4" :weight bold)
+                ("IN-PROGRESS" :foreground "#50fa7b" :weight bold)
+                ("PROJECT" :foreground "#0189cc" :weight bold)
+                ("WAITING" :foreground "#f8f8f2" :weight bold)
+                ("HOLD" :foreground "#a0522d" :weight bold)
+                ("CANCELLED" :foreground "#ff5555" :weight bold)))))
+#+end_src
+
+** org-org
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:30]
+:ID:       a8f1f7b5-fdd0-4e5e-838c-302085174b0b
+:END:
+
+Next we'll build the organisational aspect of org-mode.
+#+begin_src elisp :noweb-ref org-org
+(after! org
+(setq org-agenda-files '("~/org/personal.org"
+                           "~/org/work.org"
+                           "~/org/next.org"
+                           "~/org/incubation.org"
+                           "~/org/org-brain/article-notes/thesis.org"
+                           ;; "~/org/ir_stack.org"
+                           "~/org/danieru-cal.org"
+                           "~/org/habits.org"))
+
+;;TODO set refile to only projects?
+  ;; Set refile targets
+  (setq org-refile-use-outline-path 'file              ; Show full paths for refiling
+        org-outline-path-complete-in-steps nil)        ; Refile in a single go
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-completion-use-ido nil)
+  (setq org-refile-targets '(("~/org/next.org" :level . 0)
+                             ("~/org/work.org" :maxlevel . 2)
+                             ("~/org/personal.org" :maxlevel . 3)
+                             ("~/org/wiki/thesis.org" :maxlevel . 3)
+                             ("~/org/someday.org" :maxlevel . 2)
+                             ("~/org/incubation.org" :maxlevel . 1)
+                             ("~/org/read.org" :maxlevel . 2)
+                             ("~/org/watch.org" :maxlevel . 2)))
+
+  ;; Org-contacts
+  (setq org-contacts-files '("~/org/contacts.org"))
+
+  (setq org-blank-before-new-entry '((heading . nil)))
+
+  (setq org-startup-folded 'fold)
+  (setq org-id-link-to-org-use-id 'use-existing)
+
+  (setq org-enable-org-journal-support t)
+  (setq org-journal-dir "~/org/journal/")
+
+  ;; Link types for org-mode
+  (setq org-file-apps
+        '((auto-mode . emacs)
+          ("\\.mpg\\'" . "mpv %s")))
+
+  (setq org-image-actual-width '420)
+  ;; org-todo keywords with interactivity
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(i)" "|" "DONE(d)")
+          (type "PROJECT(p)" "|" "DONE(d!)")
+          (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-log-state-notes-insert-after-drawers nil)
+
+  ;; context tags
+  (setq org-tag-alist '((:startgroup)
+                            ;;; Contexts
+                        ("@home" . ?h)
+                        ;; ("@nathans" . ?n)
+                        ("@uni" . ?u)
+                        ("@errand" . ?e)
+                        ("@shops" . ?s)
+                        ("@onlineshop" . ?o)
+                        ("@training" . ?T)
+                        (:endgroup)
+                        (:newline)
+                            ;;; Tools
+                        ("@phone" . ?p)
+                        ("@computer" . ?c)
+                        ;; ("@anywhere" . ?c)
+                        (:newline)
+                            ;;; Category
+                        ("#email" . ?m)
+                        ("#lowenergy" . ?l)
+                        ("#translation" . ?t)
+                        ;; ("web" . ?t)
+                        ;; ("reading" . ?t)
+                        (:newline)
+                        ("WAITING" . ?W)
+                        ("HOLD" . ?H)
+                        ("CANCELLED" . ?C)
+                        )))
+#+end_src
+
+#+begin_src elisp :noweb-ref org-org
+(use-package! org-super-agenda
+  ;; :commands (org-super-agenda-mode)
+  ;; :init (advice-add #'org-super-agenda-mode :around #'doom-shut-up-a)
+  :after org-agenda
+  :init
+  (setq org-super-agenda-groups
+        '((:name "Schedule\n"
+           :time-grid t)
+          (:name "Habits"
+           :habit t)
+          (:name "Today\n"
+           :scheduled today
+           :discard (:habit))
+          (:name "Translation"
+           :tag "#translation")
+          (:name "Due today\n"
+           :deadline today)
+          (:name "Overdue\n"
+           :deadline past)
+          (:name "Due soon\n"
+           :deadline future)
+          (:name "Waiting\n"
+           :todo "WAIT"
+           :order 98)
+          (:name "Scheduled earlier\n"
+           :scheduled past)))
+  :config
+  (org-super-agenda-mode))
+
+;; (use-package! org-rich-yank
+;;   :after org)
+#+end_src
+
+#+begin_src elisp :noweb-ref org-org
+(use-package! org-ql
+  :after org)
+
+(after! org-agenda
+  (setq org-agenda-custom-commands
+        '(("c" "At computer or laptop" tags-todo "@computer"
+           ((org-agenda-overriding-header "@Computer Tasks")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "WAITING" "DONE" "CANCELLED")))))
+          ("e" "Emails to send" tags-todo "#email"
+           ((org-agenda-overriding-header "Emails")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "DONE" "CANCELLED")))))
+          ("h" "Tasks around the house" tags-todo "@home"
+           ((org-agenda-overriding-header "@Home Tasks")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "WAITING" "DONE" "CANCELLED")))))
+          ("t" "Translation (work) related tasks" tags-todo "#translation"
+           ((org-agenda-overriding-header "Translation")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "WAITING" "DONE" "CANCELLED")))))
+          ("o" "Online shopping" tags-todo "@onlineshop"
+           ((org-agenda-overriding-header "@Online Shops")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "DONE" "CANCELLED")))))
+          ("e" "Errands out and about" tags-todo "@errand"
+           ((org-agenda-overriding-header "Errands")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "WAITING" "DONE" "CANCELLED")))))
+          ("l" "Low energy tasks" tags-todo "#lowenergy"
+           ((org-agenda-overriding-header "Low Energy")
+            (org-agenda-skip-function
+             '(org-agenda-skip-entry-if
+               'todo '("PROJECT" "TODO" "WAITING" "DONE" "CANCELLED")))))
+          ;; HACK Attempt to emulate rudimentary Supermemo IR stack in org
+          ("i" "Incremental Reading stack"
+           ((org-ql-block '(todo "READING")
+                          ((org-ql-block-header "Incremental Reading Stack")))))
+          ("p" "Projects list"
+           ((org-ql-block '(todo "PROJECT")
+                          ((org-ql-block-header "Test PROJECT list")))))
+          ;; From https://github.com/alphapapa/org-ql/blob/master/examples.org
+          ("n" "All NEXT actions"
+           ((org-ql-block '(todo "NEXT")
+                          ((org-ql-block-header "Next actions list")))))
+          ("s" "Stuck Projects"
+           ((org-ql-block '(and (todo "PROJECT")
+                                (not (done))
+                                (not (descendants (todo "NEXT")))
+                                (not (descendants (scheduled))))
+                          ((org-ql-block-header "Suck Projects")))))
+          ;; List tasks without "PROJECT" parent
+          ("O" "Orphaned Tasks"
+           ((org-ql-block '(and (todo)
+                                (path "personal.org"
+                                      "work.org"
+                                      "wiki/thesis.org")
+                                (not (todo "PROJECT"))
+                                (not (ancestors (todo "PROJECT")))))
+            ((org-ql-block-header "Orphaned Tasks"))))
+          )))
+#+end_src
+
+#+begin_src elisp :noweb-ref org-org
+(use-package! ox-reveal
+  :config
+  (setq org-reveal-root "file:///home/volk/Templates/reveal.js"))
+#+end_src
+
+#+begin_src elisp :noweb-ref org-org
+(use-package! org-depend
+  :after org
+  :config
+(defun r-org/org-insert-trigger ()
+  "Automatically insert chain-find-next trigger when entry becomes NEXT"
+  (cond ((equal org-state "NEXT")
+         (unless org-depend-doing-chain-find-next
+           (org-set-property "TRIGGER" "chain-find-next(NEXT,from-current,priority-up,effort-down)")))
+        ((equal org-state "IN-PROGRESS")
+         (unless org-depend-doing-chain-find-next
+           (org-set-property "TRIGGER" "chain-find-next(NEXT,from-current,priority-up,effort-down)")))
+        ((equal org-state "WAITING")
+         (unless org-depend-doing-chain-find-next
+           (org-set-property "TRIGGER" "chain-find-next(NEXT,from-current,priority-up,effort-down)")))
+        ((not (member org-state org-done-keywords))
+         (org-delete-property "TRIGGER")))))
+
+(add-hook 'org-after-todo-state-change-hook 'r-org/org-insert-trigger)
+
+;; Capture
+;; TODO Transfer captures to DOCT
+(after! org-capture
+  (add-hook 'org-capture-mode-hook 'evil-insert-state)
+
+  ;; :ensure nil
+  ;; :after org
+  ;; :preface
+  (defvar my/org-ledger-debitcard1-template "%(org-read-date) %^{Payee}
+  Expenses:%^{Account}  $%^{Amount}
+  Assets:Bank:Personal" "Template for personal debit card transactions with ledger.")
+
+  (defvar my/org-ledger-debitcard2-template "%(org-read-date) %^{Payee}
+  Expenses:%^{Account}  $%^{Amount}
+  Assets:Bank:Business" "Template for business debit card transactions with ledger.")
+
+  (defvar my/org-ledger-cash-template "%(org-read-date) * %^{Payee}
+  Expenses:%^{Account}  $%^{Amount}
+  Assets:Cash:Wallet" "Template for cash transaction with ledger.")
+
+  (defvar my/org-ledger-creditcard-template "%(org-read-date) %^{Payee}
+  Expenses:%^{Account}  $%^{Amount}
+  Liabilities:Credits Cards:CWB" "Template for credit card transaction with ledger.")
+  :custom
+  (setq org-default-notes-file "inbox.org"
+        org-capture-templates
+        `(("t" "Todo [inbox]" entry (file+headline "~/org/inbox.org" "Tasks")
+           "** TODO %i%?")
+          ("e" "email" entry (file+headline "~/org/inbox.org" "Tasks")
+           "** TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
+          ("e" "email" entry (file+headline "~/org/inbox.org" "Tasks")
+           "** TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
+          ("c" "Contacts" entry (file "~/org/contacts.org")
+           "** %(org-contacts-template-name)\n:PROPERTIES:\n:ROLE: %^{Role}\n:COMPANY: %^{Company}\n:EMAIL: %^(org-contacts-template-email)\n:CELL:%^{Cellphone}\n:PHONE:%^{Phone}\n:WEBSITE: %^{Website}\n:ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}\n:NOTE: %^{NOTE} \n:END:")
+          ;; Ledger
+          ("l" "Ledger")
+          ("lp" "Personal Bank" plain (file ,(format "~/Documents/ledger/ledger-%s.dat" (format-time-string "%Y"))),
+           my/org-ledger-debitcard1-template
+           :empty-lines 1
+           :immediate-finish t)
+          ("lb" "Business Bank" plain (file ,(format "~/Documents/ledger/ledger-%s.dat" (format-time-string "%Y"))),
+           my/org-ledger-debitcard2-template
+           :empty-lines 1
+           :immediate-finish t)
+          ("lc" "CWB Credit Card" plain (file ,(format "~/Documents/ledger/ledger-%s.dat" (format-time-string "%Y"))),
+           my/org-ledger-creditcard-template
+           :empty-lines 1
+           :immediate-finish t)
+          ("lw" "Cash" plain (file ,(format "~/Documents/ledger/ledger-%s.dat" (format-time-string "%Y"))),
+           my/org-ledger-cash-template
+           :empty-lines 1
+           :immediate-finish t)
+
+          ;; Anki
+          ("a" "Anki")
+          ("ab" "Anki basic"
+           entry
+           (file+headline org-my-anki-file "Dispatch Shelf")
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: MegaDeck\n:END:\n** Front\n%?\n** Back\n%x\n")
+          ("ac" "Anki cloze"
+           entry
+           (file+headline org-my-anki-file "Dispatch Shelf")
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra\n")
+          ("ai" "Anki IR"
+           entry
+           (file+function "~/org/anki.org" key-to-header)
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra \n\n** Cited \n** Link\n %(insert-property)  \n** Key\n %(insert-key)")
+          ;; ("at" "Anki test"
+          ;;  entry
+          ;;  (file+function "~/org/anki.org" insert-key)
+          ;;  "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x ** Extra \n\n** Link\n %(insert-property)%")
+          )))
+#+end_src
+** org-gtd
+:PROPERTIES:
+:CREATED:  [2020-12-14 Mon 17:54]
+:ID:       6c1724b7-06be-4b91-bead-451b74695204
+:END:
+
+** Academic org
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:30]
+:ID:       57af6f09-ffc5-4227-86e2-a8f48b689e15
+:END:
+Here are academic/pdf related configs:
+
+*** reference and writing tools
+:PROPERTIES:
+:CREATED:  [2020-12-10 Thu 10:35]
+:ID:       7bf4ad4d-fc04-4783-9e93-cd423933babc
+:END:
+#+begin_src elisp :noweb-ref org-academic
+;; PDF + synctex
+(after! pdf-tools
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+        TeX-source-correlate-start-server t)
+  ;; This allows for opening in an indirect buffer
+  (setq pdf-sync-backward-display-action t)
+  (setq pdf-sync-forward-display-action t)
+<<pdf outline numbering>>
+  ;; to have the buffer refresh after compilation
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer))
+
+<<pdftools modeline hack>>
+
+;; org-ref
+(use-package! org-ref
+  :config
+  (setq reftex-default-bibliography "~/Documents/LaTeX/uni.bib"
+        org-ref-default-bibliography '("~/Documents/LaTeX/uni.bib")
+        org-ref-pdf-directory "~/Documents/PDF/"
+        org-ref-bibliography-notes "~/org/org-brain/article-notes"
+        bibtex-completion-bibliography "~/Documents/LaTeX/uni.bib"
+        bibtex-completion-library-path "~/Documents/PDF"
+        bibtex-completion-notes-path "~/org/org-brain/article-notes"
+        bibtex-completion-pdf-symbol "⌘"
+        bibtex-completion-notes-symbol "✎"
+        bibtex-completion-additional-search-fields '(keywords)
+;; I should improve the formatting of this:
+        bibtex-completion-notes-template-one-file
+        (format
+         "\n* ${author}${year}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :Keywords: ${keywords}\n  :YEAR: ${year}\n  :END:\n\n  - cite:${=key=}")
+        doi-utils-open-pdf-after-download nil
+        org-ref-note-title-format "* (%y) %t\n  :PROPERTIES:\n  :Custom_ID: %k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n  :END:")
+        )
+;; bib-library "~/Documents/LaTeX/uni.bib"
+#+end_src
+
+Automating export rules for org-files to LaTeX pdfs:
+#+begin_src elisp :noweb-ref org-academic
+(after! 'ox-latex
+  :config
+  (add-to-list 'org-latex-classes
+               '("org-plain-latex"
+                 "\\documentclass[12]{article}
+        [NO-DEFAULT-PACKAGES]
+        [PACKAGES]
+        [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+This is imported into the file (I should create more)
+#+begin_src org :tangle ~/Documents/LaTeX/standard-export.org
+,#+LATEX_CLASS: org-plain-latex
+
+,#+LATEX_HEADER: \usepackage[backend=biber, style=apa]{biblatex}
+,#+LATEX_HEADER: \usepackage{tocloft}
+,#+LATEX_HEADER: \usepackage{hyperref}
+,#+LATEX_HEADER: \usepackage{setspace}
+,#+LATEX_HEADER: \usepackage[a4paper,% left=3cm,right=1cm]{geometry}
+%% top=1in,bottom=1in,% footskip=.25in]
+,#+LATEX_HEADER: \addbibresource{/home/vrika/Documents/LaTeX/uni.bib}
+#+end_src
+
+*** org-protocol
+:PROPERTIES:
+:CREATED:  [2021-02-19 Fri 13:42]
+:ID:       4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b
+:END:
+By using ~org-protocol~, we can call =emacsclient= from other applications by specifying a link recognised by the OS (whether is be Linux or Windows).
+
+First we declare a regedit for WINE, in which we allow Windows to recognise the ~org-protocol:~ scheme handler:
+https://github.com/nobiot/Zero-to-Emacs-and-Org-roam/blob/main/90.org-protocol.md
+#+begin_src conf
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\org-protocol]
+@="URL:Org Protocol"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\org-protocol\shell]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open\command]
+@="C:\\windows\\system32\\winebrowser.exe -nohome \"%1\""
+#+end_src
+
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-protocol.el
+;;; lang/org-private/+org-protocol.el -*- lexical-binding: t; -*-
+
+(use-package! org-protocol
+  :after org
+  :config
+  <<org-protocol handlers>>
+  )
+
+<<org-export backend>>
+
+#+end_src
+
+**** Custom org-protocol handlers
+:PROPERTIES:
+:CREATED:  [2021-03-01 Mon 15:07]
+:ID:       c342cd1d-25eb-499f-9bf5-d1b4dbf1e470
+:header-args: :noweb-ref org-protocol handlers
+:END:
+Then we can write a custom org-id [[https://emacs.stackexchange.com/questions/47986/jump-to-org-mode-heading-from-external-application][protocol handler]]:
+#+begin_src elisp
+
+(add-to-list 'org-protocol-protocol-alist
+             '("org-id" :protocol "org-id"
+               :function org-id-protocol-goto-org-id))
+
+(defun org-id-protocol-goto-org-id (info)
+  "This handler simply goes to the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://org-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((id (plist-get info :id)))
+    (org-id-goto id))
+  nil)
+
+(defun org-id-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://org-id?id="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("brain-id" :protocol "brain-id"
+               :function brain-id-protocol-visualize-brain-id))
+
+(defun brain-id-protocol-visualize-brain-id (info)
+  "This handler visualizes the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://brain-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((id (plist-get info :id)))
+    (org-brain-visualize (or (org-brain-entry-from-id id))))
+  nil)
+
+(defun brain-id-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://brain-id?id="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("pdf-tools" :protocol "pdf-tools"
+               :function pdftools-protocol-pop-pdf))
+
+(defun pdftools-protocol-pop-pdf (info)
+  "This opens the highlight location of the given extract
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the org-pdf-tools link, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://brain-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((link (plist-get info :pdf)))
+    (org-link-open-from-string (format "[[pdf:%s]]" link)))
+  nil)
+
+(defun pdf-tools-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://pdf-tools?pdf="
+                        (org-entry-get nil "NOTER_PAGE"))))
+
+(defun pdft-tools-protocol-htmlfier ()
+  (interactive)
+  (let ((pdf-link (org-entry-get nil "ID")))
+    (format "<a href=\"org-protocol://pdf-tools?pdf=%s\"></a>" pdf-link)))
+
+(defun pdf-tools-protocol-html-link-copy ()
+  (interactive)
+  (org-kill-new (concat "<a href=\"org-protocol://pdf-tools?pdf="
+                        (org-entry-get nil "NOTER_PAGE") "</a>")))
+
+#+end_src
+"<a href=\"org-protocol://brain-id?id=%s\">%s</a>"
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("media-link" :protocol "media-link"
+               :function media-link-protocol-play-mpv-video))
+
+(defun media-link-protocol-play-mpv-video (info)
+  "This handler visualizes the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://media-link?video=~/org/.attach/27/e2318b-7353-4004-943a-2f1d69b32209/doge_vid420.mpg#0:00:13"
+  (when-let ((link (plist-get info :video)))
+    (org-link-open-from-string (format "[[video:%s]]" link)))
+  nil)
+
+(defun media-link-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://media-link?video="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(defun media-link-protocol-play-cite-video (info)
+"This handler visualizes the org heading with given id using emacsclient.
+
+  INFO is an alist containing additional information passed by the protocol URL.
+  It should contain the id key, pointing to the path of the org id.
+
+    Example protocol string:
+    org-protocol://media-link?videocite=~/org/.attach/27/e2318b-7353-4004-943a-2f1d69b32209/doge_vid420.mpg#0:00:13"
+(when-let ((link (plist-get info :videocite)))
+  (org-link-open-from-string (format "[[videocite:%s]]" link)))
+nil)
+
+(defun media-link-protocol-cite-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://media-link?videocite="
+                        (org-media-note--current-org-ref-key))))
+#+end_src
+org-protocol://media-link?video=https://www.youtube.com/watch?v=lW3eWIj3Q04#0:03:28-0:03:39
+org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b
+[[org-protocol://org-id/?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b]]
+[[org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b]] ;; doesn't work
+
+Because we have defined a regedit, with the right formatting, html links will redirect to the org-protocol handler as well:
+#+begin_example html :tangle no
+<A href="org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b">Link text here</A>
+<A href="org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b">** org-protocol</A>
+#+end_example
+
+This can be directly pasted into an element with either =e= (for Questions) or =a= (for Answers) and then =M-<F10>-x-p= (Element pane -> Text -> Paste Html)
+
+Now we can write a key script to automate this process, and bind it to a contextual hydra:
+
+**** org-export backend
+:PROPERTIES:
+:CREATED:  [2021-03-01 Mon 15:07]
+:ID:       d2942d96-207d-4061-bcea-116f8a437b8d
+:header-args: :noweb-ref org-export backend
+:END:
+To automate the process, we can write extend the =org-export= backend with [[https://kitchingroup.cheme.cmu.edu/blog/2018/05/09/Making-it-easier-to-extend-the-export-of-org-mode-links-with-generic-functions/][org-link-set-parameters]] to introduce the above protocol link into header text automatically
+#+begin_src elisp
+(cl-defgeneric brain-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod brain-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://brain-id?id=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "brain" :export 'brain-link-export)
+#+end_src
+
+=video:= link exporter
+#+begin_src elisp
+(cl-defgeneric media-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod media-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?video=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "video" :export 'media-link-export)
+#+end_src
+
+=videocite:= link exporter
+#+begin_src elisp
+
+;; this one runs when the backend is equal to html
+(cl-defmethod media-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?video=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "video" :export 'media-link-export)
+
+;; for videocite links
+(cl-defgeneric videocite-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod videocite-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?videocite=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "videocite" :export 'videocite-link-export)
+#+end_src
+
+cite:key reference exporter
+
+#+begin_src elisp
+(cl-defgeneric cite-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod cite-link-export ((path t) (desc t) (backend (eql html)))
+  (format "<a href=\"%s\">%s:%s</a>" path path desc))
+
+(org-link-set-parameters "cite" :export 'cite-link-export)
+#+end_src
+
+Ideally targeting the ~:ID:~ property, extracting the =org-id= and generating the org-protocol link:
+https://emacs.stackexchange.com/questions/156/emacs-function-to-convert-an-arbitrary-org-property-into-an-arbitrary-string-na
+
+Modified =org-html-headline= from [[file:~/.emacs.d/.local/straight/repos/org-mode/lisp/ox-html.el::defun org-html-headline (headline contents info][ox-html.el]] :
+#+begin_src elisp
+(after! org
+  (setq org-html-self-link-headlines t)
+
+  (defun org-html-headline (headline contents info)
+    "Transcode a HEADLINE element from Org to HTML.
+    CONTENTS holds the contents of the headline.  INFO is a plist
+    holding contextual information."
+    (unless (org-element-property :footnote-section-p headline)
+      (let* ((numberedp (org-export-numbered-headline-p headline info))
+             (numbers (org-export-get-headline-number headline info))
+             (level (+ (org-export-get-relative-level headline info)
+                       (1- (plist-get info :html-toplevel-hlevel))))
+             (todo (and (plist-get info :with-todo-keywords)
+                        (let ((todo (org-element-property :todo-keyword headline)))
+                          (and todo (org-export-data todo info)))))
+             (todo-type (and todo (org-element-property :todo-type headline)))
+             (priority (and (plist-get info :with-priority)
+                            (org-element-property :priority headline)))
+             (text (org-export-data (org-element-property :title headline) info))
+             (tags (and (plist-get info :with-tags)
+                        (org-export-get-tags headline info)))
+             (full-text (funcall (plist-get info :html-format-headline-function)
+                                 todo todo-type priority text tags info))
+             (contents (or contents ""))
+             (id (org-html--reference headline info))
+             (brain-id (org-element-property :ID headline))
+             (formatted-text
+              ;; (if (plist-get info :html-self-link-headlines)
+              ;;     (format "<a href=\"#%s\">%s</a>" id full-text)
+              ;;   full-text)))
+              (if (plist-get info :html-self-link-headlines)
+                  (format "<a href=\"org-protocol://brain-id?id=%s\">%s</a>" brain-id full-text)
+                full-text)))
+        (if (org-export-low-level-p headline info)
+            ;; This is a deep sub-tree: export it as a list item.
+            (let* ((html-type (if numberedp "ol" "ul")))
+              (concat
+               (and (org-export-first-sibling-p headline info)
+                    (apply #'format "<%s class=\"org-%s\">\n"
+                           (make-list 2 html-type)))
+               (org-html-format-list-item
+                contents (if numberedp 'ordered 'unordered)
+                nil info nil
+                (concat (org-html--anchor id nil nil info) formatted-text)) "\n"
+               (and (org-export-last-sibling-p headline info)
+                    (format "</%s>\n" html-type))))
+          ;; Standard headline.  Export it as a section.
+          (let ((extra-class
+                 (org-element-property :HTML_CONTAINER_CLASS headline))
+                (headline-class
+                 (org-element-property :HTML_HEADLINE_CLASS headline))
+                (first-content (car (org-element-contents headline))))
+            (format "<%s id=\"%s\" class=\"%s\">%s%s</%s>\n"
+                    (org-html--container headline info)
+                    (format "outline-container-%s" id)
+                    (concat (format "outline-%d" level)
+                            (and extra-class " ")
+                            extra-class)
+                    (format "\n<h%d id=\"%s\"%s>%s</h%d>\n"
+                            level
+                            id
+                            (if (not headline-class) ""
+                              (format " class=\"%s\"" headline-class))
+                            (concat
+                             (and numberedp
+                                  (format
+                                   "<span class=\"section-number-%d\">%s</span> "
+                                   level
+                                   (mapconcat #'number-to-string numbers ".")))
+                             formatted-text)
+                            level)
+                    ;; When there is no section, pretend there is an
+                    ;; empty one to get the correct <div
+                    ;; class="outline-...> which is needed by
+                    ;; `org-info.js'.
+                    (if (eq (org-element-type first-content) 'section) contents
+                      (concat (org-html-section first-content "" info) contents))
+                    (org-html--container headline info)))))))
+  )
+
+#+end_src
+
+**** defunct: base64 images
+:PROPERTIES:
+:CREATED:  [2021-03-18 Thu 23:04]
+:ID:       0ea21e75-4410-4d69-a110-be87eaa90e40
+:END:
+Because SM is finicky with filepaths, lets ~base64~ encode our images so they reside within the HTML file itself, we'll redefine =org-html--format-image= to do this:
+IE8 has a 32KB limitation :(
+#+begin_src elisp :tangle no :noweb no
+(defun tob64 (filename)
+  "Transforms a file FILENAME in base64."
+  (base64-encode-string
+   (with-temp-buffer
+     (insert-file-contents filename)
+     (buffer-string))))
+
+(defun html-base64-images (text backend info)
+  "Replaces files links in TEXT with appropriate html string when BACKEND is html. INFO is ignored."
+  (when (org-export-derived-backend-p backend 'html)
+    (when (string-match "^<img" text)
+      (let ((filename (replace-regexp-in-string ".*=\"" "" (replace-regexp-in-string "\\\" .*" "" text))))
+      (format  "<img src=\"data:image/png;base64,%s\">" (tob64 "/home/vrika/org/.attach/89/59cf0a-dce5-4285-b418-71dc0147c3d5/extract-7.2072-9.943267.gif")))
+      )
+    )
+  )
+
+;; (add-to-list 'org-export-filter-link-functions 'html-base64-images)
+#+end_src
+
+#+RESULTS:
+: org-html--format-image
+
+*** org-media-note                                                   :ATTACH:
+:PROPERTIES:
+:CREATED:  [2021-02-18 Thu 14:05]
+:ID:       2986f9d8-8f09-40ed-a0a6-ce088d13325e
+:header-args: :noweb-ref org-media-note config
+:END:
+
+#+begin_src elisp :noweb-ref org-media-note :tangle ~/.doom.d/modules/lang/org-private/+org-media-note.el
+;;; lang/org-private/+org-media-note.el -*- lexical-binding: t; -*-
+
+(use-package! org-media-note
+  :after org
+  :hook (org-mode . org-media-note-setup-org-ref)
+  :bind (("H-n" . org-media-note-hydra/body))  ;; Main entrance
+  :config
+  (setq bibtex-completion-pdf-field "file") ;; this is needed for local files stored in the bibkey entry, otherwise the path won't be found
+  (setq org-media-note-screenshot-save-method 'attach)
+  (setq org-media-note-use-refcite-first t)  ;; use videocite link instead of video link if possible
+
+  <<org-media-note config>>
+  )
+#+end_src
+
+TODO Make sure that the path is     ~
+#+begin_src elisp
+(defun nanjigen/org-media-note-insert-gif ()
+  "Use giffer to generate a gif from mpv's loop
+giffer's path is input-file output-file start-time end-time"
+  (interactive)
+  (let* ((input (shell-quote-argument (mpv-get-property "path")))
+         (base-path (url-basepath (mpv-get-property "path")))
+         (time-a (mpv-get-property "ab-loop-a"))
+         (time-b (mpv-get-property "ab-loop-b"))
+         (gif-file-name (org-media-note--format-file-name
+                         (format "%sextract-%s-%s.gif" base-path time-a time-b)))
+                        ;; (concat base-path "extract-"
+                        ;;         time-a time-b ".gif")))
+         (gif-target-path (cond
+                             ((eq org-media-note-screenshot-save-method
+                                  'attach)
+                              (expand-file-name gif-file-name
+                                                (org-attach-dir t)))
+                             ((eq org-media-note-screenshot-save-method
+                                  'directory)
+                              (expand-file-name gif-file-name org-media-note-screenshot-image-dir)))))
+    (shell-command (format "giffer %s %s %s %s" input gif-file-name time-a time-b))
+    (insert (format "[[file:%s]] " gif-file-name)
+    ;; (if (and (eq org-media-note-screenshot-save-method
+    ;;              'attach)
+    ;;          (eq org-media-note-screenshot-link-type-when-save-in-attach-dir
+    ;;              'attach))
+    ;;     (insert (format "[[attachment:%s]] "
+    ;;                     (file-relative-name gif-target-path
+    ;;                                         (org-attach-dir))))
+    ;;   (insert (format "[[file:%s]] "
+    ;;                   (org-media-note--format-file-path gif-target-path)
+    ;;                   )))
+    (org-media-note--display-inline-images))))
+#+end_src
+
+#+begin_src elisp
+(defun org-media-note-insert-screenshot ()
+  "Insert current mpv screenshot into Org-mode note."
+  (interactive)
+  (let* ((image-file-name (org-media-note--format-picture-file-name (concat "screenshot-"
+                                                                    (org-media-note--get-current-hms)
+                                                                    ".jpg")))  ;; TODO let user customize this
+         (image-target-path (cond
+                             ((eq org-media-note-screenshot-save-method
+                                  'attach)
+                              (expand-file-name image-file-name
+                                                (org-attach-dir t)))
+                             ((eq org-media-note-screenshot-save-method
+                                  'directory)
+                              (expand-file-name image-file-name org-media-note-screenshot-image-dir)))))
+    (if org-media-note-screenshot-with-sub
+        (mpv-run-command "screenshot-to-file" image-target-path)
+      (mpv-run-command "screenshot-to-file" image-target-path
+                       "video"))
+    (if (and (eq org-media-note-screenshot-save-method
+                 'attach)
+             (eq org-media-note-screenshot-link-type-when-save-in-attach-dir
+                 'attach))
+        (insert (format "[[attachment:%s]] "
+                        (file-relative-name image-target-path
+                                            (org-attach-dir))))
+      (insert (format "[[file:%s]] "
+                      (org-media-note--format-file-path image-target-path)
+                      )))
+    (org-media-note--display-inline-images)))
+#+end_src
+
+Additionally we can allow a more automated workflow for annotating screenshots:
+#+begin_src elisp
+(defun nanjigen/org-link-file-path-at-point ()
+  "Get the path of the file referred to by the link at point."
+  (let* ((org-element (org-element-context))
+         (is-subscript-p (equal (org-element-type org-element) 'subscript))
+         (is-link-p (equal (org-element-type org-element) 'link))
+         (is-file-p (equal (org-element-property :type org-element) "file")))
+    (when is-subscript-p
+      (user-error "Org thinks you're in a subscript. Move the point and try again."))
+    (unless (and is-link-p is-file-p)
+      (user-error "Not on file link"))
+    (expand-file-name (org-element-property :path org-element))))
+
+(defvar nanjigen/org-edit-image-redisplay-images t
+  "Redisplay images after editing an image with `ll/org/edit-image'?")
+
+(defun nanjigen/org-edit-image (&optional arg)
+  "Edit the image linked at point. If
+`ll/org/insert-screenshot/redisplay-images' is non-nil, redisplay
+images in the current buffer."
+  (interactive)
+  (let ((img (nanjigen/org-link-file-path-at-point )))
+    (start-process "gimp" nil "/usr/bin/gimp" img)
+    (read-char "Editing image... Press any key when done.")
+    (when nanjigen/org-edit-image-redisplay-images
+      (org-remove-inline-images)
+      (org-display-inline-images))))
+#+end_src
+
+TODO
+- Increment/decrement the a/b timestamp of a loop.
+- Clear a/b loop and move to b position of loop and continue watching
+- Screen key for selection style screenshot
+#+begin_src elisp
+(setq org-html-self-link-headlines t)
+
+  (pretty-hydra-define nanjigen/org-media-note-hydra
+    (:color red
+     :title (org-media-note--hydra-title)
+     :hint nil)
+    ("File"
+     (("o" org-media-note-mpv-smart-play
+       (if (org-media-note-ref-cite-p)
+           (format "Open %s"
+                   (org-media-note--current-org-ref-key))
+         "Open file")
+       :width 20)
+      ("j"
+       (mpv-cycle-property "sub")
+       "toggle subtitles")
+      ("T"
+       (mpv-cycle-property "ontop")
+       "toggle ontop")
+      ("c"
+       (org-media-note-change-speed-by 0.1)
+       "increase speed")
+      ("x"
+       (org-media-note-change-speed-by -0.1)
+       "decrease speed")
+      ("z" org-media-note-mpv-toggle-speed "reset speed")
+      ("f" org-media-note-toggle-mirror-view "Toggle mirror flip"))
+     "Playback"
+     (("<SPC>" mpv-pause "Play/Pause")
+      ("l"
+       (mpv-run-command "ab-loop")
+       (let ((time-a (mpv-get-property "ab-loop-a"))
+             (time-b (mpv-get-property "ab-loop-b")))
+         (if (org-media-note--ab-loop-p)
+             (format "Clear A-B loop (%s - %s)"
+                     (org-media-note--seconds-to-hms time-a)
+                     (org-media-note--seconds-to-hms time-b))
+           (if (numberp time-a)
+               (format "Set B of A-B loop (%s - )"
+                       (org-media-note--seconds-to-hms time-a))
+             "Set A of A-B loop")))
+       :width 35)
+      ("g" org-media-note-goto-timestamp "Jump to the timestamp")
+      ("," (mpv-seek-backward 1) "Back 1s")
+      ("." (mpv-seek-forward 0.5) "Forward 1s")
+      ("<left>" mpv-seek-backward "Back 5s")
+      ("<right>" mpv-seek-forward "Forward 5s")
+      ("C-<left>"
+       (mpv-run-command "sub-seek" -1)
+       "Previous subtitle")
+      ("C-<right>"
+       (mpv-run-command "sub-seek" 1)
+       "Next subtitle"))
+     "Volume"
+     (("+"
+       (org-media-note-change-volume-by 5)
+       "Up")
+      ("-"
+       (org-media-note-change-volume-by -5)
+       "Down")
+      ("0" org-media-note-mpv-toggle-volume "toggle")
+      ("m"
+       (mpv-cycle-property "mute")
+       "(un)mute"))
+     "Note"
+     (("i" org-media-note-insert-link "Insert timestamp")
+      ("S" org-media-note-insert-screenshot "Insert Screenshot")
+        ("C" org-media-note-toggle-crop "Toggle cropping" :toggle org-media-note-crop-p)
+      ("s" org-media-note-insert-sub-text "Insert subtitle")
+      ("g" nanjigen/org-media-note-insert-gif "Insert Gif")
+      ("I p" org-media-note-insert-note-from-pbf
+       "Import from pbf")
+      ("I n" org-media-note-insert-note-from-noted
+       "Import from Noted"))
+     "Toggle"
+     (("t m" org-media-note-mode "Auto insert media item"
+       :toggle t)
+      ("t c" org-media-note-toggle-refcite "Use ref key instead of absolute path"
+       :toggle org-media-note-use-refcite-first)
+      ("t p" org-media-note-toggle-pause-after-insertion
+       "Pause media after insert link" :toggle org-media-note-pause-after-insert-link)
+      ("t s" org-media-note-toggle-save-screenshot
+       "Auto save screenshot" :toggle org-media-note-save-screenshot-p)
+      ("t S" org-media-note-toggle-screenshot-with-sub
+       "Screenshot with subtitles" :toggle org-media-note-screenshot-with-sub))))
+
+  (defcustom org-media-note-crop-p nil
+    "When nil, allow cropping to start, otherwise stop cropping"
+    :type 'boolean)
+
+    (defun org-media-note-toggle-crop ()
+      "toggle cropping"
+      (interactive)
+      (if org-media-note-crop-p
+          (mpv-run-command "vf" "del" "-1")
+        (mpv-run-command "script-message-to" "crop" "start-crop")))
+
+    (defun org-media-note-toggle-crop ()
+      "toggle cropping"
+      (interactive)
+      (if org-media-note-crop-p
+          (progn
+          (mpv-run-command "set" "fullscreen" "no")
+            (mpv-run-command "vf" "del" "-1")
+            (setq org-media-note-crop-p nil))
+        (progn
+          (mpv-run-command "set" "fullscreen" "yes")
+          (mpv-run-command "script-message-to" "crop" "start-crop")
+          (setq org-media-note-crop-p t))))
+#+end_src
+
+*** org-brain
+:PROPERTIES:
+:CREATED:  [2020-12-10 Thu 16:00]
+:ID:       e69debce-5954-4552-a8a6-3f9970fee70c
+:header-args: :noweb-ref org-brain config
+:END:
+
+#+begin_src elisp
+(use-package! polymode)
+
+;; org-brain
+(use-package! org-brain
+  :after polymode
+  :defer t
+
+  :init
+  (setq org-brain-visualize-default-choices 'all
+        org-brain-title-max-length 24
+        org-brain-include-file-entries t
+        org-brain-backlink t)
+  (setq org-brain-path "~/org/org-brain")
+
+  :config
+  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode)
+
+  (set-popup-rule! "^\\*org-brain"
+    :side 'right :size 1.00 :select t :ttl nil)
+
+  (when (featurep! :editor evil +everywhere)
+    ;; TODO Make a proper evil keybind scheme for org-brain
+    ;; REVIEW This should be handled upstream by evil-collection
+    (set-evil-initial-state!
+      '(org-brain-visualize-mode
+        org-brain-select-map
+        org-brain-move-map
+        org-brain-polymode-map)
+      'normal)
+    (defun +org--evilify-map (map)
+      (let (keys)
+        (map-keymap (lambda (event function)
+                      (push function keys)
+                      (push (vector event) keys))
+                    map)
+        (apply #'evil-define-key* 'normal map keys)))
+
+    (+org--evilify-map org-brain-visualize-mode-map)
+    (+org--evilify-map org-brain-select-map)
+    (+org--evilify-map org-brain-move-map)
+    (after! polymode
+      (+org--evilify-map org-brain-polymode-map)))
+
+  (defun +popup-toggle-brain ()
+    (interactive)
+    (let ((+popup--inhibit-transient t))
+      (cond ((+popup-windows) (+popup/close-all t))
+            ((display-buffer (get-buffer "*org-brain*"))))))
+
+  (setq org-id-track-globally t
+        org-id-locations-file "~/org/.org-id-locations")
+
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+  (cl-pushnew '("b" "Brain" plain (function org-brain-goto-end)
+                "* %i%?" :empty-lines 1)
+              org-capture-templates
+              :key #'car :test #'equal)
+  ;; (define-key org-brain-visualize-mode-map (kbd "C-l") #'link-hint-open-link)
+  (map! :map org-brain-visualize-mode-map "C-o" #'link-hint-open-link)
+
+  (use-package! org-cliplink)
+  (defun org-brain-cliplink-resource ()
+    "Add a URL from the clipboard as an org-brain resource.
+    Suggest the URL title as a description for resource."
+    (interactive)
+    (let ((url (org-cliplink-clipboard-content)))
+      (org-brain-add-resource
+       url
+       (org-cliplink-retrieve-title-synchronously url)
+       t)))
+
+  (map! :map org-brain-visualize-mode-map "L" #'org-brain-cliplink-resource)
+  (add-hook 'org-brain-after-visualize-hook #'visual-line-mode)
+
+  ;; Prettier line drawing
+
+  (defface aa2u-face '((t . nil))
+    "Face for aa2u box drawing characters")
+  (advice-add #'aa2u-1c :filter-return
+              (lambda (str) (propertize str 'face 'aa2u-face)))
+  (defun aa2u-org-brain-buffer ()
+    (let ((inhibit-read-only t))
+      (make-local-variable 'face-remapping-alist)
+      (add-to-list 'face-remapping-alist
+                   '(aa2u-face . org-brain-wires))
+      (ignore-errors (aa2u (point-min) (point-max)))))
+  (with-eval-after-load 'org-brain
+    (add-hook 'org-brain-after-visualize-hook #'aa2u-org-brain-buffer))
+
+  (defun org-brain-insert-resource-icon (link)
+    "Insert an icon, based on content of org-mode LINK."
+    (insert (format "%s "
+                    (cond ((string-prefix-p "brain:" link)
+                           (all-the-icons-fileicon "brain"))
+                          ((string-prefix-p "info:" link)
+                           (all-the-icons-octicon "info"))
+                          ((string-prefix-p "help:" link)
+                           (all-the-icons-material "help"))
+                          ((string-prefix-p "http" link)
+                           (all-the-icons-icon-for-url link))
+                          (t
+                           (all-the-icons-icon-for-file link))))))
+
+  (with-eval-after-load 'all-the-icons
+    (add-hook 'org-brain-after-resource-button-functions
+              'org-brain-insert-resource-icon))
+
+  ;; Setup org-expiry and define a org-agenda function to compare timestamps
+  (use-package! org-expiry
+    :after org-brain
+    :config
+    (setq org-expiry-inactive-timestamps t)
+    (defun org-expiry-created-comp (a b)
+      "Compare `org-expiry-created-property-name' properties of A and B."
+      (let ((ta (ignore-errors
+                  (org-time-string-to-seconds
+                   (org-entry-get (get-text-property 0 'org-marker a)
+                                  org-expiry-created-property-name))))
+            (tb (ignore-errors
+                  (org-time-string-to-seconds
+                   (org-entry-get (get-text-property 0 'org-marker b)
+                                  org-expiry-created-property-name)))))
+        (cond ((if ta (and tb (< ta tb)) tb) -1)
+              ((if tb (and ta (< tb ta)) ta) +1))))
+
+    ;; Add CREATED property when adding a new org-brain headline entry
+    (add-hook 'org-brain-new-entry-hook #'org-expiry-insert-created)
+
+    ;; Finally add a function which lets us watch the entries chronologically
+    (defun org-brain-timeline ()
+      "List all org-brain headlines in chronological order."
+      (interactive)
+      (let ((org-agenda-files (org-brain-files))
+            (org-agenda-cmp-user-defined #'org-expiry-created-comp)
+            (org-agenda-sorting-strategy '(user-defined-down)))
+        (org-tags-view nil (format "+%s>\"\"" org-expiry-created-property-name))))))
+
+#+end_src
+
+A new =helm= for =org-brain=, =helm-org-brain=, which offers more features and easier configuration than the provided default.
+Mainly, a Helm action that allows opening the current entry (or marked entries) in another visible window, bound to ~C-c o~ (much like the ~helm-buffer-switch-other-window~ action).
+#+begin_src elisp
+(after! org-brain
+  :init
+
+  (load! "+helm-org-brain")
+
+  :config
+;; (map! :map helm-org-brain-map
+;;         "C-c o" #'helm-org-brain-switch-node-other-window)
+
+  (map! :map org-mode-map
+      ;; "C-c a"         #'org-agenda
+       (:prefix ("C-c b" . "brain")
+        "a"            #'org-brain-agenda
+        "v"            #'org-brain-visualize)))
+
+  #+end_src
+
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+helm-org-brain.el :noweb-ref no
+;;; lang/org-private/+helm-org-brain.el -*- lexical-binding: t; -*-
+
+(defmacro helm-exit-and-run! (&rest body)
+  "Define an action with BODY to be run after exiting Helm."
+  (declare (doc-string 1))
+  `(lambda ()
+     (interactive)
+     (with-helm-alive-p
+       (helm-exit-and-execute-action (lambda (_candidate) ,@body)))))
+
+  (defun helm-brain--add-children (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-add-relationship
+       (org-brain-entry-at-pt) (or (org-brain-entry-from-id candidate) candidate)))
+    (org-brain--revert-if-visualizing))
+
+  (defun helm-brain--add-parents (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-add-relationship
+       (or (org-brain-entry-from-id candidate) candidate) (org-brain-entry-at-pt)))
+    (org-brain--revert-if-visualizing))
+
+  (defun helm-brain--add-friends (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain--internal-add-friendship
+       (org-brain-entry-at-pt) (or (org-brain-entry-from-id candidate) candidate)))
+    (org-brain--revert-if-visualizing))
+
+  (defun helm-brain--delete-entries (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-delete-entry (or (org-brain-entry-from-id candidate) candidate))))
+
+  (defun helm-brain--archive (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-archive (or (org-brain-entry-from-id candidate) candidate))))
+
+  (defun helm-brain--select (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-select (or (org-brain-entry-from-id candidate) candidate) 1)))
+
+  (defun helm-brain--unselect (_c)
+    (dolist (candidate (helm-marked-candidates))
+      (org-brain-select (or (org-brain-entry-from-id candidate) candidate) -1)))
+
+(defun helm-org-brain--visualize-node (_c)
+  (dolist (candidate (helm-marked-candidates))
+    (org-brain-visualize (or (org-brain-entry-from-id candidate) candidate))))
+
+(defun helm-org-brain--switch-node (_c)
+  (dolist (candidate (helm-marked-candidates))
+    (org-brain-goto (or (org-brain-entry-from-id candidate) candidate))))
+
+(defun helm-org-brain-switch-node-other-window ()
+  "Open the current node selected in helm-brain in org"
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-org-brain--switch-node)))
+
+(defvar helm-org-brain-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    ;; (define-key map (kbd "C-c o") (helm-exit-and-run! (helm-org-brain--switch-node)))
+    (define-key map (kbd "C-c o") 'helm-org-brain-switch-node-other-window)
+    map)
+  "Keymap for `helm-brain'.")
+
+(defun helm-org-brain-build-source (&optional filter)
+  "Build source for org-brain buffers.
+See `helm-org-brain' for more details."
+  (helm-build-sync-source "org-brain"
+    :candidates #'org-brain--all-targets
+    ;; :candidate-transformer 'helm-exwm-highlight-buffers
+    :action '(("Visualize" . (lambda (x)
+                   (org-brain-visualize (or (org-brain-entry-from-id x) x))))
+              ;; ("Visualize node" . helm-org-brain--visualize-node)
+              ("Switch to node(s) in other window `C-c o`'" . helm-org-brain--switch-node)
+              ("Kill buffer(s) `M-D`" . helm-kill-marked-buffers))
+    ;; When follow-mode is on, the persistent-action allows for multiple candidate selection.
+    :persistent-action 'helm-buffers-list-persistent-action
+    :keymap helm-org-brain-map))
+
+  (defvar helm-org-brain--fallback-source
+    (helm-make-source "New entry" 'helm-source-dummy
+      :action (helm-make-actions
+               "Visualize" (lambda (x)
+                             (org-brain-visualize (org-brain-get-entry-from-title x)))
+               "Add children" 'helm-brain--add-children
+               "Add parents" 'helm-brain--add-parents
+               "Add friends" 'helm-brain--add-friends)))
+
+;; (defun helm-org-brain (&optional filter)
+(defun helm-org-brain ()
+  (interactive)
+  (helm :sources (helm-org-brain-build-source helm-brain--fallback-source)
+        :buffer "helm-org-brain"))
+#+end_src
+
+Maybe also have a function to rifle the visualized node? [[https://github.com/justin-roche/spacemacs-config/blob/69dd0703e0a331b84cada2a13a145419460c3db1/org-journal.el#L119][inspiration]]
+#+begin_src elisp
+;; (defun helm-org-rifle-brain ()
+;;   ;; "Rifle files in `org-brain-path'.\"
+;;   (interactive)
+;;   (helm-org-rifle-directories (list org-brain-path)))
+
+#+end_src
+
+#+begin_src elisp
+;; Prettier line drawing
+
+(defface aa2u-face '((t . nil))
+  "Face for aa2u box drawing characters")
+(advice-add #'aa2u-1c :filter-return
+            (lambda (str) (propertize str 'face 'aa2u-face)))
+(defun aa2u-org-brain-buffer ()
+  (let ((inhibit-read-only t))
+    (make-local-variable 'face-remapping-alist)
+    (add-to-list 'face-remapping-alist
+                 '(aa2u-face . org-brain-wires))
+    (ignore-errors (aa2u (point-min) (point-max)))))
+(with-eval-after-load 'org-brain
+  (add-hook 'org-brain-after-visualize-hook #'aa2u-org-brain-buffer))
+
+#+end_src
+
+Some iconification stolen from [[https://github.com/vedang/emacs-up/blob/f8635f3875704b5a1a3966f4fd8558d2b331d47c/el-get-init-files/init-org-brain.el#L97][here]]:
+#+begin_src elisp
+(defun org-brain-insert-resource-icon (link)
+  "Insert an icon, based on content of org-mode LINK."
+  (insert (format "%s "
+                  (cond ((string-prefix-p "brain:" link)
+                         (all-the-icons-fileicon "brain"))
+                        ((string-prefix-p "info:" link)
+                         (all-the-icons-octicon "info"))
+                        ((string-prefix-p "help:" link)
+                         (all-the-icons-material "help"))
+                        ((string-prefix-p "http" link)
+                         (all-the-icons-icon-for-url link))
+                        (t
+                         (all-the-icons-icon-for-file link))))))
+
+(with-eval-after-load 'all-the-icons
+  (add-hook 'org-brain-after-resource-button-functions
+            'org-brain-insert-resource-icon))
+
+;; Setup org-expiry and define a org-agenda function to compare timestamps
+(use-package! org-expiry
+  :after org-brain
+  :config
+  (setq org-expiry-inactive-timestamps t)
+  (defun org-expiry-created-comp (a b)
+    "Compare `org-expiry-created-property-name' properties of A and B."
+    (let ((ta (ignore-errors
+                (org-time-string-to-seconds
+                 (org-entry-get (get-text-property 0 'org-marker a)
+                                org-expiry-created-property-name))))
+          (tb (ignore-errors
+                (org-time-string-to-seconds
+                 (org-entry-get (get-text-property 0 'org-marker b)
+                                org-expiry-created-property-name)))))
+      (cond ((if ta (and tb (< ta tb)) tb) -1)
+            ((if tb (and ta (< tb ta)) ta) +1))))
+
+  ;; Add CREATED property when adding a new org-brain headline entry
+  (add-hook 'org-brain-new-entry-hook #'org-expiry-insert-created)
+
+  ;; Finally add a function which lets us watch the entries chronologically
+  (defun org-brain-timeline ()
+    "List all org-brain headlines in chronological order."
+    (interactive)
+    (let ((org-agenda-files (org-brain-files))
+          (org-agenda-cmp-user-defined #'org-expiry-created-comp)
+          (org-agenda-sorting-strategy '(user-defined-down)))
+      (org-tags-view nil (format "+%s>\"\"" org-expiry-created-property-name))))
+
+  )
+#+end_src
+
+*** org-noter
+:PROPERTIES:
+:CREATED:  [2021-01-14 Thu 13:53]
+:ID:       2baec6b9-5177-445c-81b0-ea5ec192e057
+:header-args: :noweb-ref org-noter config
+:END:
+#+begin_src elisp
+;; org-noter
+;; org-noter + org-brain
+;; https://github.com/Kungsgeten/org-brain#org-noter
+(add-hook 'org-noter-insert-heading-hook #'org-id-get-create)
+(defun org-brain-open-org-noter (entry)
+  "Open `org-noter' on the ENTRY. If run interactively, get ENTRY from context."
+  (interactive (list (org-brain-entry-at-pt)))
+  (org-with-point-at (org-brain-entry-marker entry)
+    (org-noter)))
+
+;;    (define-key org-brain-visualize-mode-map (kbd "\C-c n") 'org-brain-open-org-noter)
+(map! :map org-brain-visualize-mode-map "\C-c n" #'org-brain-open-org-noter)
+
+;; org-pomodoro
+(use-package! org-pomodoro
+  :after org
+  :config
+  (setq org-pomodoro-keep-killed-pomodoro-time t))
+
+;; (use-package! org-drill
+;;   :after org
+;;   :config
+;;   (setq org-drill-scope (quote directory)))
+
+;; (org-drill "~/org/article-notes/article-index.org")
+
+(use-package! org-noter
+  :after org
+  :config
+  ;; Your org-noter config ........
+  (require 'org-noter-pdftools)
+  (setq org-noter-notes-search-path '("~/org/org-brain/article-notes/")))
+
+(use-package! org-pdftools
+  :hook (org-mode . org-pdftools-setup-link))
+
+(use-package! org-noter-pdftools
+  :after org-noter
+  :config
+  (setq org-noter-pdftools-insert-content-heading nil)
+  (setq org-noter-pdftools-use-org-id nil) ;; this interferes with org-brain
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freestyle-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+(load! "+ir.el")
+
+(use-package! org-web-tools)
+(use-package! org-web-tools-archive)
+
+;; (use-package! org-gcal
+;;   :after org
+;;   :init
+;;   ;; Currently not working https://github.com/kidd/org-gcal.el/issues/58
+;;   ;; https://console.cloud.google.com/apis/credentials/
+;;   (setq org-gcal-client-id (password-store-get "secrets/org-gcal-client-id")
+;;         org-gcal-client-secret (password-store-get "secrets/org-gcal-client-secret"))
+
+;;   (setq org-gcal-file-alist '(("otoo.danieru@gmail.com" . "~/org/danieru-cal.org"))))
+#+end_src
+
+** hydra
+:PROPERTIES:
+:CREATED:  [2020-10-24 Sat 00:16]
+:ID:       10d9b8ea-2886-4c67-a7ef-5d66994dab6b
+:END:
+Create a hydra menu for insertion of src block options:
+
+#+name: hydra babel lang
+#+begin_src elisp
+(defhydra hydra-org-src (:color blue :hint nil)
+  "
+_c_onfig   _e_macs-lisp _p_ython
+_C_lojure  _l_isp       _s_hell
+C_#_       _L_atex      _S_cheme
+ "
+
+  ("c" (insert "conf"))
+  ("C" (insert "clojure"))
+  ("#" (insert "csharp"))
+  ("e" (insert "elisp"))
+  ("l" (insert "lisp"))
+  ("L" (insert "latex"))
+  ("p" (insert "python"))
+  ("s" (insert "sh"))
+  ("S" (insert "scheme"))
+  ("o" nil "quit"))
+#+end_src
+
+#+RESULTS:
+: hydra-org-src/body
+
+Using the official hydra [[https://github.com/abo-abo/hydra/wiki/Nesting-Hydras][wiki]] we'll make a hydra to insert org-babel header-args and reveal their respective options in nested hydra. This should be independent of src block expansion so that it can be reused in yasnippets pertaining to subtree :PROPERTIES:.
+
+First we'll define some hydra body - initially the base hydra:
+
+(after some testing I needed a function for inserting /after/ the cursor position, otherwise text gets cut up when pasting programmatically with default internals)
+#+name: insertion after point
+#+begin_src elisp
+(defun insert-after-point (n)
+  (forward-char)
+  (insert n))
+#+end_src
+
+I should actually write a function that intelligently finds the src-block header and moves point there with =save-excursion=:
+#+name: intelligent block finder
+#+begin_src elisp
+(defun org-babel-toggle-header-args (arg)
+"Toggle insertion of header-args"
+(interactive)
+(save-excursion
+  (org-babel-goto-src-block-head)
+  (goto-char (point-at-eol))
+  ;; (s-matches-p (rx (seq (arg))))
+  (when (s-matches-p arg arg)
+      (message "error")
+      ;; we'll have to match the arg via regex then remove if there.
+    (insert arg))))
+#+end_src
+
+#+RESULTS: intelligent block finder
+: org-babel-toggle-header-args
+
+#+BEGIN_SRC elisp
+(org-babel-toggle-header-args ":cache")
+#+END_SRC
+
+#+RESULTS:
+: error
+
+#+BEGIN_SRC elisp
+(defhydra hydra-test (:color teal :hint nil)
+  "
+   header-args
+----------------
+_t_ ?t? :test _l_ ?l? :lol
+
+"
+  ("t" (message "%s" (hydra-get-property 'hydra-curr-body-fn ':test)))
+  ("l" (message "%s" (symbol-value 'hydra-curr-on-exit)))
+  ;; ("l" (message "%s" (symbol-value 'hydra-curr-body-fn)))
+  )
+#+END_SRC
+
+#+RESULTS:
+: hydra-test/body
+
+#+BEGIN_SRC elisp
+(defhydra hydra-test2 (:color blue)
+  ("q" nil "quit" :column "ROFL")
+  ("t" (message "%s" (hydra-get-property 'hydra-curr-body-fn)) "_t_rekker")
+  ("l" (message "%s" (pretty-hydra--get-heads 'hydra-curr-body-fn)) "big jol" :column "hallo")
+  )
+#+END_SRC
+
+#+RESULTS:
+: hydra-test2/body
+
+hydra-curr-body-fn
+
+#+begin_src elisp
+(defun symbol-navigation-hydra-head-header (is-enabled name suffix)
+  "Get the string for the head.
+`IS-ENABLED' should be a boolean. `NAME' should be the name of the head.
+`SUFFIX' should be the string to append to the header, either the empty
+string or a string indicating that `NAME' is disabled."
+  (if is-enabled
+      (format "%s%s" name suffix)
+    (format "%s%s"
+            (propertize name 'face symbol-navigation-hydra-disabled-head-face)
+            suffix)))
+#+end_src
+
+A collection of good looking tangle functions.
+#+begin_src elisp
+;; (org-babel-src-block-regexp)
+;; org-babel-key-bindings
+;; org-babel-header-arg-names
+
+(org-babel-check-src-block)
+(org-babel-when-in-src-block)
+(org-babel-goto-src-block-head)
+(org-babel-get-src-block-info)
+(org-element-inline-src-block-interpreter)
+(org-element-src-block-parser)
+(org-babel-enter-header-arg-w-completion)
+(org-babel-ref-parse)
+(org-babel-find-file-noselect-refresh)
+(org-babel-tangle-jump-to-org)
+(org-babel--get-vars)
+(org-babel-parse-multiple-vars)
+(org-babel-do-load-languages)
+(org-babel-noweb-wrap)
+(org-babel-speed-command-activate)
+(org-babel-params-from-properties)
+(org-babel-read-element)
+(org-babel-tangle-single-block)
+(org-babel-process-params)
+(org-babel-header-arg-expand)
+(org-babel-insert-header-arg)
+#+end_src
+
+#+begin_src elisp :noweb-ref header-args-hydra
+(defhydra hydra-src-header-args (:color teal :hint nil)
+  "
+   header-args
+----------------
+:_c_ache    :_f_ile       :_n_oweb      :_s_ep         [_#_]:comments
+:_C_mdline  :_F_ile-desc  :_noweb-_r_ef :_s_ession     [_|_]:colnames
+:_d_ir      :_h_lines     :_N_oweb-sep  :_t_angle      [_-_]:rownames
+:_e_val     :_m_kdirp     :_p_adline    :_T_angle-mode [_!_]:shebang
+:_E_xports  :no-e_x_pand  :_P_ost       :_v_ar         [_&_]:epi/pro
+                          :_R_esults    :_w_rap        [_q_] quit
+
+"
+  ("c" (progn
+         (insert-after-point " :cache")
+         (hydra-cache-options/body)))
+  ("C" (progn
+         (insert-after-point " :cmdline ")
+         (edit-indirect-region (point) (point) 't)
+         (sh-mode)
+         (hydra-cache-options/body)))
+  ("d" (progn
+         (insert-after-point " :dir ")
+;; TODO build in somekind of autocompletion
+         (hydra-dir-options/body)))
+  ;; ("e")
+  ;; ("E")
+  ;; ("f")
+  ;; ("F")
+  ;; ("h")
+  ;; ("m")
+  ;; ("x")
+  ;; ("n")
+  ;; ("r")
+  ;; ("N")
+  ;; ("p")
+  ;; ("P")
+  ;; ("R")
+  ;; ("s")
+  ;; ("s")
+  ;; ("t")
+  ;; ("T")
+  ;; ("v")
+  ;; ("w")
+  ;; ("#")
+  ("|" (progn
+         (insert-after-point " :colnames")
+         (hydra-cache-options/body)))
+  ;; ("-")
+  ;; ("!")
+  ;; ("&")
+  ("q" hydra-pop)
+  )
+#+end_src
+
+#+RESULTS:
+: hydra-src-header-args/body
+
+Then the subsequent nested hydra, in alphabetical order
+#+begin_src elisp :noweb-ref header-args-options
+(defhydra hydra-cache-options (:color teal)
+  "
+    :cache options
+----------------------
+:cache [_n_] no (default)
+:cache [_y_] yes
+
+[_b_] back
+"
+  ("n" (progn
+         (insert-after-point " no")
+         (hydra-src-header-args/body)))
+  ("y" (progn
+         (insert-after-point " yes")
+         (hydra-src-header-args/body)))
+  ("b" (hydra-src-header-args/body)))
+
+
+(defhydra hydra-colnames-options (:color teal)
+  "
+    :colnames options
+----------------------
+:colnames [_n_] no (Elisp default)
+:colnames [_y_] yes (1st row are colnames)
+:colnames [_l_] <LIST>
+:colnames [_'_] '() [Unsets header arg]
+
+[_b_] back
+"
+  ("n" (progn
+         (insert-after-point " no")
+         (hydra-src-header-args/body)))
+  ("y" (progn
+         (insert-after-point " yes")
+         (hydra-src-header-args/body)))
+  ("l" (progn
+         (insert-after-point " ")
+         (edit-indirect-region (point) (point) 't)
+         (hydra-src-header-args/body)))
+  ("'" (progn
+         (insert-after-point "'()")
+         (hydra-src-header-args/body)))
+  ("b" (hydra-src-header-args/body)))
+
+(defhydra hydra-comments-options (:color teal)
+  "
+    :comments options
+----------------------
+:comments [_n_] no (default)
+:comments [_l_] link
+:comments [_y_] yes (deprecated)
+:comments [_N_] noweb (advanced 'link')
+:comments [_o_] org (Insert preceding org text as plain comments)
+:comments [_b_] both (Turn on both 'link' and 'org')
+
+[_b_] back
+"
+  ("n" (progn
+         (insert-after-point " no")
+         (hydra-src-header-args/body)))
+  ("l" (progn
+         (insert-after-point " link")
+         (hydra-src-header-args/body)))
+  ("y" (progn
+         (message "Warning: ':comments yes' (deprecated) - same as ':comments link'")
+         (hydra-comments-options/body)))
+  ("N" (progn
+         (insert-after-point " noweb")
+         (hydra-src-header-args/body)))
+  ("o" (progn
+         (insert-after-point " org")
+         (hydra-src-header-args/body)))
+  ("b" (progn
+         (insert-after-point " both")
+         (hydra-src-header-args/body)))
+  ("b" (hydra-src-header-args/body)))
+#+end_src
+
+#+begin_src elisp
+(completing-read '(helm-find-files-1))
+(completing-read)
+#+end_src
+
+I need to have helm-find-files or another helm source for return the directory path selected and insert it into the buffer.
+
+Define a new helm?
+
+#+begin_src elisp
+(setq helm-dir-source
+      '((name . "Select SRC block :dir")
+        (candidates . helm-source-find-files)
+        (action . (lambda (candidate)
+                    (message "%s" candidate)))))
+
+;; (defun helm-insert-dir ()
+;;   (interactive)
+;;   (insert 'identity
+;;           (helm :sources '(helm-dir-source)))
+;;   )
+#+end_src
+
+#+begin_src elisp
+(helm :sources '(helm-dir-source))
+#+end_src
+
+#+begin_src elisp
+(defhydra hydra-dir-options (:color teal)
+  "
+    :dir options
+----------------------
+:dir [_p_] projectile (default)
+
+[_b_] back
+"
+("n" (progn
+       (insert-after-point " no")
+       (hydra-src-header-args/body)))
+("y" (progn
+       (insert-after-point " yes")
+       (hydra-src-header-args/body)))
+("b" (hydra-src-header-args/body)))
+#+end_src
+
+The =hydra-push/pop= machinery, which will allow us to leave hydras and enter nests?:
+
+#+name: hydra push/pop
+#+begin_src elisp
+(defvar hydra-stack nil)
+
+(defun hydra-push (expr)
+  (push `(lambda () ,expr) hydra-stack))
+
+(defun hydra-pop ()
+  (interactive)
+  (let ((x (pop hydra-stack)))
+    (when x
+      (funcall x))))
+#+end_src
+
+#+RESULTS:
+: hydra-pop
+
+Should we also manage some evil bindings for org-babel?
+Another option would be to writing a function binding it to something like <enter>, and having a helm or hydra pop up for moving to the src_block of a given <<noweb>> reference:
+1. Jump to src_block
+2. Open in indirect buffer
+3. Open in =org-edit-special= buffer
+
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+hydra.el
+<<header-args options>>
+<<header-args hydra>>
+<<hydra push/pop>>
+#+end_src
+
+**** Misc:
+:PROPERTIES:
+:CREATED:  [2020-10-24 Sat 00:16]
+:ID:       ac4349b2-2c8d-463d-a9a7-3e1ce0fd2b47
+:END:
+
+This is just an example helm src block.
+#+begin_src elisp :results silent
+ (defhydra hydra-org-template (:color blue :hint nil)
+    "
+ _c_enter  _q_uote     _e_macs-lisp    _L_aTeX:
+ _l_atex   _E_xample   _p_erl          _i_ndex:
+ _a_scii   _v_erse     _P_erl tangled  _I_NCLUDE:
+ _s_rc     _n_ote      plant_u_ml      _H_TML:
+ _h_tml    ^ ^         ^ ^             _A_SCII:
+"
+    ("s" (hot-expand "<s"))
+    ("E" (hot-expand "<e"))
+    ("q" (hot-expand "<q"))
+    ("v" (hot-expand "<v"))
+    ("n" (hot-expand "<not"))
+    ("c" (hot-expand "<c"))
+    ("l" (hot-expand "<l"))
+    ("h" (hot-expand "<h"))
+    ("a" (hot-expand "<a"))
+    ("L" (hot-expand "<L"))
+    ("i" (hot-expand "<i"))
+    ("e" (hot-expand "<s" "emacs-lisp"))
+    ("p" (hot-expand "<s" "perl"))
+    ("u" (hot-expand "<s" "plantuml :file CHANGE.png"))
+    ("P" (hot-expand "<s" "perl" ":results output :exports both :shebang \"#!/usr/bin/env perl\"\n"))
+    ("I" (hot-expand "<I"))
+    ("H" (hot-expand "<H"))
+    ("A" (hot-expand "<A"))
+    ("<" self-insert-command "ins")
+    ("o" nil "quit"))
+
+  (require 'org-tempo) ; Required from org 9 onwards for old template expansion
+  ;; Reset the org-template expnsion system, this is need after upgrading to org 9 for some reason
+  (setq org-structure-template-alist (eval (car (get 'org-structure-template-alist 'standard-value))))
+  (defun hot-expand (str &optional mod header)
+    "Expand org template.
+
+STR is a structure template string recognised by org like <s. MOD is a
+string with additional parameters to add the begin line of the
+structure element. HEADER string includes more parameters that are
+prepended to the element after the #+HEADER: tag."
+    (let (text)
+      (when (region-active-p)
+        (setq text (buffer-substring (region-beginning) (region-end)))
+        (delete-region (region-beginning) (region-end))
+        (deactivate-mark))
+      (when header (insert "#+HEADER: " header) (forward-line))
+      (insert str)
+      (org-tempo-complete-tag)
+      (when mod (insert mod) (forward-line))
+      (when text (insert text))))
+
+  (define-key org-mode-map "<"
+    (lambda () (interactive)
+      (if (or (region-active-p) (looking-back "^"))
+          (hydra-org-template/body)
+        (self-insert-command 1))))
+
+  (eval-after-load "org"
+    '(cl-pushnew
+    '("not" . "note")
+      org-structure-template-alist))
+
+#+end_src
+
+** Module files
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:38]
+:ID:       708a4f2f-e37a-4f55-b792-cac22f651714
+:END:
+
+Finally putting everything together:
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/config.el
+<<org-ricing>>
+
+<<org-org>>
+
+<<org-literate>>
+
+<<org-academic>>
+
+<<org-brain config>>
+
+<<org-noter config>>
+
+(load! "+org-media-note.el")
+(load! "+org-protocol.el")
+#+end_src
+
+** TODO autohide drawers
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:31]
+:ID:       3ea4999c-d4f4-487c-a22e-eadddbc3cafa
+:END:
+A failed attempt at getting :PROPERTIES: drawers to autohide.
+#+begin_src elisp :tangle no
+;; (use-package! org
+;;   :config
+;;   (defun org-cycle-hide-drawers (state)
+;;     "Re-hide all drawers after a visibility state change."
+;;     (when (and (derived-mode-p 'org-mode)
+;;               (not (memq state '(overview folded contents))))
+;;       (save-excursion
+;;         (let* ((globalp (memq state '(contents all)))
+;;               (beg (if globalp
+;;                       (point-min)
+;;                       (point)))
+;;               (end (if globalp
+;;                       (point-max)
+;;                       (if (eq state 'children)
+;;                         (save-excursion
+;;                           (outline-next-heading)
+;;                           (point))
+;;                         (org-end-of-subtree t)))))
+;;           (goto-char beg)
+;;           (while (re-search-forward org-drawer-regexp end t)
+;;             (save-excursion
+;;               (beginning-of-line 1)
+;;               (when (looking-at org-drawer-regexp)
+;;                 (let* ((start (1- (match-beginning 0)))
+;;                       (limit
+;;                         (save-excursion
+;;                           (outline-next-heading)
+;;                             (point)))
+;;                       (msg (format
+;;                               (concat
+;;                                 "org-cycle-hide-drawers:  "
+;;                                 "`:END:`"
+;;                                 " line missing at position %s")
+;;                               (1+ start))))
+;;                   (if (re-search-forward "^[ \t]*:END:" limit t)
+;;                     (outline-flag-region start (point-at-eol) t)
+;;                     (user-error msg))))))))))
+
+;;   (defun org-toggle-properties ()
+;;     ;; toggle visibility of properties in current header if it exists
+;;     (save-excursion
+;;       (when (not (org-at-heading-p))
+;;         (org-previous-visible-heading 1))
+;;       (when (org-header-property-p)
+;;         (let* ((a (re-search-forward "\n\\:" nil t)))
+;;           (if (outline-invisible-p (point))
+;;               (outline-show-entry)
+;;             (org-cycle-hide-drawers 'all))))))
+
+;; )
+#+end_src
+
+* Org literate programming
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:35]
+:ID:       aa8703d1-3b49-4407-b106-346f385a2f24
+:header-args: :noweb-ref org-literate
+:END:
+
+We'll enable ~babel~ here and some languages.
+
+- This isn't actually needed by ~Doom~ and would prevent some of the startup optimisations.
+#+begin_src elisp :tangle no
+;; "setup org-babel."
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t)
+  ;; org-src-tab-acts-natively t)
+
+(after! ob
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     ;; (c          . t)
+     (calc       . t)
+     ;; (comint     . t)
+     ;; (ditaa      . t)
+     (dot        . t)
+     (emacs-lisp . t)
+     (gnuplot    . t)
+     ;; (haskell    . t)
+     ;; (js         . t)
+     (latex      . t)
+     (lisp       . t)
+     (makefile   . t)
+     ;; (python     . t)
+     ;; (ipython     . t)
+     ;; (r          . t)
+     ;; (restclient . t)
+     ;; (sagemath   . t)
+     (scheme     . t)
+     (shell      . t)
+     (sql        . t)
+     (sqlite     . t))))
+#+end_src
+
+Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
+Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
+#+begin_src elisp :tangle no
+;; (setq org-mode-hook #'display-line-numbers-mode)
+#+end_src
+
+This prevents issues with tangling, otherwise emacs attempts to ask for the default scheme implementation when it reaches blocks with scheme in it.
+#+begin_src elisp
+(setq geiser-default-implementation 'guile)
+#+end_src
+
+Async tangle on save https://github.com/bixuanzju/emacs.d/blob/master/emacs-init.org.
+This is setup to tangle ="~/org/org-brain/system.org"=, this file.,
+#+begin_src elisp :tangle no :results silent
+;; (use-package! async
+;;   :after org-brain
+;;   :config
+;;   (setq org-system-file (expand-file-name (concat org-brain-path "/system.org")))
+
+;;   (defun tangle-init-async ()
+;;     "If the current buffer is 'system.org' the code-blocks are tangled."
+;;     (when (equal (buffer-file-name) org-system-file)
+;;       (async-start
+;;        `(lambda ()
+;;           (require 'org)
+;;           (org-babel-tangle-file ,org-system-file))
+;;        (lambda (result)
+;;          (message "Tangled file compiled.")))))
+;;   (add-hook 'after-save-hook 'tangle-init-async))
+
+#+end_src
+
+Instead of the above let's use a package:
+#+begin_src elisp
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+
+A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][fix]] for the ="Don’t know how to format org-mode code"= [[https://github.com/hlissner/doom-emacs/issues/4129][error]] in Doom. No longer needed
+#+begin_src elisp :tangle no
+(setq +format-on-save-enabled-modes
+      '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
+            sql-mode         ; sqlformat is currently broken
+            tex-mode         ; latexindent is broken
+            ;; org-mode         ; a doom bug (may be fixed now)
+            latex-mode))
+#+end_src
+
+Let's write a function that
+#+begin_src elisp
+;; (defun )
+#+end_src
+
+* EXWM
+:PROPERTIES:
+:CREATED:  [2020-11-16 Mon 18:45]
+:ID:       d263ee0b-c782-4e59-9d52-2cf70d96cfba
+:header-args:elisp: :mkdirp yes :noweb yes
+:END:
+
+** Minimal starting
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:03]
+:ID:       35c06fd8-f238-4af1-aa4c-75351aab9065
+:END:
+#+BEGIN_SRC elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/config.el
+;;; desktop/exwm/config.el -*- lexical-binding: t; -*-
+(load! "+funcs")
+(use-package! xelb)
+(use-package! exwm
+  :init
+  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h)
+  (set-popup-rule! "^\\*EXWM\\*$" :ignore t)
+
+  (load! "+polybar")
+  (setq exwm-workspace-number 7)
+  ;;    (when exwm-hide-tiling-modeline
+                                        ;(add-hook 'exwm-mode-hook #'hidden-mode-line-mode))
+  (setq exwm-input-line-mode-passthrough t)
+
+ (load! "+settings")
+
+
+<<exwm main>>
+
+<<exwm buffer management>>
+
+<<exwm keybinds>>
+
+<<exwm-edit>>
+
+(exwm-enable))
+#+END_SRC
+
+** main options
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:03]
+:ID:       42725160-56b9-4b3b-b38a-dd81891c7427
+:END:
+#+BEGIN_SRC elisp :noweb-ref exwm main
+  :config
+  ;; make sure that displaying transient states gets the keyboard input.
+  ;; Borrowed from: https://github.com/abo-abo/hydra/issues/232
+  ;; (define-advice hydra-set-transient-map (:around (fun keymap on-exit &optional foreign-keys) exwm-passthrough)
+  ;;   (setq exwm-input-line-mode-passthrough t)
+  ;;   (let ((on-exit (lexical-let ((on-exit on-exit))
+  ;;                    (lambda ()
+  ;;                      (setq exwm-input-line-mode-passthrough nil)
+  ;;                      (when on-exit (funcall on-exit))))))
+  ;;     (funcall fun keymap on-exit foreign-keys)))
+
+  ;; (exwm-input-set-key (kbd "<s-return>")
+  ;; (lambda ()
+  ;; (interactive)
+  ;; (start-process-shell-command exwm-terminal-command nil exwm-terminal-command)))
+
+;; <<exwm-class-hook>>
+
+;; <<exwm-title-hook>>
+
+                                          ;    (add-hook 'exwm-update-class-hook 'exwm/rename-buffer)
+                                          ;    (add-hook 'exwm-update-title-hook 'exwm/rename-buffer)
+
+  ;; kick all exwm buffers into insert mode per default
+  (add-hook 'exwm-manage-finish-hook 'exwm/enter-insert-state)
+
+  ;; Quick swtiching between workspaces
+  (defvar exwm-toggle-workspace 0
+    "Previously selected workspace. Used with `exwm/jump-to-last-exwm'.")
+
+  ;; Buffer switching settings:
+  (setq exwm-workspace-show-all-buffers t)
+  (setq exwm-layout-show-all-buffers t)
+
+  (defadvice exwm-workspace-switch (before save-toggle-workspace activate)
+    (setq exwm-toggle-workspace exwm-workspace-current-index))
+
+  ;; `exwm-input-set-key' sets global key bindings, independent of char mode, line mode, and line mode passthru
+
+  ;; + We always need a way to get to normal state if we are in insert state.
+  (exwm-input-set-key (kbd "s-<escape>") 'exwm/escape)
+
+  (exwm-input-set-key (kbd "<s-tab>") #'exwm/jump-to-last-exwm)
+  ;; + Set shortcuts to switch to a certain workspace.
+  (exwm-input-set-key (kbd "s-1")
+                      (lambda () (interactive) (exwm-workspace-switch 0)))
+  (exwm-input-set-key (kbd "s-2")
+                      (lambda () (interactive) (exwm-workspace-switch 1)))
+  (exwm-input-set-key (kbd "s-3")
+                      (lambda () (interactive) (exwm-workspace-switch 2)))
+  (exwm-input-set-key (kbd "s-4")
+                      (lambda () (interactive) (exwm-workspace-switch 3)))
+  (exwm-input-set-key (kbd "s-5")
+                      (lambda () (interactive) (exwm-workspace-switch 4)))
+  (exwm-input-set-key (kbd "s-6")
+                      (lambda () (interactive) (exwm-workspace-switch 5)))
+  (exwm-input-set-key (kbd "s-7")
+                      (lambda () (interactive) (exwm-workspace-switch 6)))
+  (exwm-input-set-key (kbd "s-8")
+                      (lambda () (interactive) (exwm-workspace-switch 7)))
+  (exwm-input-set-key (kbd "s-9")
+                      (lambda () (interactive) (exwm-workspace-switch 8)))
+  (exwm-input-set-key (kbd "s-0")
+                      (lambda () (interactive) (exwm-workspace-switch 9)))
+
+  ;; in normal state/line mode, use the familiar i key to switch to input state
+  ;;  (evil-define-key 'normal exwm-mode-map (kbd "i") 'exwm-input-release-keyboard)
+  ;; (evil-define-key 'normal exwm-mode-map
+(after! exwm
+  (map! :map exwm-mode-map
+        :n "i" #'exwm/enter-insert-state))
+  ;; (push ?\i exwm-input-prefix-keys)
+  ;; (push ?\  exwm-input-prefix-keys)
+  ;;      (kbd "i") #'exwm/enter-insert-state)
+  ;; (map! :map exwm-mode-map
+  ;;       :n "i" #'exwm-input-release-keyboard)
+
+(setq exwm-workspace-warp-cursor t)
+#+END_SRC
+
+** Key bindings
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:03]
+:ID:       00c013c2-dbb0-4fc6-ab02-694dfc613b1a
+:END:
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+  ;; (setq exwm-input-prefix-keys
+  ;;       '(
+  ;;         ;; ?\C-x
+  ;;         ?\M-x
+  ;;         ;; ?\M-m
+  ;;         ;; ?\C-g
+  ;;         ;; ?\C-m
+  ;;         ;; ?\C-h
+  ;;         ;; ?\C-р                         ; cyrillic
+  ;;         ))
+
+  ;; (use-package! exwm-firefox-evil
+  ;;   :defer t
+  ;;   :config
+  ;;   (add-to-list 'exwm-firefox-evil-firefox-class-name "firefox")
+  ;;   (add-hook 'exwm-manage-finish-hook 'exwm-firefox-evil-activate-if-firefox))
+
+  ;; (use-package! +exwm-sm-evil
+  ;; (add-hook 'exwm-manage-finish-hook 'exwm-sm-evil-activate-if-sm))
+
+  ;; Define super-space as default leader key.
+  (exwm-input-set-key (kbd "s-SPC") doom-leader-map)
+
+  ;; EXWM does not bypass exwm-mode-map keybindings in line-mode, so the
+  ;; default bindings are still mapped to C-c.  We remap that to C-s-c.
+
+  ;; (define-keya/body)
+
+  (exwm-input-set-key (kbd "s-n") #'nanjigen/org-media-note-hydra/body)
+  ;; (exwm-input-set-key (kbd "s-N") #'org-journal-new-entry)
+  ;; (exwm-input-set-key (kbd "s-N") #'elfeed)
+  ;; (exwm-input-set-key (kbd "s-W") #'nmtui)
+  (exwm-input-set-key (kbd "s-v") #'exwm-floating-toggle-floating)
+  (exwm-input-set-key (kbd "s-Q") #'kill-buffer)
+  (exwm-input-set-key (kbd "s-q") #'kill-buffer-and-window)
+  ;; (exwm-input-set-key (kbd "s-<down-mouse-1>") #'exwm-input-move-event)
+  (exwm-input-set-key (kbd "s-e") #'mu4e)
+  (exwm-input-set-key (kbd "s-o") #'link-hint-open-link)
+  ;; TODO possibly have N for journal entries and another n for somekind of popup/dropdown notetaking
+  (exwm-input-set-key (kbd "s-<f1>") #'helm-info)
+  ;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
+  ;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
+  ;; (exwm-input-set-key (kbd "s-<f8>") #'scrot)
+  ;; (exwm-input-set-key (kbd "s-m") #'launch-mpsyt)
+  ;; (exwm-input-set-key (kbd "s-m") #'major-mode-hydra)
+  ;; (define-key exwm-mode-map (kbd "s-v") #'exwm-floating-toggle-floating)
+
+  ;; (exwm-input-set-key (kbd "s-:") 'helm-M-x)
+  ;; (exwm-input-set-key (kbd "s-;") 'evil-ex)
+  ;; (exwm-input-set-key (kbd "s-g") 'bookmark-jump)
+  ;; Shell (not a real one for the moment)
+
+  ;;    (push (concat (getenv "HOME") "/.local/share/applications/") counsel-linux-apps-directories)
+  ;;   (defun exwm/counsel-linux-app-format-function (name comment exec)
+  ;;     "Default Linux application name formatter.
+  ;; NAME is the name of the application, COMMENT its comment and EXEC
+  ;; the command to launch it."
+  ;;     (format "% -45s %s"
+  ;;             (propertize name 'face 'font-lock-builtin-face)
+  ;;             (or comment "")))
+  ;;   (setq counsel-linux-app-format-function #'exwm/counsel-linux-app-format-function)
+  ;;
+  (exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
+  ;; possible use helm because custom actions
+  ;; (exwm-input-set-key (kbd "s-D") #'helm-run-external-command)
+  (exwm-input-set-key (kbd "s-y") #'org-agenda)
+  (exwm-input-set-key (kbd "s-a") #'calc)
+  ;; (exwm-input-set-key (kbd "s-x") #'xflock4)
+  ;; (exwm-input-set-key (kbd "s-X") #'logout-menu)
+  ;; (exwm-input-set-key (kbd "s-I") #'launch-htop)
+  ;; (exwm-input-set-key (kbd "s-r") #'launch-ranger)
+  ;; (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+  (exwm-input-set-key (kbd "s-c") #'org-capture)
+  ;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
+
+;; (use-package! desktop-environment
+;;     :after exwm
+;;     :config (desktop-environment-mode)
+;;     :custom
+;;     (desktop-environment-brightness-small-increment "2%+")
+;;     (desktop-environment-brightness-small-decrement "2%-")
+;;     (desktop-environment-brightness-normal-increment "5%+")
+;;     (desktop-environment-brightness-normal-decrement "5%-"))
+
+(defun nanjigen/lockscreen ()
+  (interactive)
+  "simple shell call for locking screen"
+  (shell-command "betterlockscreen -l --display 1"))
+
+;; (defvar logoff-menu--title (with-faicon ))
+
+(pretty-hydra-define logoff-menu (:foreign-keys warn :title "logoff" :color blue :quit-key "q")
+  ("Actions"
+   (("l" nanjigen/lockscreen "lock computer")
+    ("s" nanjigen/shutdown "shutdown computer")
+    ("m" nanjigen/restart "restart computer")
+    ("Q" save-buffers-kill-terminal "exit Emacs and logout"))))
+
+  (exwm-input-set-key (kbd "s-x") #'logoff-menu/body)
+  (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
+  (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
+  (exwm-input-set-key (kbd "s-|") #'helm-bibtex)
+  ;; Window management
+  ;; (use-package! ace-window
+  ;;   :init
+  ;;   (setq ace-window-display-mode t))
+  ;; Undo window configurations
+  ;; (exwm-input-set-key (kbd "s-U") #'winner-undo)
+  (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
+  ;; (exwm-input-set-key (kbd "s-R") #'winner-redo)
+  (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
+  (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
+  ;; Change buffers
+  ;; (exwm-input-set-key (kbd "s-<space>") #'helm-M-x)
+  (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; try excluding EXWM buffers
+  (exwm-input-set-key (kbd "s-B") #'helm-exwm)
+  ;; Focusing windows
+  ;; (exwm-input-set-key (kbd "<s-f9>") #'exwm-sm-core-down)
+  (exwm-input-set-key (kbd "<f8>") #'exwm-sm-core-test)
+  ;; (exwm-input-set-key (kbd "<f7>") #'evil-window-left)
+  (exwm-input-set-key (kbd "s-h") #'evil-window-left)
+  (exwm-input-set-key (kbd "s-j") #'evil-window-down)
+  (exwm-input-set-key (kbd "s-k") #'evil-window-up)
+  (exwm-input-set-key (kbd "s-l") #'evil-window-right)
+  (exwm-input-set-key (kbd "s-\/") #'split-window-below)
+  (exwm-input-set-key (kbd "s-<return>") #'split-window-right)
+  ;; Moving Windows
+  (exwm-input-set-key (kbd "s-H") #'evil-window-move-far-left)
+  (exwm-input-set-key (kbd "s-J") #'evil-window-move-very-bottom)
+  (exwm-input-set-key (kbd "s-K") #'evil-window-move-very-top)
+  (exwm-input-set-key (kbd "s-L") #'evil-window-move-far-right)
+  ;; Resize
+  (exwm-input-set-key (kbd "s-Y") #'enlarge-window-horizontally)
+  (exwm-input-set-key (kbd "s-U") #'shrink-window)
+  (exwm-input-set-key (kbd "s-I") #'enlarge-window)
+  (exwm-input-set-key (kbd "s-O") #'shrink-window-horizontally)
+
+(defun nanjigen/min-max ()
+  (interactive)
+  (if (< 1 (count-windows))
+      (doom/window-maximize-buffer)
+    (winner-undo)))
+
+(exwm-input-set-key (kbd "s-f") #'nanjigen/min-max)
+
+
+  ;; Workspaces
+  (exwm-input-set-key (kbd "s-]") #'next-buffer)
+  (exwm-input-set-key (kbd "s-[") #'previous-buffer)
+
+  (exwm-input-set-key (kbd "s-'") #'helm-bookmarks)
+  ;; (exwm-input-set-key (kbd "s-i") #'exwm-edit--compose)
+  (exwm-input-set-key (kbd "s--") #'pulseaudio-control-decrease-volume)
+  (exwm-input-set-key (kbd "s-=") #'pulseaudio-control-increase-volume)
+  (exwm-input-set-key (kbd "s-0") #'pulseaudio-control-toggle-current-sink-mute)
+  ;; (exwm-input-set-key (kbd "s--") #'amixer-down)
+  ;; (exwm-input-set-key (kbd "s-=") #'amixer-up)
+  (exwm-input-set-key (kbd "<XF86AudioMute>") #'pulseaudio-control-toggle-current-sink-mute)
+
+  ;;   (use-package xbacklight
+  ;; :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
+  ;;        ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
+#+END_SRC
+
+Extra helm stuff
+#+begin_src elisp :noweb no
+  ;; TODO get this working for helm-brain
+  ;; https://occasionallycogent.com/emacs_custom_helm_actions/index.html
+  ;; (after! org-brain
+  ;;   :config
+  ;;   (defun cogent/switch-to-buffer-split-vert (name)
+  ;;     (select-window (split-window-right))
+  ;;     (switch-to-buffer name))
+  ;;   (defun cogent/switch-to-buffer-split-horiz (name)
+  ;;     (select-window (split-window-below))
+  ;;     (switch-to-buffer name))
+
+  ;;   (defun cogent/helm-brain-switch-vert (parsed-output &optional highlight-matches)
+  ;;     (let ((helm-brain-display-buffer-normal-method #'cogent/switch-to-buffer-split-vert))
+  ;;       (helm-brain--async-action parsed-output highlight-matches)))
+  ;;   (defun cogent/helm-brain-switch-horiz (parsed-output &optional highlight-matches)
+  ;;     (let ((helm-brain-display-buffer-normal-method #'cogent/switch-to-buffer-split-horiz))
+  ;;       (helm-brain--async-action parsed-output highlight-matches)))
+
+  ;;   ;; helm-brain defines the source when it's loaded, so we can add the action
+  ;;   ;; right away
+  ;;   (helm-add-action-to-source
+  ;;    "Open in horizontal split `C-s'" #'cogent/helm-brain-switch-horiz
+  ;;    helm-brain-process-source)
+  ;;   (helm-add-action-to-source
+  ;;    "Open in vertical split `C-v'" #'cogent/helm-brain-switch-vert
+  ;;    helm-brain-process-source)
+
+  ;;   (defun cogent/helm-brain-switch-vert-command ()
+  ;;     (interactive)
+  ;;     (with-helm-alive-p
+  ;;       (helm-exit-and-execute-action #'cogent/helm-brain-switch-vert)))
+  ;;   (defun cogent/helm-brain-switch-horiz-command ()
+  ;;     (interactive)
+  ;;     (with-helm-alive-p
+  ;;       (helm-exit-and-execute-action #'cogent/helm-brain-switch-horiz)))
+
+  ;;   (general-def helm-brain-map
+  ;;     "C-<enter>" #'cogent/helm-brain-switch-horiz-command
+  ;;     "C-v" #'cogent/helm-brain-switch-vert-command))
+
+  ;; (exwm-input-set-key (kbd "s-\\") #'exwm/multi-org-brain-helm)
+
+  ;; (defun exwm/helm-org-rifle-gtd ()
+  ;;   "A rifle for my gtd files"
+  ;;   (interactive)
+  ;;   (helm-org-rifle-files (list "~/org/personal.org"
+  ;;                               "~/org/work.org"
+  ;;                               "~/org/inbox.org"
+  ;;                               "~/org/someday.org")))
+#+end_src
+
+** buffer and window rules
+:PROPERTIES:
+:CREATED:  [2020-12-03 Thu 11:03]
+:ID:       1eea19ee-9c31-4eba-8327-4bbb5b81d40a
+:END:
+#+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
+  ;;; Some programs escape EXWM control and need be tamed.  See
+  ;; https://github.com/ch11ng/exwm/issues/287
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-title "WineDesktop - Wine desktop")
+  ;;                                            (string= exwm-title "Wine") managed t))
+
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "WineDesktop - Wine desktop") managed t))
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Explorer.exe/Default - Wine desktop") managed t))
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Wine") managed t))
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "explorer.exe") managed t))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Mousepad") managed t floating nil))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "SuperMemo 18") managed t floating nil))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "TotalWarhammer2")
+                                             managed t floating nil fullscreen t char-mode t))
+  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Wine") managed t floating nil))
+
+  (load! "+sm-window-rules")
+
+  ;; FIXME See if I can get this randr code working without affecting the above.
+  (use-package! exwm-randr
+    :config
+    (setq exwm-randr-workspace-output-plist '(0 "HDMI-A-0" 1 "DisplayPort-0"))
+    ;; (setq exwm-monitor-list '("HDMI1" "DP2"))
+    ;; https://github.com/ch11ng/exwm/issues/202#issuecomment-559222831
+    ;; (setq exwm-workspace-name-alist '((0 . "Dashboard")
+    ;;                                   (1 . "Code")
+    ;;                                   (2 . "Comms")
+    ;;                                   (3 . "Translation")
+    ;;                                   (4 . "Study")
+    ;;                                   (5 . "Reading")
+    ;;                                   (6 . "Extra")))
+
+    ;; (setq exwm-workspace-monitor-alist '(("Dashboard" . "HDMI1")
+    ;;                                      ("Code" . "HDMI1")
+    ;;                                      ("Comms" . "HDMI1")
+    ;;                                      ("Translation" . "HDMI1")
+    ;;                                      ("Study" . "HDMI1")
+    ;;                                      ("Reading" . "DP2")
+    ;;                                      ("Extra" . "DP2")))
+
+    ;; assign programs to workspaces
+    ;; https://emacs.stackexchange.com/questions/33107/in-exwm-emacs-x-window-manager-how-can-i-assign-apps-to-particular-workspaces
+    ;; (setq exwm-manage-configurations
+    ;;       '(((equal exwm-class-name "Anki")
+    ;;          workspace (car (rassoc "Study" exwm-workspace-name-alist)))))
+
+    ;; (setq exwm-manage-configurations
+    ;;       '(((equal exwm-class-name "Anki")
+    ;;          workspace 4)))
+
+    ;; (defun update-exwm-randr-workspace-monitor-plist ()
+    ;;       "Update exwm-randr-workspace-monitor-plist based on the current
+    ;;        value of exwm-workspace-monitor-alist"
+    ;;       (setq exwm-randr-workspace-monitor-plist (mapcan (lambda (workspace->monitor)
+    ;;                                                          (let ((workspace-number (car (rassoc (car workspace->monitor)
+    ;;                                                                                                exwm-workspace-name-alist)))
+    ;;                                                                 (monitor (cdr workspace->monitor)))
+    ;;                                                            (list workspace-number monitor)))
+    ;;                                                        exwm-workspace-monitor-alist)))
+    ;; (update-exwm-randr-workspace-monitor-plist)
+
+    (add-hook 'exwm-randr-screen-change-hook
+              (lambda ()
+                (start-process-shell-command
+                 ;; "xrandr" nil "xrandr --output HDMI1 --primary --mode 1920x1080_60.00 --pos 900x0 --rotate normal")))
+                 "xrandr" nil "xrandr --output HDMI-A-0 --primary --mode 1920x1080 --rotate normal --output DisplayPort-0 --left-of HDMI-A-0 --mode 1440x900 --rotate left"))))
+
+  ;; (setq exwm-randr-workspace-monitor-plist '())
+
+  (exwm-randr-enable)
+  #+END_SRC
+
+  #+BEGIN_SRC elisp :noweb-ref exwm-edit
+  (use-package! exwm-edit
+    :after exwm
+    :custom
+    (exwm-edit-bind-default-keys nil)
+
+    :config
+    (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
+    (defun exwm/on-exwm-edit-compose ()
+      ;; (spacemacs/toggle-visual-line-navigation-on)
+      (funcall 'org-mode))
+    ;; include frame height restrictions here?
+    (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
+#+END_SRC
+
+* Newsfeed
+:PROPERTIES:
+:CREATED:  [2021-05-16 Sun 16:33]
+:ID:       80c51341-56a9-4821-ba1e-fd7c1272880c
+:header-args: :tangle ~/.doom.d/modules/lang/org-private/+elfeed.el
+:END:
+** Keybinds
+:PROPERTIES:
+:CREATED:  [2021-05-16 Sun 16:33]
+:ID:       8fb84e98-19fb-49c0-9a7d-d62d1664a255
+:END:
+#+begin_src elisp
+ (map! :map elfeed-search-mode-map
+      :after elfeed-search
+      [remap kill-this-buffer] "q"
+      [remap kill-buffer] "q"
+      :n doom-leader-key nil
+      :n "q" #'+rss/quit
+      :n "e" #'elfeed-update
+      :n "r" #'elfeed-search-untag-all-unread
+      :n "u" #'elfeed-search-tag-all-unread
+      :n "s" #'elfeed-search-live-filter
+      :n "RET" #'elfeed-search-show-entry
+      :n "p" #'elfeed-show-pdf
+      :n "+" #'elfeed-search-tag-all
+      :n "-" #'elfeed-search-untag-all
+      :n "S" #'elfeed-search-set-filter
+      :n "b" #'elfeed-search-browse-url
+      :n "y" #'elfeed-search-yank)
+(map! :map elfeed-show-mode-map
+      :after elfeed-show
+      [remap kill-this-buffer] "q"
+      [remap kill-buffer] "q"
+      :n doom-leader-key nil
+      :nm "q" #'+rss/delete-pane
+      :nm "o" #'ace-link-elfeed
+      :nm "RET" #'org-ref-elfeed-add
+      :nm "n" #'elfeed-show-next
+      :nm "N" #'elfeed-show-prev
+      :nm "p" #'elfeed-show-pdf
+      :nm "+" #'elfeed-show-tag
+      :nm "-" #'elfeed-show-untag
+      :nm "s" #'elfeed-show-new-live-search
+      :nm "y" #'elfeed-show-yank)
+#+end_src
+
+** Usability enhancements
+:PROPERTIES:
+:CREATED:  [2021-05-16 Sun 16:33]
+:ID:       3bb6ad3b-c24a-4c66-b518-b8c46541da18
+:END:
+#+begin_src elisp
+ (after! elfeed-search
+  (set-evil-initial-state! 'elfeed-search-mode 'normal))
+(after! elfeed-show-mode
+  (set-evil-initial-state! 'elfeed-show-mode   'normal))
+
+(after! evil-snipe
+  (push 'elfeed-show-mode   evil-snipe-disabled-modes)
+  (push 'elfeed-search-mode evil-snipe-disabled-modes))
+#+end_src
+
+** Visual Enhancments
+:PROPERTIES:
+:CREATED:  [2021-05-16 Sun 16:33]
+:ID:       403a8963-4e40-492e-b6ad-33afea8609df
+:END:
+#+begin_src elisp
+(after! elfeed
+
+  (elfeed-org)
+  (use-package! elfeed-link)
+
+  (setq elfeed-search-filter "@1-week-ago +unread"
+        elfeed-search-print-entry-function '+rss/elfeed-search-print-entry
+        elfeed-search-title-min-width 80
+        elfeed-show-entry-switch #'pop-to-buffer
+        elfeed-show-entry-delete #'+rss/delete-pane
+        elfeed-show-refresh-function #'+rss/elfeed-show-refresh--better-style
+        shr-max-image-proportion 0.6)
+
+  (add-hook! 'elfeed-show-mode-hook (hide-mode-line-mode 1))
+  (add-hook! 'elfeed-search-update-hook #'hide-mode-line-mode)
+
+  (defface elfeed-show-title-face '((t (:weight ultrabold :slant italic :height 1.5)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-author-face `((t (:weight light)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (set-face-attribute 'elfeed-search-title-face nil
+                      :foreground 'nil
+                      :weight 'light)
+
+  (defadvice! +rss-elfeed-wrap-h-nicer ()
+    "Enhances an elfeed entry's readability by wrapping it to a width of
+`fill-column' and centering it with `visual-fill-column-mode'."
+    :override #'+rss-elfeed-wrap-h
+    (setq-local truncate-lines nil
+                shr-width 120
+                visual-fill-column-center-text t
+                default-text-properties '(line-height 1.1))
+    (let ((inhibit-read-only t)
+          (inhibit-modification-hooks t))
+      (visual-fill-column-mode)
+      ;; (setq-local shr-current-font '(:family "Merriweather" :height 1.2))
+      (set-buffer-modified-p nil)))
+
+  (defun +rss/elfeed-search-print-entry (entry)
+    "Print ENTRY to the buffer."
+    (let* ((elfeed-goodies/tag-column-width 40)
+           (elfeed-goodies/feed-source-column-width 30)
+           (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+           (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+           (feed (elfeed-entry-feed entry))
+           (feed-title
+            (when feed
+              (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+           (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+           (tags-str (concat (mapconcat 'identity tags ",")))
+           (title-width (- (window-width) elfeed-goodies/feed-source-column-width
+                           elfeed-goodies/tag-column-width 4))
+
+           (tag-column (elfeed-format-column
+                        tags-str (elfeed-clamp (length tags-str)
+                                               elfeed-goodies/tag-column-width
+                                               elfeed-goodies/tag-column-width)
+                        :left))
+           (feed-column (elfeed-format-column
+                         feed-title (elfeed-clamp elfeed-goodies/feed-source-column-width
+                                                  elfeed-goodies/feed-source-column-width
+                                                  elfeed-goodies/feed-source-column-width)
+                         :left)))
+
+      (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
+      (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
+      (insert (propertize title 'face title-faces 'kbd-help title))
+      (setq-local line-spacing 0.2)))
+
+  (defun +rss/elfeed-show-refresh--better-style ()
+    "Update the buffer to match the selected entry, using a mail-style."
+    (interactive)
+    (let* ((inhibit-read-only t)
+           (title (elfeed-entry-title elfeed-show-entry))
+           (date (seconds-to-time (elfeed-entry-date elfeed-show-entry)))
+           (author (elfeed-meta elfeed-show-entry :author))
+           (link (elfeed-entry-link elfeed-show-entry))
+           (tags (elfeed-entry-tags elfeed-show-entry))
+           (tagsstr (mapconcat #'symbol-name tags ", "))
+           (nicedate (format-time-string "%a, %e %b %Y %T %Z" date))
+           (content (elfeed-deref (elfeed-entry-content elfeed-show-entry)))
+           (type (elfeed-entry-content-type elfeed-show-entry))
+           (feed (elfeed-entry-feed elfeed-show-entry))
+           (feed-title (elfeed-feed-title feed))
+           (base (and feed (elfeed-compute-base (elfeed-feed-url feed)))))
+      (erase-buffer)
+      (insert "\n")
+      (insert (format "%s\n\n" (propertize title 'face 'elfeed-show-title-face)))
+      (insert (format "%s\t" (propertize feed-title 'face 'elfeed-search-feed-face)))
+      (when (and author elfeed-show-entry-author)
+        (insert (format "%s\n" (propertize author 'face 'elfeed-show-author-face))))
+      (insert (format "%s\n\n" (propertize nicedate 'face 'elfeed-log-date-face)))
+      (when tags
+        (insert (format "%s\n"
+                        (propertize tagsstr 'face 'elfeed-search-tag-face))))
+      ;; (insert (propertize "Link: " 'face 'message-header-name))
+      ;; (elfeed-insert-link link link)
+      ;; (insert "\n")
+      (cl-loop for enclosure in (elfeed-entry-enclosures elfeed-show-entry)
+               do (insert (propertize "Enclosure: " 'face 'message-header-name))
+               do (elfeed-insert-link (car enclosure))
+               do (insert "\n"))
+      (insert "\n")
+      (if content
+          (if (eq type 'html)
+              (elfeed-insert-html content base)
+            (insert content))
+        (insert (propertize "(empty)\n" 'face 'italic)))
+      (goto-char (point-min))))
+
+  )
+#+end_src
+
+** Functionality enhancements
+:PROPERTIES:
+:CREATED:  [2021-05-16 Sun 16:33]
+:ID:       c03f6fb9-2116-4848-ae64-1b509c9d46dc
+:END:
+#+begin_src elisp
+(after! elfeed-show
+  (require 'url)
+
+  (defvar elfeed-pdf-dir
+    (expand-file-name "pdfs/"
+                      (file-name-directory (directory-file-name elfeed-enclosure-default-dir))))
+
+  (defvar elfeed-link-pdfs
+    '(("https://www.jstatsoft.org/index.php/jss/article/view/v0\\([^/]+\\)" . "https://www.jstatsoft.org/index.php/jss/article/view/v0\\1/v\\1.pdf")
+      ("http://arxiv.org/abs/\\([^/]+\\)" . "https://arxiv.org/pdf/\\1.pdf"))
+    "List of alists of the form (REGEX-FOR-LINK . FORM-FOR-PDF)")
+
+  (defun elfeed-show-pdf (entry)
+    (interactive
+     (list (or elfeed-show-entry (elfeed-search-selected :ignore-region))))
+    (let ((link (elfeed-entry-link entry))
+          (feed-name (plist-get (elfeed-feed-meta (elfeed-entry-feed entry)) :title))
+          (title (elfeed-entry-title entry))
+          (file-view-function
+           (lambda (f)
+             (when elfeed-show-entry
+               (elfeed-kill-buffer))
+             (pop-to-buffer (find-file-noselect f))))
+          pdf)
+
+      (let ((file (expand-file-name
+                   (concat (subst-char-in-string ?/ ?, title) ".pdf")
+                   (expand-file-name (subst-char-in-string ?/ ?, feed-name)
+                                     elfeed-pdf-dir))))
+        (if (file-exists-p file)
+            (funcall file-view-function file)
+          (dolist (link-pdf elfeed-link-pdfs)
+            (when (and (string-match-p (car link-pdf) link)
+                       (not pdf))
+              (setq pdf (replace-regexp-in-string (car link-pdf) (cdr link-pdf) link))))
+          (if (not pdf)
+              (message "No associated PDF for entry")
+            (message "Fetching %s" pdf)
+            (unless (file-exists-p (file-name-directory file))
+              (make-directory (file-name-directory file) t))
+            (url-copy-file pdf file)
+            (funcall file-view-function file))))))
+
+  )
+#+end_src
+
+* General Issues
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       26e34a74-a46d-4d15-b436-7996d28ad452
+:END:
+** error in process filter: [XELB] Connection Failed: Invalid MIT-MAGIC-COOKIE-1 key
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       96d3a1ad-f779-4ff1-85ac-e1e7668831a0
+:END:
+
+This seems to be display/environment related.
+
+#+begin_src shell
+export DISPLAY=:1.0
+#+end_src
+
+* emacsclient
+:PROPERTIES:
+:CREATED:  [2021-07-19 Mon 16:51]
+:ID:       e6e7d838-ff92-4805-b0b9-f3ef665aa481
+:END:
+** emacsclient as editor in EXWM
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       001d0ca3-1fac-4629-b2b4-325961d07ac2
+:END:
+between .profile and files in .bin I need to set some config options for emacsclient
+** emacsclient as WM
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       bcad42bc-0bd3-4b74-a233-7aa2d76ea6eb
+:END:
+
+*** ~/.xinit
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       4d8b18e7-96cd-4217-81b4-7cdebf7f9118
+:END:
+I believe .xinitrc would be used in the case of running ~startx~
+from a TTY (i.e. in lieu of a DE). From ambrevar's dotfiles:
+https://gitlab.com/ambrevar/dotfiles/blob/master/.xinitrc
+
+#+begin_src shell
+#!/bin/sh
+
+## WARNING: If started from TTY on a multi-seat, the user must run 'startx &
+## vlock' to ensure the X locker cannot be bypassed.
+
+## Run site init scripts. Usually not necessary.
+if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+	for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+		[ -x "$f" ] && . "$f"
+	done
+	unset f
+fi
+
+## Source environment config.
+[ -f ~/.xprofile ] && . ~/.xprofile
+
+if [ $# -eq 0 ]; then
+	## With no argument, launch custom session.
+	conky | dzen2 -p -dock -ta l -fn "DejaVu Sans Mono" &
+	## `exwm-enable' has to be called before the frame is spawned.
+	emacs --daemon --eval "(require 'exwm)" -f exwm-enable
+	exec emacsclient -c
+fi
+
+exec "$@"
+
+#+end_src
+
+*** /bin/em
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       78067cbe-70d9-4942-9fe9-537f734d114f
+:END:
+This is the script that is called to run emacsclient as -c or -t dependent on
+situation. It is called by
+#+begin_src shell
+
+  #!/bin/sh
+
+  if [ "$1" = "-h" ]; then
+    cat <<EOF>&2
+  Usage: ${0##*/} [OPTIONS] [FILES]
+
+  Start emacsclient in terminal or in X window if possible. Server is started on
+  demand.
+
+  The calling script can have different names:
+
+  - emc: the Emacs instance is opened in the current terminal.
+  - emw: if graphical, tell the client to wait.
+
+  All emacsclient(1) options are supported:
+
+  $(emacsclient --help)
+
+  EOF
+    exit
+  fi
+
+  if [ "${0##*/}" = "emc" ]; then
+    ## Force terminal mode
+    param="-t"
+  else
+    ## If Emacs cannot start in graphical mode, -c will act just like -t.
+    param="-c"
+    if [ "${0##*/}" != "emw" ] && [ -n "$DISPLAY" ] && [ "$(emacs --batch -Q --eval='(message (if (fboundp '"'"'tool-bar-mode) "X" "TTY"))' 2>&1)" = X ]; then
+      ## Don't wait if not called with "emw" and if Emacs can start in graphical mode.
+      ## The Emacs batch test checks whether it was compiled with GUI suppport.
+      param="$param -n"
+    fi
+  fi
+
+  emacsclient $param -a "" "$@"
+
+#+end_src
+*** /bin/emc
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       20005ed2-d293-49c9-9040-bf589327976e
+:END:
+*** /bin/emw
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       68c309b4-62a9-4a8b-b3a5-43ae4bad464c
+:END:
+
+*** ~/.profile
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       af29239f-3450-4ac7-a3b2-9eb75e8e8633
+:END:
+#+begin_src shell
+So this fucking thing. Another gem from ambrevar, but with some (commmented) out
+code that doesn't really pertain to my (nonguix) system. It features some useful
+emacsclient configuration.
+
+https://gitlab.com/ambrevar/dotfiles/blob/master/.profile
+
+#!/bin/sh
+## This file should be automatically sourced by the login manager or Bash if
+## .bash_profile does not exist.  If this file is not automatically sourced,
+## do it from the shell config to me sure it applies to TTY as well.
+
+## Mask
+## Result for 027 is "rwxr-x---".  022 is the popular default.
+##
+## As a result applications make the bad assumption # that "others" have access.
+## Another drawback of 027 is that is behaves badly with default sudo config: for
+## instance "sudo mkdir foo" will effectively create a "foo" folder whose owner
+## is root and with permission 027, even if root's umask is 022.  This is
+## usually very bad.
+## See https://wiki.archlinux.org/index.php/Sudo#Permissive_umask.
+##
+## It is possible to override sudo's umask by adding the following to the
+## sudoers file:
+##
+## Defaults umask = 0022
+## Defaults umask_override
+# umask 027
+
+
+
+## Preliminary path definitions.  For security reasons (and bad programming
+## assumptions) you should always append entries to PATH, not prepend them.
+appendpath () {
+	[ $# -eq 2 ] && PATHVAR=$2 || PATHVAR=PATH
+	[ -d "$1" ] || return
+	eval echo \$$PATHVAR | grep -q "\(:\|^\)$1\(:\|$\)" && return
+	eval export $PATHVAR="\$$PATHVAR:$1"
+}
+prependpath () {
+	[ $# -eq 2 ] && PATHVAR=$2 || PATHVAR=PATH
+	[ -d "$1" ] || return
+	eval echo \$$PATHVAR | grep -q "\(:\|^\)$1\(:\|$\)" && return
+	eval export $PATHVAR="$1:\$$PATHVAR"
+}
+
+## Use this to override system executables.
+# prependpath "${HOME}/personal/hackpool"
+
+# ## Last PATH entries.
+# appendpath "${HOME}/.local/bin"
+# command -v pacman >/dev/null 2>&1 && appendpath "${HOME}/.local/bin/pacman"
+
+## mcron: needs to be run after PATH is fully set or else local programs could
+## be missing.
+# if command -v mcron >/dev/null 2>&1; then
+# 	# TODO: Only start if not already started?
+# 	# pkill mcron
+# 	mcron &
+# fi
+
+## Remove less history.
+# LESSHISTFILE='-'
+
+## Manpage.
+# export MANPAGER="less -s"
+# export MANWIDTH=80
+
+## Time display (with ls command for example).  GNU 'ls' only.
+export TIME_STYLE=+"|%Y-%m-%d %H:%M:%S|"
+
+## SSH-Agent
+## Set SSH to use gpg-agent
+# unset SSH_AGENT_PID
+# if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+#   export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+# fi
+# Set GPG TTY
+# export GPG_TTY=$(tty)
+# Refresh gpg-agent tty in case user switches into an X session
+# gpg-connect-agent updatestartuptty /bye >/dev/null
+
+## Linux specific
+if [ "$(uname -o)" = "GNU/Linux" ] ; then
+	## Startup error log.
+	## dmesg
+	log_dmesg="$(dmesg | grep -i error)"
+	[ -n "$log_dmesg" ] && echo "$log_dmesg" > "$HOME/errors-dmesg.log" || rm "$HOME/errors-dmesg.log" 2>/dev/null
+	## systemd
+	if command -v systemctl >/dev/null 2>&1; then
+		count="$(systemctl show | awk -F= '$1=="NFailedUnits" {print $2; exit}')"
+		if [ $count -ne 0 ]; then
+			systemctl -l --failed > "$HOME/errors-systemd.log"
+		else
+			rm -f "$HOME/errors-systemd.log"
+		fi
+	fi
+
+	## Set sound volume.  (Useless when running Pulseaudio.)
+	# amixer 2>/dev/null | grep -q PCM && amixer set PCM 100%
+
+	## External device auto-mounting.
+	## If already started, the new process will replace the old one.
+	if command -v udiskie >/dev/null 2>&1; then
+		udiskie &
+	elif command -v devmon >/dev/null 2>&1; then
+		devmon &
+	else
+		udisks-automount &
+	fi
+fi
+
+## Wine DLL overrides.
+## Remove the annoying messages for Mono and Gecko.
+export WINEDLLOVERRIDES="mscoree,mshtml="
+## Do not create desktop links or start menu entries.
+export WINEDLLOVERRIDES="$WINEDLLOVERRIDES;winemenubuilder.exe=d"
+
+## Pacman asp root.
+if command -v asp >/dev/null 2>&1; then
+	export ASPROOT="$HOME/.cache/asp"
+fi
+
+## Guix
+## WARNING: GUIX_PACKAGE_PATH is deprecated in favor of channels.
+# if command -v guix >/dev/null 2>&1; then
+# 	export GUIX_PACKAGE_PATH="$HOME/.guix-packages"
+# fi
+
+## Default text editor
+## 'em' is a custom wrapper for emacsclient. See '.bin/em'.
+## VISUAL is given priority by some programs like Mutt. This way we can separate
+## editors that wait from those that don't.
+for i in emacsclient em emacs vim vi nano; do
+	command -v $i >/dev/null 2>&1 && export EDITOR=$i && break
+done
+GIT_EDITOR="$EDITOR"
+VISUAL="$EDITOR"
+[ "$GIT_EDITOR" = em ] && GIT_EDITOR=emc
+[ "$VISUAL" = em ] && VISUAL=emw
+export GIT_EDITOR
+export VISUAL
+
+## $HOME software install
+## See http://nullprogram.com/blog/2017/06/19/.
+## The variables should not contain paths to non-existing folders as it may
+## break compilers.
+# prependpath "$HOME/.local/include" C_INCLUDE_PATH
+# prependpath "$HOME/.local/include" CPLUS_INCLUDE_PATH
+# prependpath "$HOME/.local/lib" LIBRARY_PATH
+# prependpath "$HOME/.local/lib/pkgconfig" PKG_CONFIG_PATH
+# prependpath "$HOME/.local/share/info" INFOPATH
+# prependpath "$HOME/.local/share/man" MANPATH
+## If you install a library in your home directory that is also installed on the
+## system, and then run a system program, it may be linked against your library
+## rather than the library installed on the system as was originally
+## intended. This could have detrimental effects.
+# export LD_LIBRARY_PATH=$HOME/.local/lib
+
+## Hook. Should be sourced last
+# [ -f ~/.profile_hook ] && . ~/.profile_hook
+## Hook example
+#
+# export CPPFLAGS=-I$HOME/local/usr/include
+# export LDFLAGS=-L$HOME/local/usr/lib
+#
+# appendpath "$HOME/local/usr/lib/python2.7/dist-packages/" PYTHONPATH
+# export LUA_CPATH="$HOME/local/usr/lib/lib?.so;$(lua -e "print(package.cpath)")"
+#
+# umask 077
+
+## End: Source .bashrc. The rc file should guard against non-interactive shells.
+[ "$(ps -o comm= $$)" != bash ] && return
+[ -f ~/.bashrc ] && . ~/.bashrc
+
+[ -z "$DISPLAY" ] && [ "$(tty)" = '/dev/tty1' ] && exec xinit -- vt01
+#+end_src
+
+
+** emacsclient as pdf tool
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       accd40fc-03d9-4a57-89a8-4d0956fcad5f
+:END:
+https://emacs.stackexchange.com/questions/19686/how-to-use-pdf-tools-pdf-view-mode-in-emacs/24502
+
+So that ranger can open pdfs in emacsclient/pdf-tools rather than external applications
+
+*** xdg-open
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       e15199de-c981-4b02-a005-4d92f47fce46
+:END:
+~/.local/share/applications/emacsclient.desktop
+
+#+begin_src conf
+[Desktop Entry]
+Name=Emacs Client
+Exec=emacsclient %u
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=application/pdf;
+#+end_src
+
+*** Then run
+:PROPERTIES:
+:CREATED:  [2020-05-16 Sat 12:08]
+:ID:       d9e1a39d-d4a5-4175-af0e-ae498d0293aa
+:END:
+#+begin_src sh
+xdg-mime default emacsclient.desktop application/pdf
+#+end_src
+
+* Ricing
+:PROPERTIES:
+:CREATED:  [2020-05-20 Wed 17:14]
+:ID:       234cc1a9-e265-4e24-839f-8cf76ceb5df5
+:END:
+:RESOURCES:
+- [[https://andreyorst.gitlab.io/posts/2020-05-10-making-emacs-tabs-look-like-in-atom/][Making Emacs tabs look like in Atom – Andrey Orst]]
+:END:
+
+Then set frame transparency:
+#+begin_src elisp :noweb yes :noweb-ref frame transparency
+;; (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(defconst doom-frame-transparency 94)
+(set-frame-parameter (selected-frame) 'alpha doom-frame-transparency)
+(add-to-list 'default-frame-alist `(alpha . ,doom-frame-transparency))
+#+end_src
+
+* Academic workflow
+:PROPERTIES:
+:CREATED:  [2020-09-29 Tue 14:16]
+:ID:       98d97a6b-9b42-4f02-92ee-b638e100d250
+:BRAIN_PARENTS: 98d0173d-34d2-4fda-916f-d19e8e5ef257
+:END:
+A unified setup for academic writing and reading/notarisation.
+
+** Features
+:PROPERTIES:
+:CREATED:  [2020-10-01 Thu 18:11]
+:ID:       ab9e1742-dce1-4807-91ac-547527a59b55
+:END:
++ Unification across applications via Emacs (as a textual interface)
++ Zotero, BBT and Zotfile as a backend
++ Org-mode, org-brain and pdf-tools as a frontend
++ Advanced
++ org-pdftools for notetaking
+
+** Zotero
+:PROPERTIES:
+:CREATED:  [2020-09-21 Mon 14:49]
+:ID:       0061e76f-7486-4b32-8aaa-4e6420708bd5
+:END:
+Zotero provides some excellent features for managing a bibtex file and corresponding pdfs.
+
+A good general guide for Zotero can be found from Berkeley [[https://guides.lib.berkeley.edu/c.php?g=4472&p=6647803][here]].
+
+I also want Zotero to install in another folder.
+
+Download and install from the AUR:
+
+#+begin_src sh
+yay -S zotero -y
+#+end_src
+
+Before setting anything up make sure that Zotero's attachment syncing is turned off.
+
+Then setup the [[https://retorque.re/zotero-better-bibtex/][Better Bibtex]] and [[http://zotfile.com/][zotfile]] add-ons for Zotero.
+Curl the latest .xpi (code seen from [[https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8][this]] github thread)
+#+begin_src sh
+cd ~/Downloads
+curl -s https://api.github.com/repos/retorquere/zotero-better-bibtex/releases/latest \
+| grep "browser_download_url.*xpi" \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi -
+#+end_src
+
+#+begin_src sh
+cd ~/Downloads \
+curl -s https://api.github.com/repos/jlegewie/zotfile/releases/latest \
+| grep "browser_download_url.*xpi" \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi -
+#+end_src
+
+Unfortunately add-ons have to be installed manually, clicking through ~Add-ons~ and finding the .xpi file.
+(it may be possible to script .xpi installs, see [[https://askubuntu.com/questions/73474/how-to-install-firefox-addon-from-command-line-in-scripts][here]])
+
+Set ~Bitter Bibtex~ to create =[auth:lower][year]= keys and zotfile to place pdfs as citekey refs in a single folder: ~Tools->Zotfile Preferences->Renaming Rules~ and change to ={%b}= (Better Bibtex regex).
+
+Then go to ~My Library~ and select all the items, ~right click->Better Bibtex->Refresh Bibtex Key~. When this has completed make sure all the items are still selected and ~right click->Manage Attachments->Rename Attachments~ to apply the zotfile renaming rule over the attached pdfs. These 2 steps may have to be repeated from time to time, as new items with a/b/c suffixes are added.
+
+** Manipulating pdfs
+:PROPERTIES:
+:CREATED:  [2020-09-29 Tue 14:21]
+:ID:       710ab76f-f0e2-473d-b479-7dc0e28d3f59
+:header-args: :noweb yes
+:END:
+To correct pdfs that lack a TOC and correct page labelling, we'll use the package [[https://github.com/dalanicolai/toc-mode/tree][toc-mode]]:
+
+Requirements:
+Firstly we'll need to install [[https://krasjet.com/voice/pdf.tocgen/][pdf.tocgen]], [[https://launchpad.net/ubuntu/bionic/+package/fntsample][fntsample]] and [[http://djvu.sourceforge.net/][djvulibre]].
+#+begin_src sh :dir /sudo::
+yay -S pdf.tocgen fntsample djvulibre mupdftools --noconfirm
+#+end_src
+
+~pdftk~ allows adding meta-page numbers (page labels) to pdfs. Before that however, we'll actually need to see if a given pdf has them or not.
+
+To view pagelabels as well as page numbers for =pdf-view= I use the following hack cobbled from a [[https://github.com/politza/pdf-tools/issues/204#issuecomment-227162863][pdf-tools issue]] and the doom-modeline [[https://github.com/seagle0128/doom-modeline/blob/ae2862a0335e0d9abee97850c84276ba3f3b874e/doom-modeline-segments.el#L2188-L2194][pdf segment]].
+
+#+NAME: pdftools modeline hack
+#+begin_src elisp
+   (after! pdf-view
+     :config
+     (define-pdf-cache-function pagelabels)
+
+     (defun doom-modeline-update-pdf-pages ()
+       "Update PDF pages."
+       (setq doom-modeline--pdf-pages
+             (format "  [P%s:%s/%s] "
+                     (eval '(nth (1- (pdf-view-current-page))
+                                 (pdf-cache-pagelabels)))
+                     (number-to-string (pdf-view-current-page))
+                     (number-to-string (pdf-cache-number-of-pages))))))
+#+end_src
+
+Clean up the =outline-buffer= so that it doesn't have line numbers:
+#+begin_src elisp :noweb-ref pdf outline numbering
+(add-hook! 'pdf-outline-buffer-mode-hook #'doom-disable-line-numbers-h)
+#+end_src
+****  pdftk and pagelabels
+:PROPERTIES:
+:CREATED:  [2020-10-01 Thu 10:20]
+:ID:       93db66a3-9e75-4fc7-b0f9-03734fc9e3a8
+:END:
+To correct pdfs that lack a TOC configurable via ~toc-mode~ and correct page numbering, we'll use [[https://www.pdflabs.com/docs/pdftk-cli-examples/][pdftk]]:
+The guide used was found on [[https://www.youtube.com/watch?v=5dv_02v0zzc][youtube]].
+
+To dump a given pdf's data:
+#+begin_src sh
+pdftk x.pdf dump_data > metadata.txt
+#+end_src
+
+Then we append this file with something like the following:
+#+begin_example text
+InfoBegin
+InfoKey: ModDate
+InfoValue: D:20200922190249
+InfoBegin
+InfoKey: CreationDate
+InfoValue: D:20010101000000
+InfoBegin
+InfoKey: Author
+InfoValue: Hulstijn, J.H
+InfoBegin
+InfoKey: Title
+InfoValue: Intentional and incidental second-language vocabulary learning: A reappraisal of elaboration, rehearsal and automaticity
+PdfID0: d084bab15233e7ecb3ef3413cd803884
+PdfID1: 62c6e63a08b2fdf7c8b97ba3c2d5f65c
+NumberOfPages: 39
+PageMediaBegin
+PageMediaNumber: 1
+PageMediaRotation: 0
+PageMediaRect: 0 0 595 842
+PageMediaDimensions: 595 842
+PageMediaBegin
+PageMediaNumber: 2
+PageMediaRotation: 0
+PageMediaRect: 0 0 595 842
+PageMediaDimensions: 595 842
+PageMediaBegin
+BookmarkBegin
+BookmarkTitle: Introduction
+BookmarkLevel: 1
+BookmarkPageNumber: 2
+BookmarkBegin
+BookmarkTitle: Vocabulary knowledge, learning and use
+BookmarkLevel: 1
+BookmarkPageNumber: 3
+BookmarkBegin
+BookmarkTitle: What does it mean to know a word?
+BookmarkLevel: 2
+BookmarkPageNumber: 3
+BookmarkBegin
+BookmarkTitle: How difficult is it to learn a new word?
+BookmarkLevel: 2
+BookmarkPageNumber: 5
+BookmarkBegin
+BookmarkTitle: How many words do L2 learners need to know?
+BookmarkLevel: 2
+BookmarkPageNumber: 6
+BookmarkBegin
+BookmarkTitle: Conclusion
+BookmarkLevel: 1
+BookmarkPageNumber: 28
+PageLabelBegin
+PageLabelNewIndex: 1
+PageLabelStart: 258
+PageLabelPrefix:
+PageLabelNumStyle: DecimalArabicNumerals
+#+end_example
+
+Once done editing the =metadata.txt= file, we load that into an output pdf.
+Note that ~pdftk~ won't allow us to output to the same file name as the input file, so maybe change it before hand.
+#+begin_src sh
+pdftk source.pdf update_info_utf8 metadata.txt output output.pdf
+#+end_src
+
+An alternative is the graphical [[http://jpdftweak.sourceforge.net/manual/index.html][jPDF Tweak]].
+**** pagelabels (page numbering)
+:PROPERTIES:
+:CREATED:  [2021-01-28 Thu 18:28]
+:ID:       5930a09e-846c-4950-8eee-492f30851469
+:END:
+Editing the custom naming schemes for pages is useful for academic research, as it allows us to add another page layer to a PDF document that matches its page range in a journal or some other source. It is often the case that a section of a journal is all that is needed, but for correct automated referencing to work the pagelabels need to match.
+To achieve this, we can use the python script, (conveniently named) [[https://github.com/lovasoa/pagelabels-py][pagelabels]]:
+
+Installation:
+#+begin_src sh
+python3 -m pip install --user --upgrade pagelabels
+#+end_src
+
+#+begin_src sh
+
+#+end_src
+** pdf-tools
+:PROPERTIES:
+:CREATED:  [2020-09-29 Tue 14:47]
+:ID:       d1b337fe-664e-49e8-a199-2e8b42cdca11
+:END:
+Here lets setup pdf-tools to work more efficiently with academic articles
+
+We also want ~pdf-tools~ as the pdf reader system-wide, so we need to set a mimefile:
+
+#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop
+[Desktop Entry]
+Name=Emacs Client
+Exec=emacsclient %u
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=application/pdf;
+#+end_src
+
+#+NAME: pdf
+#+begin_src elisp
+    (setq org-latex-compiler "xelatex")
+    (setq +latex-viewers '(pdf-tools))
+    ;; (setq org-latex-pdf-process '("latexmk -xelatex -bibtex -quiet -shell-escape -f %f"))
+    (setq-default TeX-engine 'xetex)
+
+    (use-package! pdf-view
+      :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
+      ;; :hook (pdf-tools-enabled . hide-mode-line-mode)
+      :config
+      (setq pdf-view-midnight-colors '("#ABB2BF" . "#282C35"))
+      (setq pdf-annot-default-annotation-properties '((color . "#ff0000"))))
+
+    ;; (map!
+    ;;  :map pdf-view-mode-map
+    ;;  :n )
+
+#+end_src
