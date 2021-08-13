@@ -2847,6 +2847,7 @@ Let's write a function that
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       00c013c2-dbb0-4fc6-ab02-694dfc613b1a
 :END:
+
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
   ;; (setq exwm-input-prefix-keys
   ;;       '(
