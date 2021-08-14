@@ -1437,7 +1437,11 @@ IE8 has a 32KB limitation :(
   <<org-media-note config>>
 
   <<org-media-note gif>>
+
   <<additional hydra functions>>
+
+  <<modified org-media hydra>>
+
   )
 #+end_src
 
@@ -1513,7 +1517,7 @@ Use timestamp to name screenshot files instead of appended file paths (too long 
 #+end_src
 
 Additionally we can allow a more automated workflow for annotating screenshots in an external image manipulating tool:
-#+begin_src elisp
+#+begin_src elisp :noweb-ref image annotation
 (defun nanjigen/org-link-file-path-at-point ()
   "Get the path of the file referred to by the link at point."
   (let* ((org-element (org-element-context))
@@ -1548,7 +1552,7 @@ TODO
 - Screen key for selection style screenshot
 
 Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra-define-1][built-in]] =pretty-hydra-define+= for appending heads.
-#+begin_src elisp
+#+begin_src elisp :noweb-ref org-media hydra
 (setq org-html-self-link-headlines t)
 
   (pretty-hydra-define nanjigen/org-media-note-hydra
