@@ -2191,13 +2191,7 @@ StartupWMClass=sm18.exe
 :ID:       d3b44770-6bb2-4675-b451-3f388e0cb6da
 :END:
 
-** mpv
-:PROPERTIES:
-:CREATED:  [2021-01-15 Fri 19:28]
-:ID:       c64e5bb7-798e-44f7-a14a-8a14d04f3cf7
-:END:
-
-*** mpv input.conf
+** mpv input.conf
 :PROPERTIES:
 :CREATED:  [2021-01-31 Sun 11:17]
 :ID:       8c4df6c5-9b2b-4352-a1bc-31a11e4fd1b9
@@ -2397,27 +2391,6 @@ CTRL+SHIFT+p script-message chapterlist
 #+end_src
 
 An alternative to scripting with =lua= would be using the =fennel= language.
-
-It seems there is no =ob-fennel= implementation, which means I'll need to write one myself:
-** ob-fennel
-:PROPERTIES:
-:CREATED:  [2021-01-14 Thu 20:20]
-:ID:       71676b7b-53f0-42fe-af25-52ae5a219ba9
-:END:
-#+begin_src lisp
-(print a)
-#+end_src
-
-#+begin_src lisp
-(message "a")
-#+end_src
-
-** base lua
-:PROPERTIES:
-:CREATED:  [2021-01-14 Thu 20:21]
-:ID:       f9a514cb-66ba-47cc-af5b-992ceb43b7db
-:END:
-For now we can prototype with base lua.
 
 * elisp/subed and mpv
 :PROPERTIES:
