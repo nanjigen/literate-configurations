@@ -1422,6 +1422,8 @@ IE8 has a 32KB limitation :(
 :ID:       2986f9d8-8f09-40ed-a0a6-ce088d13325e
 :END:
 
+This handy package works with my ~Supermemo~ functions so that I can use incremental video note taking with org-mode from SM articles.
+
 #+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-media-note.el
 ;;; lang/org-private/+org-media-note.el -*- lexical-binding: t; -*-
 
