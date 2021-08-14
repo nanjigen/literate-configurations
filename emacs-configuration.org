@@ -2621,8 +2621,7 @@ We'll enable ~babel~ here and some languages.
 (after! ob
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '(
-     ;; (c          . t)
+   '((c          . t)
      (calc       . t)
      ;; (comint     . t)
      ;; (ditaa      . t)
@@ -2651,11 +2650,6 @@ Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poo
 ;; (setq org-mode-hook #'display-line-numbers-mode)
 #+end_src
 
-This prevents issues with tangling, otherwise emacs attempts to ask for the default scheme implementation when it reaches blocks with scheme in it.
-#+begin_src elisp
-(setq geiser-default-implementation 'guile)
-#+end_src
-
 Auto-tangle on save is comfy and having it in a package gives a clean config.
 #+begin_src elisp
 (use-package! org-auto-tangle
@@ -2676,6 +2670,7 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
   (remove-hook 'after-save-hook 'ag/reveal-and-move-back))
 (add-hook 'org-babel-pre-tangle-hook 'ag/org-reveal-after-save-on)
 (add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
+
 #+end_src
 
 A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][fix]] for the ="Don’t know how to format org-mode code"= [[https://github.com/hlissner/doom-emacs/issues/4129][error]] in Doom. No longer needed
@@ -2686,11 +2681,6 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
             tex-mode         ; latexindent is broken
             ;; org-mode         ; a doom bug (may be fixed now)
             latex-mode))
-#+end_src
-
-Let's write a function that
-#+begin_src elisp
-;; (defun )
 #+end_src
 
 * EXWM
