@@ -6,14 +6,14 @@ This is my literate config detailing the installation and management of Supermem
 
 Features:
 
-- Automated installation of SM18 under Wine (mostly via supermemo-wine)
+- Automated installation of SM18 under Wine (mostly via ~supermemo-wine~)
 - Emacs integration by the following means:
   + Emacs and EXWM x-window/buffer management
-    - Reliable named buffers navigateable through EXWM
-    - =display-buffer-alist= rules for SM windows; allows for window arrangement
-    - Burly bookmarking of SM views
+    - Reliable named buffers navigate-able through EXWM
+    - =display-buffer-alist= rules for SM windows; allowing for declarative window arrangement
+    - ~Burly~ bookmarking of SM views
   + Text-streams via =exwm-input--fake-key= (utilizing ~Autohotkey~ as a backend) allowing for
-    - vIM-style modal bindings with NORMAL and INPUT modes (EXWM).
+    - vIM-style modal bindings with NORMAL and Insert modes (EXWM).
     - Access to SM interface options as hydra-menus.
     - Item element editing in org buffers, with all markup converted back to HTML.
 
@@ -2410,6 +2410,7 @@ CTRL+SHIFT+p script-message chapterlist
 #+begin_src elisp
 (org-brain-open-resource (org-brain-entry-at-pt t))
 #+end_src
+
 * org-noter integration
 :PROPERTIES:
 :CREATED:  [2021-01-19 Tue 16:27]
