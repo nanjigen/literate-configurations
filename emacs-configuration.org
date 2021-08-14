@@ -2656,28 +2656,7 @@ This prevents issues with tangling, otherwise emacs attempts to ask for the defa
 (setq geiser-default-implementation 'guile)
 #+end_src
 
-Async tangle on save https://github.com/bixuanzju/emacs.d/blob/master/emacs-init.org.
-This is setup to tangle ="~/org/org-brain/system.org"=, this file.,
-#+begin_src elisp :tangle no :results silent
-;; (use-package! async
-;;   :after org-brain
-;;   :config
-;;   (setq org-system-file (expand-file-name (concat org-brain-path "/system.org")))
-
-;;   (defun tangle-init-async ()
-;;     "If the current buffer is 'system.org' the code-blocks are tangled."
-;;     (when (equal (buffer-file-name) org-system-file)
-;;       (async-start
-;;        `(lambda ()
-;;           (require 'org)
-;;           (org-babel-tangle-file ,org-system-file))
-;;        (lambda (result)
-;;          (message "Tangled file compiled.")))))
-;;   (add-hook 'after-save-hook 'tangle-init-async))
-
-#+end_src
-
-Instead of the above let's use a package:
+Auto-tangle on save is comfy and having it in a package gives a clean config.
 #+begin_src elisp
 (use-package! org-auto-tangle
   :defer t
