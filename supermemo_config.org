@@ -2191,6 +2191,17 @@ StartupWMClass=sm18.exe
 :ID:       d3b44770-6bb2-4675-b451-3f388e0cb6da
 :END:
 
+An alternative to scripting with =lua= would be using the =fennel= language.
+
+** TODO Embed fennel in mpv lua module
+:PROPERTIES:
+:CREATED:  [2021-08-14 Sat 12:34]
+:ID:       34ae3659-6881-476b-a132-0a3863ad8064
+:END:
+
+https://gitlab.com/technomancy/fennel-mode/-/blob/master/Readme.md
+https://fennel-lang.org/setup#embedding-fennel
+
 ** mpv input.conf
 :PROPERTIES:
 :CREATED:  [2021-01-31 Sun 11:17]
