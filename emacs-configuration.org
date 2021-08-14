@@ -3158,6 +3158,7 @@ Extra helm stuff
       :nm "-" #'elfeed-show-untag
       :nm "s" #'elfeed-show-new-live-search
       :nm "y" #'elfeed-show-yank)
+
 #+end_src
 
 ** Usability enhancements
@@ -3174,6 +3175,7 @@ Extra helm stuff
 (after! evil-snipe
   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
   (push 'elfeed-search-mode evil-snipe-disabled-modes))
+
 #+end_src
 
 ** Visual Enhancments
@@ -3292,9 +3294,8 @@ Extra helm stuff
               (elfeed-insert-html content base)
             (insert content))
         (insert (propertize "(empty)\n" 'face 'italic)))
-      (goto-char (point-min))))
+      (goto-char (point-min)))))
 
-  )
 #+end_src
 
 ** Functionality enhancements
@@ -3344,9 +3345,8 @@ Extra helm stuff
             (unless (file-exists-p (file-name-directory file))
               (make-directory (file-name-directory file) t))
             (url-copy-file pdf file)
-            (funcall file-view-function file))))))
+            (funcall file-view-function file)))))))
 
-  )
 #+end_src
 
 * General Issues
