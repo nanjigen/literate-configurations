@@ -1,4 +1,3 @@
-
 #+BRAIN_PARENTS: system
 #+TITLE: Supermemo configuration
 #+auto_tangle: t

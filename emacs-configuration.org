@@ -1420,10 +1420,9 @@ IE8 has a 32KB limitation :(
 :PROPERTIES:
 :CREATED:  [2021-02-18 Thu 14:05]
 :ID:       2986f9d8-8f09-40ed-a0a6-ce088d13325e
-:header-args: :noweb-ref org-media-note config
 :END:
 
-#+begin_src elisp :noweb-ref org-media-note :tangle ~/.doom.d/modules/lang/org-private/+org-media-note.el
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-media-note.el
 ;;; lang/org-private/+org-media-note.el -*- lexical-binding: t; -*-
 
 (use-package! org-media-note
@@ -1436,11 +1435,15 @@ IE8 has a 32KB limitation :(
   (setq org-media-note-use-refcite-first t)  ;; use videocite link instead of video link if possible
 
   <<org-media-note config>>
+
+  <<org-media-note gif>>
+  <<additional hydra functions>>
   )
 #+end_src
 
+
 TODO Make sure that the path is     ~
-#+begin_src elisp
+#+begin_src elisp :noweb-ref org-media-note gif
 (defun nanjigen/org-media-note-insert-gif ()
   "Use giffer to generate a gif from mpv's loop
 giffer's path is input-file output-file start-time end-time"
@@ -1476,7 +1479,8 @@ giffer's path is input-file output-file start-time end-time"
     (org-media-note--display-inline-images))))
 #+end_src
 
-#+begin_src elisp
+Use timestamp to name screenshot files instead of appended file paths (too long and breaks SM inline images!)
+#+begin_src elisp :noweb no
 (defun org-media-note-insert-screenshot ()
   "Insert current mpv screenshot into Org-mode note."
   (interactive)
@@ -1508,7 +1512,7 @@ giffer's path is input-file output-file start-time end-time"
     (org-media-note--display-inline-images)))
 #+end_src
 
-Additionally we can allow a more automated workflow for annotating screenshots:
+Additionally we can allow a more automated workflow for annotating screenshots in an external image manipulating tool:
 #+begin_src elisp
 (defun nanjigen/org-link-file-path-at-point ()
   "Get the path of the file referred to by the link at point."
@@ -1542,6 +1546,8 @@ TODO
 - Increment/decrement the a/b timestamp of a loop.
 - Clear a/b loop and move to b position of loop and continue watching
 - Screen key for selection style screenshot
+
+Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra-define-1][built-in]] =pretty-hydra-define+= for appending heads.
 #+begin_src elisp
 (setq org-html-self-link-headlines t)
 
@@ -1628,30 +1634,32 @@ TODO
        "Auto save screenshot" :toggle org-media-note-save-screenshot-p)
       ("t S" org-media-note-toggle-screenshot-with-sub
        "Screenshot with subtitles" :toggle org-media-note-screenshot-with-sub))))
+#+end_src
 
-  (defcustom org-media-note-crop-p nil
-    "When nil, allow cropping to start, otherwise stop cropping"
-    :type 'boolean)
+#+begin_src elisp :noweb-ref addtional hydra functions
+(defcustom org-media-note-crop-p nil
+  "When nil, allow cropping to start, otherwise stop cropping"
+  :type 'boolean)
 
-    (defun org-media-note-toggle-crop ()
-      "toggle cropping"
-      (interactive)
-      (if org-media-note-crop-p
-          (mpv-run-command "vf" "del" "-1")
-        (mpv-run-command "script-message-to" "crop" "start-crop")))
+(defun org-media-note-toggle-crop ()
+  "toggle cropping"
+  (interactive)
+  (if org-media-note-crop-p
+      (mpv-run-command "vf" "del" "-1")
+    (mpv-run-command "script-message-to" "crop" "start-crop")))
 
-    (defun org-media-note-toggle-crop ()
-      "toggle cropping"
-      (interactive)
-      (if org-media-note-crop-p
-          (progn
-          (mpv-run-command "set" "fullscreen" "no")
-            (mpv-run-command "vf" "del" "-1")
-            (setq org-media-note-crop-p nil))
-        (progn
-          (mpv-run-command "set" "fullscreen" "yes")
-          (mpv-run-command "script-message-to" "crop" "start-crop")
-          (setq org-media-note-crop-p t))))
+(defun org-media-note-toggle-crop ()
+  "toggle cropping"
+  (interactive)
+  (if org-media-note-crop-p
+      (progn
+        (mpv-run-command "set" "fullscreen" "no")
+        (mpv-run-command "vf" "del" "-1")
+        (setq org-media-note-crop-p nil))
+    (progn
+      (mpv-run-command "set" "fullscreen" "yes")
+      (mpv-run-command "script-message-to" "crop" "start-crop")
+      (setq org-media-note-crop-p t))))
 #+end_src
 
 *** org-brain
