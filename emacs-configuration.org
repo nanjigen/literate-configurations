@@ -568,6 +568,7 @@ Begin experimenting with lookup
    :repo "yilkalargaw/org-auto-tangle"))
 (package! org-ql)
 (package! org-appear)
+(package! org-download)
 (package! org-web-tools)
 (package! org-super-agenda)
 (package! org-superstar)

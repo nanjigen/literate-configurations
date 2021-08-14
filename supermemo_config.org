@@ -2981,25 +2981,28 @@ Attempting to move to max point in tree from https://emacs.stackexchange.com/que
 ;;
 #+end_src
 
-** Flameshot
+** TODO Automatic screenshots in org-noter with Flameshot
 :PROPERTIES:
 :CREATED:  [2021-06-02 Wed 17:04]
 :ID:       1b6ec7b5-1957-4b53-ad71-1f58f2b99fac
 :END:
 
 #+begin_src elisp
-(use-package! org-download)
+(use-package! org-download
+  :config
+  (setq org-download-method 'attach))
 
 (defun org-noter-insert-image-slice-note ()
   (interactive)
   (async-start (shell-command "flameshot gui")
                (progn
-                 ;; (switch-to-buffer )
-                 (shell-command "xdotool key --clearmodifiers super+Tab")
+                 (switch-to-buffer-other-window
+                  (window-buffer (org-noter--get-notes-window)))
+                 ;; (defmacro org-noter--with-selected-notes-window ...)
                  (async-start (org-noter-insert-note)
-                   (org-download-clipboard)))))
+                              (org-download-clipboard)))))
 
-(define-key org-noter-doc-mode-map (kbd "y") 'org-noter-insert-image-slice-note)
+(define-key org-noter-doc-mode-map (kbd "Y") 'org-noter-insert-image-slice-note)
 #+end_src
 
 ** old org-drill code
