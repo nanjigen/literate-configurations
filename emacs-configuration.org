@@ -1412,6 +1412,7 @@ Modified =org-html-headline= from [[file:~/.emacs.d/.local/straight/repos/org-mo
 :PROPERTIES:
 :CREATED:  [2021-02-18 Thu 14:05]
 :ID:       2986f9d8-8f09-40ed-a0a6-ce088d13325e
+:HEADER-ARGS: :noweb yes
 :END:
 
 This handy package works with my ~Supermemo~ functions so that I can use incremental video note taking with org-mode from SM articles.
@@ -1546,105 +1547,24 @@ TODO
 - Screen key for selection style screenshot
 
 Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra-define-1][built-in]] =pretty-hydra-define+= for appending heads.
+
 #+begin_src elisp :noweb-ref modified org-media hydra
 (setq org-html-self-link-headlines t)
 
-  (pretty-hydra-define nanjigen/org-media-note-hydra
-    (:color red
-     :title (org-media-note--hydra-title)
-     :hint nil)
-    ("File"
-     (("o" org-media-note-mpv-smart-play
-       (if (org-media-note-ref-cite-p)
-           (format "Open %s"
-                   (org-media-note--current-org-ref-key))
-         "Open file")
-       :width 20)
-      ("j"
-       (mpv-cycle-property "sub")
-       "toggle subtitles")
-      ("T"
-       (mpv-cycle-property "ontop")
-       "toggle ontop")
-      ("c"
-       (org-media-note-change-speed-by 0.1)
-       "increase speed")
-      ("x"
-       (org-media-note-change-speed-by -0.1)
-       "decrease speed")
-      ("z" org-media-note-mpv-toggle-speed "reset speed")
-      ("f" org-media-note-toggle-mirror-view "Toggle mirror flip"))
-     "Playback"
-     (("<SPC>" mpv-pause "Play/Pause")
-      ("l"
-       (mpv-run-command "ab-loop")
-       (let ((time-a (mpv-get-property "ab-loop-a"))
-             (time-b (mpv-get-property "ab-loop-b")))
-         (if (org-media-note--ab-loop-p)
-             (format "Clear A-B loop (%s - %s)"
-                     (org-media-note--seconds-to-hms time-a)
-                     (org-media-note--seconds-to-hms time-b))
-           (if (numberp time-a)
-               (format "Set B of A-B loop (%s - )"
-                       (org-media-note--seconds-to-hms time-a))
-             "Set A of A-B loop")))
-       :width 35)
-      ("g" org-media-note-goto-timestamp "Jump to the timestamp")
-      ("," (mpv-seek-backward 1) "Back 1s")
-      ("." (mpv-seek-forward 0.5) "Forward 1s")
-      ("<left>" mpv-seek-backward "Back 5s")
-      ("<right>" mpv-seek-forward "Forward 5s")
-      ("C-<left>"
-       (mpv-run-command "sub-seek" -1)
-       "Previous subtitle")
-      ("C-<right>"
-       (mpv-run-command "sub-seek" 1)
-       "Next subtitle"))
-     "Volume"
-     (("+"
-       (org-media-note-change-volume-by 5)
-       "Up")
-      ("-"
-       (org-media-note-change-volume-by -5)
-       "Down")
-      ("0" org-media-note-mpv-toggle-volume "toggle")
-      ("m"
-       (mpv-cycle-property "mute")
-       "(un)mute"))
-     "Note"
-     (("i" org-media-note-insert-link "Insert timestamp")
-      ("S" org-media-note-insert-screenshot "Insert Screenshot")
-        ("C" org-media-note-toggle-crop "Toggle cropping" :toggle org-media-note-crop-p)
-      ("s" org-media-note-insert-sub-text "Insert subtitle")
-      ("g" nanjigen/org-media-note-insert-gif "Insert Gif")
-      ("I p" org-media-note-insert-note-from-pbf
-       "Import from pbf")
-      ("I n" org-media-note-insert-note-from-noted
-       "Import from Noted"))
-     "Toggle"
-     (("t m" org-media-note-mode "Auto insert media item"
-       :toggle t)
-      ("t c" org-media-note-toggle-refcite "Use ref key instead of absolute path"
-       :toggle org-media-note-use-refcite-first)
-      ("t p" org-media-note-toggle-pause-after-insertion
-       "Pause media after insert link" :toggle org-media-note-pause-after-insert-link)
-      ("t s" org-media-note-toggle-save-screenshot
-       "Auto save screenshot" :toggle org-media-note-save-screenshot-p)
-      ("t S" org-media-note-toggle-screenshot-with-sub
-       "Screenshot with subtitles" :toggle org-media-note-screenshot-with-sub))))
+(pretty-hydra-define+ org-media-note-hydra ()
+  ("File"
+   (("f" org-media-note-toggle-mirror-view "Toggle mirror flip"))
+   "Playback"
+   (("," (mpv-seek-backward 1) "Back 1s")
+    ("." (mpv-seek-forward 0.5) "Forward 1s"))
+   "Toggle"
+   (("t c" org-media-note-toggle-crop "Toggle mpv cropping"))))
 #+end_src
 
-#+begin_src elisp :noweb-ref addtional hydra functions
+#+begin_src elisp :noweb-ref additional hydra functions
 (defcustom org-media-note-crop-p nil
   "When nil, allow cropping to start, otherwise stop cropping"
   :type 'boolean)
-
-(defun org-media-note-toggle-crop ()
-  "toggle cropping"
-  (interactive)
-  (if org-media-note-crop-p
-      (mpv-run-command "vf" "del" "-1")
-    (mpv-run-command "script-message-to" "crop" "start-crop")))
 
 (defun org-media-note-toggle-crop ()
   "toggle cropping"
@@ -2837,7 +2757,7 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
 
   ;; (define-keya/body)
 
-  (exwm-input-set-key (kbd "s-n") #'nanjigen/org-media-note-hydra/body)
+  (exwm-input-set-key (kbd "s-n") #'org-media-note-hydra/body)
   ;; (exwm-input-set-key (kbd "s-N") #'org-journal-new-entry)
   ;; (exwm-input-set-key (kbd "s-N") #'elfeed)
   ;; (exwm-input-set-key (kbd "s-W") #'nmtui)
