@@ -575,6 +575,7 @@ Begin experimenting with lookup
 (package! org-pdftools)
 (package! org-noter-pdftools)
 (package! org-sidebar)
+(package! org-sticky-header)
 (package! org-media-note :recipe
   (:host github
    :repo "yuchen-lea/org-media-note"))
@@ -1541,7 +1542,11 @@ images in the current buffer."
       (org-display-inline-images))))
 #+end_src
 
-TODO
+**** TODO Add =org-media-note-hydra= features
+:PROPERTIES:
+:CREATED:  [2021-08-24 Tue 15:54]
+:ID:       70d863c4-0725-4e6e-9d25-fe1ad8b0c12b
+:END:
 - Increment/decrement the a/b timestamp of a loop.
 - Clear a/b loop and move to b position of loop and continue watching
 
