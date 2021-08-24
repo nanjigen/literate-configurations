@@ -1544,10 +1544,8 @@ images in the current buffer."
 TODO
 - Increment/decrement the a/b timestamp of a loop.
 - Clear a/b loop and move to b position of loop and continue watching
-- Screen key for selection style screenshot
 
 Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra-define-1][built-in]] =pretty-hydra-define+= for appending heads.
-
 #+begin_src elisp :noweb-ref modified org-media hydra
 (setq org-html-self-link-headlines t)
 
