@@ -1035,6 +1035,7 @@ Automating export rules for org-files to LaTeX pdfs:
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 #+end_src
 
 This is imported into the file (I should create more)
@@ -1048,6 +1049,27 @@ This is imported into the file (I should create more)
 ,#+LATEX_HEADER: \usepackage[a4paper,% left=3cm,right=1cm]{geometry}
 %% top=1in,bottom=1in,% footskip=.25in]
 ,#+LATEX_HEADER: \addbibresource{/home/vrika/Documents/LaTeX/uni.bib}
+#+end_src
+
+These export options are required for embedding ~lua~ code into ~latex~ snippets in org-mode blocks.
+#+begin_src elisp :noweb-ref org-academic
+(setq org-latex-pdf-process
+  '("lualatex -shell-escape -interaction nonstopmode %f"
+    "lualatex -shell-escape -interaction nonstopmode %f"))
+
+(setq luamagick '(luamagick :programs ("lualatex" "convert")
+       :description "pdf > png"
+       :message "you need to install lualatex and imagemagick."
+       :use-xcolor t
+       :image-input-type "pdf"
+       :image-output-type "png"
+       :image-size-adjust (1.0 . 1.0)
+       :latex-compiler ("lualatex -interaction nonstopmode -output-directory %o %f")
+       :image-converter ("convert -density %D -trim -antialias %f -quality 100 %O")))
+
+(add-to-list 'org-preview-latex-process-alist luamagick)
+
+(setq org-preview-latex-default-process 'luamagick)
 #+end_src
 
 *** org-protocol
@@ -1555,7 +1577,7 @@ TODO
 - Screen key for selection style screenshot
 
 Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra-define-1][built-in]] =pretty-hydra-define+= for appending heads.
-#+begin_src elisp :noweb-ref org-media hydra
+#+begin_src elisp :noweb-ref modified org-media hydra
 (setq org-html-self-link-headlines t)
 
   (pretty-hydra-define nanjigen/org-media-note-hydra
