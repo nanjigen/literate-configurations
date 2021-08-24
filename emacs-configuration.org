@@ -1408,37 +1408,6 @@ Modified =org-html-headline= from [[file:~/.emacs.d/.local/straight/repos/org-mo
 
 #+end_src
 
-**** defunct: base64 images
-:PROPERTIES:
-:CREATED:  [2021-03-18 Thu 23:04]
-:ID:       0ea21e75-4410-4d69-a110-be87eaa90e40
-:END:
-Because SM is finicky with filepaths, lets ~base64~ encode our images so they reside within the HTML file itself, we'll redefine =org-html--format-image= to do this:
-IE8 has a 32KB limitation :(
-#+begin_src elisp :tangle no :noweb no
-(defun tob64 (filename)
-  "Transforms a file FILENAME in base64."
-  (base64-encode-string
-   (with-temp-buffer
-     (insert-file-contents filename)
-     (buffer-string))))
-
-(defun html-base64-images (text backend info)
-  "Replaces files links in TEXT with appropriate html string when BACKEND is html. INFO is ignored."
-  (when (org-export-derived-backend-p backend 'html)
-    (when (string-match "^<img" text)
-      (let ((filename (replace-regexp-in-string ".*=\"" "" (replace-regexp-in-string "\\\" .*" "" text))))
-      (format  "<img src=\"data:image/png;base64,%s\">" (tob64 "/home/vrika/org/.attach/89/59cf0a-dce5-4285-b418-71dc0147c3d5/extract-7.2072-9.943267.gif")))
-      )
-    )
-  )
-
-;; (add-to-list 'org-export-filter-link-functions 'html-base64-images)
-#+end_src
-
-#+RESULTS:
-: org-html--format-image
-
 *** org-media-note                                                   :ATTACH:
 :PROPERTIES:
 :CREATED:  [2021-02-18 Thu 14:05]
