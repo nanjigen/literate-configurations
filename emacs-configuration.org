@@ -1,5 +1,6 @@
 #+BRAIN_PARENTS: system
 #+TITLE: Doom Emacs Configuration
+#+PROPERTY: header-args :mkdirp yes
 #+auto_tangle: t
 
 Doom is currently used because of its OOB vim focus and performance. Eventually I'd like to build a EFS config but that would consume a lot of time.
