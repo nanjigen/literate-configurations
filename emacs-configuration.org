@@ -3240,6 +3240,14 @@ Can show completions at point for COMMAND using helm or ivy"
         when ecname
         collect (list :buffer-name name :exwm-class-name ecname)))
 #+end_src
+** polybar integration
+:PROPERTIES:
+:CREATED:  [2021-08-28 Sat 17:04]
+:ID:       a3502af2-236a-4be4-aa9d-7a2bc419c25b
+:END:
+
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+polybar.el
+(defvar sarg/polybar-process nil)
 
 (define-minor-mode sarg/polybar-mode
   "Show polybar."
