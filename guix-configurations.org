@@ -1,5 +1,6 @@
 #+TITLE: Guix System Configuration
 #+BRAIN_PARENTS: system
+#+PROPERTY: header-args :mkdirp yes
 
 Literate configurations for a fully declarative Guix system.
 
