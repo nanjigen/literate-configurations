@@ -15,9 +15,10 @@ Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels
 *~/.config/guix/channels.scm:*
 
 #+begin_src scheme :tangle ~/.config/guix/channels.scm
-  (list (channel
-          (name 'channel-x)
-          (url "file:///home/daviwil/Projects/Code/channel-x"))
+  (list
+   ;; (channel
+   ;;        (name 'channel-x)
+   ;;        (url "file:///home/daviwil/Projects/Code/channel-x"))
         (channel
           (name 'flat)
           (url "https://github.com/flatwhatson/guix-channel.git")
