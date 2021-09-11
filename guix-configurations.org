@@ -165,7 +165,7 @@ Override the default =%desktop-services= to add the =udev= backlight configurati
 
 Use the =libinput= driver for all input devices since it's a bit more modern than the default.
 
-#+begin_src scheme
+#+begin_src scheme :tangle ~/.config/guix/systems/base-system.scm
 
 (define %xorg-libinput-config
   "Section \"InputClass\"
@@ -196,90 +196,95 @@ Define the =base-operating-system= which will be inherited by all machine config
 
 (define-public base-operating-system
   (operating-system
-    (host-name "fenrir")
-    (timezone "Australia/Sydney")
-    (locale "en_AU.utf8")
+   (host-name "umbreon")
+   (timezone "Australia/Sydney")
+   (locale "en_AU.utf8")
 
-    ;; Use non-free Linux and firmware
-    (kernel linux)
-    (firmware (list linux-firmware))
-    (initrd microcode-initrd)
+   ;; Use non-free Linux and firmware
+   (kernel linux)
+   (firmware (list linux-firmware))
+   (initrd microcode-initrd)
 
-    ;; Choose US English keyboard layout.  The "altgr-intl"
-    ;; variant provides dead keys for accented characters.
-    (keyboard-layout (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
+   ;; Choose US English keyboard layout.  The "altgr-intl"
+   ;; variant provides dead keys for accented characters.
+   (keyboard-layout (keyboard-layout "au" "altgr-intl" #:model "thinkpad"))
 
-    ;; Use the UEFI variant of GRUB with the EFI System
-    ;; Partition mounted on /boot/efi.
-    (bootloader (bootloader-configuration
-                 (bootloader grub-efi-bootloader)
-                 (target "/boot/efi")
-                 (keyboard-layout keyboard-layout)))
+   ;; Use the UEFI variant of GRUB with the EFI System
+   ;; Partition mounted on /boot/efi.
+   ;; (bootloader (bootloader-configuration
+   ;;              (bootloader grub-efi-bootloader)
+   ;;              (target "/boot/efi")
+   ;;              (keyboard-layout keyboard-layout)))
 
+   (bootloader
+    (bootloader-configuration
+     (bootloader grub-bootloader)
+     (target "/dev/sda")
+     (keyboard-layout keyboard-layout)))
 
-    ;; Guix doesn't like it when there isn't a file-systems
-    ;; entry, so add one that is meant to be overridden
-    (file-systems (cons*
-                   (file-system
-                     (mount-point "/tmp")
-                     (device "none")
-                     (type "tmpfs")
-                     (check? #f))
-                   %base-file-systems))
+   ;; Guix doesn't like it when there isn't a file-systems
+   ;; entry, so add one that is meant to be overridden
+   (file-systems (cons*
+                  (file-system
+                   (mount-point "/tmp")
+                   (device "none")
+                   (type "tmpfs")
+                   (check? #f))
+                  %base-file-systems))
 
-    (users (cons (user-account
-                  (name "nanjigen")
-                  (comment "Daniel Otto")
-                  (group "users")
-                  (home-directory "/home/nanjigen")
-                  (supplementary-groups '(
-                                          "wheel"     ;; sudo
-                                          "netdev"    ;; network devices
-                                          "kvm"
-                                          "tty"
-                                          "input"
-                                          "docker"
-                                          "realtime"  ;; Enable realtime scheduling
-                                          "lp"        ;; control bluetooth devices
-                                          "audio"     ;; control audio devices
-                                          "video")))  ;; control video devices
+   (users (cons (user-account
+                 (name "nanjigen")
+                 (comment "Daniel Otto")
+                 (group "users")
+                 (home-directory "/home/nanjigen")
+                 (supplementary-groups '(
+                                         "wheel"     ;; sudo
+                                         "netdev"    ;; network devices
+                                         "kvm"
+                                         "tty"
+                                         "input"
+                                         "docker"
+                                         "realtime"  ;; Enable realtime scheduling
+                                         "lp"        ;; control bluetooth devices
+                                         "audio"     ;; control audio devices
+                                         "video")))  ;; control video devices
 
-                 %base-user-accounts))
+                %base-user-accounts))
 
-    ;; Add the 'realtime' group
-    (groups (cons (user-group (system? #t) (name "realtime"))
-                  %base-groups))
+   ;; Add the 'realtime' group
+   (groups (cons (user-group (system? #t) (name "realtime"))
+                 %base-groups))
 
-    ;; Install bare-minimum system packages
-    (packages (append (list
-                        git
-                        ntfs-3g
-                        exfat-utils
-                        fuse-exfat
-                        stow
-                        vim
-                        emacs
-                        bluez
-                        bluez-alsa
-                        pulseaudio
-                        tlp
-                        xf86-input-libinput
-                        nss-certs     ;; for HTTPS access
-                        gvfs)         ;; for user mounts
-                    %base-packages))
+   ;; Install bare-minimum system packages
+   (packages (append (list
+                      git
+                      ntfs-3g
+                      exfat-utils
+                      fuse-exfat
+                      stow
+                      vim
+                      emacs
+                      bluez
+                      bluez-alsa
+                      pulseaudio
+                      tlp
+                      xf86-input-libinput
+                      nss-certs     ;; for HTTPS access
+                      gvfs)         ;; for user mounts
+                     %base-packages))
 
-    ;; Use the "desktop" services, which include the X11 log-in service,
-    ;; networking with NetworkManager, and more
-    (services (cons* (service slim-service-type
-                              (slim-configuration
-                                (xorg-configuration
-                                  (xorg-configuration
-                                    (keyboard-layout keyboard-layout)
-                                    (extra-config (list %xorg-libinput-config))))))
+   ;; Use the "desktop" services, which include the X11 log-in service,
+   ;; networking with NetworkManager, and more
+   (services (cons* (service slim-service-type
+                             (slim-configuration
+                              (xorg-configuration
+                               (xorg-configuration
+                                (keyboard-layout keyboard-layout)
+                                (extra-config (list %xorg-libinput-config))))))
                     (service tlp-service-type
                              (tlp-configuration
-                                (cpu-boost-on-ac? #t)
-                                (wifi-pwr-on-bat? #t)))
+                              (cpu-boost-on-ac? #t)
+                              (wifi-pwr-on-bat? #t)))
                     (pam-limits-service ;; This enables JACK to enter realtime mode
                      (list
                       (pam-limits-entry "@realtime" 'both 'rtprio 99)
@@ -292,17 +297,17 @@ Define the =base-operating-system= which will be inherited by all machine config
                               (tls-port "16555")))
                     (service cups-service-type
                              (cups-configuration
-                               (web-interface? #t)
-                               (extensions
-                                 (list cups-filters))))
+                              (web-interface? #t)
+                              (extensions
+                               (list cups-filters))))
                     (service nix-service-type)
                     (bluetooth-service #:auto-enable? #t)
                     (remove (lambda (service)
-                                (eq? (service-kind service) gdm-service-type))
+                              (eq? (service-kind service) gdm-service-type))
                             %my-desktop-services)))
 
-    ;; Allow resolution of '.local' host names with mDNS
-    (name-service-switch %mdns-host-lookup-nss)))
+   ;; Allow resolution of '.local' host names with mDNS
+   (name-service-switch %mdns-host-lookup-nss)))
 
 #+end_src
 
@@ -395,45 +400,51 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 #+end_src
 
-*** okami
+*** umbreon
 :PROPERTIES:
 :CREATED:  [2020-12-21 Mon 12:10]
 :ID:       467da99b-abdc-4234-8b8e-f1baa1099bdf
 :END:
 
-=okami= is a ThinkPad T530.
+=umbreon= is a ThinkPad T530.
 
-*~/.config/guix/systems/okami.scm:*
+*~/.config/guix/systems/umbreon.scm:*
 
-#+begin_src scheme :tangle ~/.config/guix/systems/davinci.scm
+#+begin_src scheme :tangle ~/.config/guix/systems/umbreon.scm
 
 ;; NOTE: This file is generated from ~/.dotfiles/System.org.  Please see commentary there.
 
-(define-module (okami)
+(define-module (umbreon)
   #:use-module (base-system)
   #:use-module (gnu))
 
 (operating-system
  (inherit base-operating-system)
- (host-name "okami")
+ (host-name "umbreon")
 
- (mapped-devices
-  (list (mapped-device
-         (source (uuid "eaba53d9-d7e5-4129-82c8-df28bfe6527e"))
-         (target "system-root")
-         (type luks-device-mapping))))
-
- (file-systems (cons*
-                (file-system
-                 (device (file-system-label "system-root"))
-                 (mount-point "/")
-                 (type "ext4")
-                 (dependencies mapped-devices))
-                (file-system
-                 (device "/dev/nvme0n1p2")
-                 (mount-point "/boot/efi")
-                 (type "vfat"))
-                %base-file-systems)))
+  (mapped-devices
+    (list (mapped-device
+            (source
+              (uuid "602818e7-ce42-4532-a3fb-66c60472db3b"))
+            (target "cryptroot")
+            (type luks-device-mapping))
+          (mapped-device
+            (source
+              (uuid "06ba3493-7137-4c68-a351-677d0ece80fd"))
+            (target "crypthome")
+            (type luks-device-mapping))))
+  (file-systems
+    (cons* (file-system
+             (mount-point "/")
+             (device "/dev/mapper/cryptroot")
+             (type "ext4")
+             (dependencies mapped-devices))
+           (file-system
+             (mount-point "/home")
+             (device "/dev/mapper/crypthome")
+             (type "ext4")
+             (dependencies mapped-devices))
+           %base-file-systems)))
 
 #+end_src
 
@@ -441,7 +452,7 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 #+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep ""
 
-(when (equal system-name "okami")
+(when (equal system-name "umbreon")
   '((desktop/dpi . 130)
     (polybar/height . 25)
     (polybar/font-0-size . 12)
@@ -561,7 +572,7 @@ To install Guix on another machine, you first need to build need a USB image.  S
       ;; Add the 'net.ifnames' argument to prevent network interfaces
       ;; from having really long names.  This can cause an issue with
       ;; wpa_supplicant when you try to connect to a wifi network.
-      (kernel-arguments '("quiet" "modprobe.blacklist=radeon" "net.ifnames=0"))
+      (kernel-arguments '("quiet" "modprobe.blacklist=nouveau" "net.ifnames=0"))
 
       ;; Add some extra packages useful for the installation process
       (packages
