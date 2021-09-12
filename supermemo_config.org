@@ -2185,6 +2185,342 @@ StartupWMClass=sm18.exe
 #Concept group: Root: neruon (1: neuron)
 #+end_src
 
+* org-protocol
+:PROPERTIES:
+:CREATED:  [2021-02-19 Fri 13:42]
+:ID:       4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b
+:END:
+By using ~org-protocol~, we can call =emacsclient= from other applications by specifying a link recognised by the OS (whether is be Linux or Windows).
+
+First we declare a regedit for WINE, in which we allow Windows to recognise the ~org-protocol:~ scheme handler:
+https://github.com/nobiot/Zero-to-Emacs-and-Org-roam/blob/main/90.org-protocol.md
+#+begin_src conf
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\org-protocol]
+@="URL:Org Protocol"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\org-protocol\shell]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open\command]
+@="C:\\windows\\system32\\winebrowser.exe -nohome \"%1\""
+#+end_src
+
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-protocol.el
+;;; lang/org-private/+org-protocol.el -*- lexical-binding: t; -*-
+
+(use-package! org-protocol
+  :after org
+  :config
+  <<org-protocol handlers>>
+  )
+
+<<org-export backend>>
+
+#+end_src
+
+** Custom org-protocol handlers
+:PROPERTIES:
+:CREATED:  [2021-03-01 Mon 15:07]
+:ID:       c342cd1d-25eb-499f-9bf5-d1b4dbf1e470
+:header-args: :noweb-ref org-protocol handlers
+:END:
+Then we can write a custom org-id [[https://emacs.stackexchange.com/questions/47986/jump-to-org-mode-heading-from-external-application][protocol handler]]:
+#+begin_src elisp
+
+(add-to-list 'org-protocol-protocol-alist
+             '("org-id" :protocol "org-id"
+               :function org-id-protocol-goto-org-id))
+
+(defun org-id-protocol-goto-org-id (info)
+  "This handler simply goes to the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://org-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((id (plist-get info :id)))
+    (org-id-goto id))
+  nil)
+
+(defun org-id-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://org-id?id="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("brain-id" :protocol "brain-id"
+               :function brain-id-protocol-visualize-brain-id))
+
+(defun brain-id-protocol-visualize-brain-id (info)
+  "This handler visualizes the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://brain-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((id (plist-get info :id)))
+    (org-brain-visualize (or (org-brain-entry-from-id id))))
+  nil)
+
+(defun brain-id-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://brain-id?id="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("pdf-tools" :protocol "pdf-tools"
+               :function pdftools-protocol-pop-pdf))
+
+(defun pdftools-protocol-pop-pdf (info)
+  "This opens the highlight location of the given extract
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the org-pdf-tools link, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://brain-id?id=309A0509-81BE-4D51-87F4-D3F61B79EBA4"
+  (when-let ((link (plist-get info :pdf)))
+    (org-link-open-from-string (format "[[pdf:%s]]" link)))
+  nil)
+
+(defun pdf-tools-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://pdf-tools?pdf="
+                        (org-entry-get nil "NOTER_PAGE"))))
+
+(defun pdft-tools-protocol-htmlfier ()
+  (interactive)
+  (let ((pdf-link (org-entry-get nil "ID")))
+    (format "<a href=\"org-protocol://pdf-tools?pdf=%s\"></a>" pdf-link)))
+
+(defun pdf-tools-protocol-html-link-copy ()
+  (interactive)
+  (org-kill-new (concat "<a href=\"org-protocol://pdf-tools?pdf="
+                        (org-entry-get nil "NOTER_PAGE") "</a>")))
+
+#+end_src
+"<a href=\"org-protocol://brain-id?id=%s\">%s</a>"
+
+#+begin_src elisp
+(add-to-list 'org-protocol-protocol-alist
+             '("media-link" :protocol "media-link"
+               :function media-link-protocol-play-mpv-video))
+
+(defun media-link-protocol-play-mpv-video (info)
+  "This handler visualizes the org heading with given id using emacsclient.
+
+    INFO is an alist containing additional information passed by the protocol URL.
+    It should contain the id key, pointing to the path of the org id.
+
+      Example protocol string:
+      org-protocol://media-link?video=~/org/.attach/27/e2318b-7353-4004-943a-2f1d69b32209/doge_vid420.mpg#0:00:13"
+  (when-let ((link (plist-get info :video)))
+    (org-link-open-from-string (format "[[video:%s]]" link)))
+  nil)
+
+(defun media-link-protocol-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://media-link?video="
+                        (org-id-copy))))
+
+#+end_src
+
+#+begin_src elisp
+(defun media-link-protocol-play-cite-video (info)
+"This handler visualizes the org heading with given id using emacsclient.
+
+  INFO is an alist containing additional information passed by the protocol URL.
+  It should contain the id key, pointing to the path of the org id.
+
+    Example protocol string:
+    org-protocol://media-link?videocite=~/org/.attach/27/e2318b-7353-4004-943a-2f1d69b32209/doge_vid420.mpg#0:00:13"
+(when-let ((link (plist-get info :videocite)))
+  (org-link-open-from-string (format "[[videocite:%s]]" link)))
+nil)
+
+(defun media-link-protocol-cite-link-copy ()
+  (interactive)
+  (org-kill-new (concat "org-protocol://media-link?videocite="
+                        (org-media-note--current-org-ref-key))))
+#+end_src
+org-protocol://media-link?video=https://www.youtube.com/watch?v=lW3eWIj3Q04#0:03:28-0:03:39
+org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b
+[[org-protocol://org-id/?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b]]
+[[org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b]] ;; doesn't work
+
+Because we have defined a regedit, with the right formatting, html links will redirect to the org-protocol handler as well:
+#+begin_example html :tangle no
+<A href="org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b">Link text here</A>
+<A href="org-protocol://org-id?id=4dd04a25-b81d-4da3-b6d0-dc1ba9dd307b">** org-protocol</A>
+#+end_example
+
+This can be directly pasted into an element with either =e= (for Questions) or =a= (for Answers) and then =M-<F10>-x-p= (Element pane -> Text -> Paste Html)
+
+Now we can write a key script to automate this process, and bind it to a contextual hydra:
+
+** org-export backend
+:PROPERTIES:
+:CREATED:  [2021-03-01 Mon 15:07]
+:ID:       d2942d96-207d-4061-bcea-116f8a437b8d
+:header-args: :noweb-ref org-export backend
+:END:
+To automate the process, we can write extend the =org-export= backend with [[https://kitchingroup.cheme.cmu.edu/blog/2018/05/09/Making-it-easier-to-extend-the-export-of-org-mode-links-with-generic-functions/][org-link-set-parameters]] to introduce the above protocol link into header text automatically
+#+begin_src elisp
+(cl-defgeneric brain-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod brain-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://brain-id?id=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "brain" :export 'brain-link-export)
+#+end_src
+
+=video:= link exporter
+#+begin_src elisp
+(cl-defgeneric media-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod media-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?video=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "video" :export 'media-link-export)
+#+end_src
+
+=videocite:= link exporter
+#+begin_src elisp
+
+;; this one runs when the backend is equal to html
+(cl-defmethod media-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?video=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "video" :export 'media-link-export)
+
+;; for videocite links
+(cl-defgeneric videocite-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod videocite-link-export ((path t) (desc t) (backend (eql html)))
+ (format "<a href=\"org-protocol://media-link?videocite=%s\">%s</a>" path desc))
+
+(org-link-set-parameters "videocite" :export 'videocite-link-export)
+#+end_src
+
+cite:key reference exporter
+
+#+begin_src elisp
+(cl-defgeneric cite-link-export (path desc backend)
+ "Generic function to export a brain link."
+ path)
+
+;; this one runs when the backend is equal to html
+(cl-defmethod cite-link-export ((path t) (desc t) (backend (eql html)))
+  (format "<a href=\"%s\">%s:%s</a>" path path desc))
+
+(org-link-set-parameters "cite" :export 'cite-link-export)
+#+end_src
+
+Ideally targeting the ~:ID:~ property, extracting the =org-id= and generating the org-protocol link:
+https://emacs.stackexchange.com/questions/156/emacs-function-to-convert-an-arbitrary-org-property-into-an-arbitrary-string-na
+
+Modified =org-html-headline= from [[file:~/.emacs.d/.local/straight/repos/org-mode/lisp/ox-html.el::defun org-html-headline (headline contents info][ox-html.el]] :
+#+begin_src elisp
+(after! org
+  (setq org-html-self-link-headlines t)
+
+  (defun org-html-headline (headline contents info)
+    "Transcode a HEADLINE element from Org to HTML.
+    CONTENTS holds the contents of the headline.  INFO is a plist
+    holding contextual information."
+    (unless (org-element-property :footnote-section-p headline)
+      (let* ((numberedp (org-export-numbered-headline-p headline info))
+             (numbers (org-export-get-headline-number headline info))
+             (level (+ (org-export-get-relative-level headline info)
+                       (1- (plist-get info :html-toplevel-hlevel))))
+             (todo (and (plist-get info :with-todo-keywords)
+                        (let ((todo (org-element-property :todo-keyword headline)))
+                          (and todo (org-export-data todo info)))))
+             (todo-type (and todo (org-element-property :todo-type headline)))
+             (priority (and (plist-get info :with-priority)
+                            (org-element-property :priority headline)))
+             (text (org-export-data (org-element-property :title headline) info))
+             (tags (and (plist-get info :with-tags)
+                        (org-export-get-tags headline info)))
+             (full-text (funcall (plist-get info :html-format-headline-function)
+                                 todo todo-type priority text tags info))
+             (contents (or contents ""))
+             (id (org-html--reference headline info))
+             (brain-id (org-element-property :ID headline))
+             (formatted-text
+              ;; (if (plist-get info :html-self-link-headlines)
+              ;;     (format "<a href=\"#%s\">%s</a>" id full-text)
+              ;;   full-text)))
+              (if (plist-get info :html-self-link-headlines)
+                  (format "<a href=\"org-protocol://brain-id?id=%s\">%s</a>" brain-id full-text)
+                full-text)))
+        (if (org-export-low-level-p headline info)
+            ;; This is a deep sub-tree: export it as a list item.
+            (let* ((html-type (if numberedp "ol" "ul")))
+              (concat
+               (and (org-export-first-sibling-p headline info)
+                    (apply #'format "<%s class=\"org-%s\">\n"
+                           (make-list 2 html-type)))
+               (org-html-format-list-item
+                contents (if numberedp 'ordered 'unordered)
+                nil info nil
+                (concat (org-html--anchor id nil nil info) formatted-text)) "\n"
+               (and (org-export-last-sibling-p headline info)
+                    (format "</%s>\n" html-type))))
+          ;; Standard headline.  Export it as a section.
+          (let ((extra-class
+                 (org-element-property :HTML_CONTAINER_CLASS headline))
+                (headline-class
+                 (org-element-property :HTML_HEADLINE_CLASS headline))
+                (first-content (car (org-element-contents headline))))
+            (format "<%s id=\"%s\" class=\"%s\">%s%s</%s>\n"
+                    (org-html--container headline info)
+                    (format "outline-container-%s" id)
+                    (concat (format "outline-%d" level)
+                            (and extra-class " ")
+                            extra-class)
+                    (format "\n<h%d id=\"%s\"%s>%s</h%d>\n"
+                            level
+                            id
+                            (if (not headline-class) ""
+                              (format " class=\"%s\"" headline-class))
+                            (concat
+                             (and numberedp
+                                  (format
+                                   "<span class=\"section-number-%d\">%s</span> "
+                                   level
+                                   (mapconcat #'number-to-string numbers ".")))
+                             formatted-text)
+                            level)
+                    ;; When there is no section, pretend there is an
+                    ;; empty one to get the correct <div
+                    ;; class="outline-...> which is needed by
+                    ;; `org-info.js'.
+                    (if (eq (org-element-type first-content) 'section) contents
+                      (concat (org-html-section first-content "" info) contents))
+                    (org-html--container headline info)))))))
+  )
+
+#+end_src
+
 * SM (linux) mpv prototyping                                           :ATTACH:
 :PROPERTIES:
 :CREATED:  [2021-01-14 Thu 20:03]
