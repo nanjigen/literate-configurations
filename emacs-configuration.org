@@ -914,10 +914,6 @@ Basically, it seemed to me that the systemd ecosystem is generally better for al
 (package! org-media-note :recipe
   (:host github
    :repo "yuchen-lea/org-media-note"))
-;; (package! org-expiry :recipe
-;;   (:host github
-;;    :repo "tkf/org-mode"
-;;    :files ("contrib/lisp/org-expiry.el")))
 (package! org-expiry :recipe
   (:host github
    :repo "emacs-straight/org-mode"
