@@ -2223,7 +2223,193 @@ StartupWMClass=sm18.exe
 :CREATED:  [2021-01-04 Mon 15:52]
 :ID:       a04ab1f5-a77b-4dec-8c59-3276246dfb88
 :END:
+** fs monitoring
+:PROPERTIES:
+:CREATED:  [2021-09-19 Sun 17:46]
+:ID:       503009e6-6543-471d-b7a7-0bcfdf90aa94
+:END:
 
+Using =inotifywait= from the ~inotif-tools~ program we can watch the =$SM-COLLECTION/elements= folder recursively for file open events made by SuperMemo:
+#+begin_src elisp
+(start-process
+ "inotifywait"
+ "*inotifywait*"
+ "inotifywait" "-mrq" "-e" "open" "/home/nanjigen/Documents/SM/neuron/elements" "--include" ".HTM")
+#+end_src
+
+#+RESULTS:
+: #<process inotifywait>
+
+Setup a sentinel to watch for changes to the process buffer =*inotifywait*=
+#+begin_src elisp
+(defun msg-me (process event)
+  (princ
+   (format "Process: %s had the event '%s'" process event)))
+(set-process-sentinel (get-process "inotifywait") 'msg-me)
+#+end_src
+
+#+begin_src elisp
+(kill-process (get-process "inotifywait"))
+#+end_src
+
+#+begin_src elisp
+(set-process-filter (get-process "inotifywait") 'keep-output)
+#+end_src
+
+#+RESULTS:
+: keep-output
+
+#+begin_src elisp
+(defun keep-output (process output)
+    (setq kept (cons output kept)))
+
+(setq kept nil)
+;; (setq kept sm-paths)
+(setq sm-paths nil)
+#+end_src
+
+#+begin_src elisp
+(defun keep-output (process output)
+  (progn
+    (setq kept (cons output kept))
+    (sleep-for 0.1)
+    (store-sm-element-paths)
+    ;; (message %s (store-element-paths))
+    ;; (sleep-for 0.3)
+    (setq kept nil)))
+#+end_src
+
+#+RESULTS:
+: keep-output
+
+#+begin_src elisp
+(eval 'kept)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src elisp
+(eval 'sm-paths)
+#+end_src
+
+#+RESULTS:
+| /home/nanjigen/Documents/SM/neuron/elements/2/16/4/22850.HTM | /home/nanjigen/Documents/SM/neuron/elements/2/16/5/22854.HTM |
+
+#+begin_src elisp
+(defun store-sm-element-paths ()
+  (interactive)
+  (if (> (length kept) 1)
+      (let* ((answer-path (nth 0 (split-string (car kept) " ")))
+             (answer-file (substring
+                           (nth 2 (split-string (car kept) " ")) 0 -1))
+             (question-path (nth 0 (split-string (cadr kept) " ")))
+             (question-file (substring
+                             (nth 2 (split-string (cadr kept) " ")) 0 -1))
+             (answer (format "%s%s" answer-path answer-file))
+             (question (format "%s%s" question-path question-file)))
+        (setq sm-paths (list answer question)))
+    (let* ((article-path (nth 0 (split-string (car kept) " ")))
+           (article-file (substring
+                          (nth 2 (split-string (car kept) " ")) 0 -1))
+           (article (format "%s%s" article-path article-file)))
+      (setq sm-paths article))))
+#+end_src
+
+#+begin_src elisp
+(process-sentinel (get-process "inotifywait"))
+#+end_src
+
+Then we can parse these file read through to various =setq's= to be read in the background.
+** sm launcher
+:PROPERTIES:
+:CREATED:  [2021-09-20 Mon 07:42]
+:ID:       eec68fe9-9dc3-4591-9047-af0e4ea196b4
+:END:
+
+The wineprefix and drive_c should be named ~$PATHS~
+#+begin_src elisp
+(defun nanjigen/launch-sm-process ()
+  "Launch SM as a process with 'start-process-shell-command'"
+  (interactive)
+  (start-process-shell-command
+   "SuperMemo18"
+   "*Supermemo18*"
+   (combine-and-quote-strings '("env WINEPREFIX="
+                                "/home/nanjigen/.local/share/wineprefixes/supermemo18"
+                                " wine "
+                                "/home/nanjigen/.local/share/wineprefixes/supermemo18/drive_c/SuperMemo/sm18.exe"
+                                "") "\"")))
+#+end_src
+
+#+RESULTS:
+: nanjigen/launch-sm-process
+
+#+begin_src elisp
+(process-list)
+#+end_src
+
+#+RESULTS:
+| SuperMemo18 | *Guix Internal REPL* | Guile REPL | vterm | *bash-completion* | XELB | epdfinfo | server |
+
+#+begin_src elisp
+;; (process-command (get-process "SuperMemo18"))
+;; (process-id (get-process "SuperMemo18"))
+;; (get-process "SuperMemo18")
+;; (process-name (get-process "SuperMemo18"))
+;; (let* ((child-procs (alist-get 'comm (process-attributes 3335)))
+;;        ()))
+;; (process-attributes 3335)
+
+;; (exwm--update-class 3335)
+;; (exwm--id->buffer 8178896)
+(add-hook 'exwm-update-class-hook
+(defun rename-sm-class ()
+  "Rename sm18.exe class"
+  (when (string-match (rx "sm18.exe") exwm-instance-name)
+    (setq exwm-class-name exwm-instance-name))))
+#+end_src
+
+#+begin_src sh
+guix install dotnet@3
+#+end_src
+
+#+RESULTS:
+
+#+begin_src sh
+# xprop -id 3335
+# pgrep sm18.exe
+xdotool search --pid 3335
+# xdotool search --pid 3335 -- set_window --class sm18
+# xdotool search --name sm-element-window
+
+#+end_src
+
+#+RESULTS:
+| 81788965 |
+| 81788959 |
+| 81788961 |
+| 81788931 |
+| 81788930 |
+| 81788929 |
+| 81788936 |
+| 81788937 |
+| 81788938 |
+| 81788939 |
+| 81788940 |
+| 81788941 |
+| 81788945 |
+| 81788946 |
+| 81788953 |
+| 81788954 |
+| 81788955 |
+| 81788962 |
+| 81788960 |
+| 81788963 |
+| 81788964 |
+| 81788966 |
+| 81788968 |
+
+81788961
 ** sm yasnippet
 :PROPERTIES:
 :CREATED:  [2021-01-04 Mon 15:52]
@@ -2268,7 +2454,21 @@ Windows Registry Editor Version 5.00
 @="C:\\windows\\system32\\winebrowser.exe -nohome \"%1\""
 #+end_src
 
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-protocol.el
+#+begin_src sh
+wine regedit
+#+end_src
+
+#+begin_src conf :tangle ~/.local/share/applications/org-protocol.desktop
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient -n %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/lang/org-private/+org-protocol.el
 ;;; lang/org-private/+org-protocol.el -*- lexical-binding: t; -*-
 
 (use-package! org-protocol
@@ -2280,6 +2480,10 @@ Windows Registry Editor Version 5.00
 <<org-export backend>>
 
 #+end_src
+
+The whole protocol system can be fairly complex in terms of flow. Let's draw a diagram to better explain our intention:
+
+
 
 ** Custom org-protocol handlers
 :PROPERTIES:
@@ -2372,6 +2576,18 @@ Then we can write a custom org-id [[https://emacs.stackexchange.com/questions/47
 #+end_src
 "<a href=\"org-protocol://brain-id?id=%s\">%s</a>"
 
+We also want the ability to store an ~org-id~ UUID translated /back/ from the =attach-dir=. This will allow us to act upon the source file if we choose to take notes on the video file.
+
+#+begin_src elisp
+(defun org-attach-id-from-dir (id)
+  "Translate a org-attach dir folder-path back into an UUID ID"
+  (format "%s%s"
+  (substring id 0 2)
+  (substring id 3)))
+
+#+end_src
+
+Do some simple string splitting. This hopefully conforms to the way this kind of information is normally handled in =org-mode/org-media-note=.
 #+begin_src elisp
 (add-to-list 'org-protocol-protocol-alist
              '("media-link" :protocol "media-link"
@@ -2386,14 +2602,43 @@ Then we can write a custom org-id [[https://emacs.stackexchange.com/questions/47
       Example protocol string:
       org-protocol://media-link?video=~/org/.attach/27/e2318b-7353-4004-943a-2f1d69b32209/doge_vid420.mpg#0:00:13"
   (when-let ((link (plist-get info :video)))
-    (org-link-open-from-string (format "[[video:%s]]" link)))
-  nil)
+    (let* ((org-style-link (format "[[video:%s]]" link))
+           (splitted (split-string org-style-link "/"))
+           (id (format "%s%s"
+                       (nth 3 splitted)
+                       (nth 4 splitted))))
+        ;; (org-link-open-from-string (format "[[video:%s]]" link))
+        (setq org-protocol-uuid-from-media-link id)
+        (setq org-protocol-last-visited-link org-style-link)
+        (org-link-open-from-string org-style-link))
+        nil))
+
+  (defun nanjigen/org-media-note-jump-to-note ()
+    (interactive)
+    (let* ((buffer (org-id-find org-protocol-uuid-from-media-link))
+          (link-text (nth 5
+                          (split-string org-protocol-last-visited-link "/")))
+          (link-text-clean (substring link-text 0 -2)))
+      (progn
+        (org-id-open org-protocol-uuid-from-media-link t)
+        (org-narrow-to-subtree)
+        (search-forward link-text-clean)
+        (recenter nil))))
 
 (defun media-link-protocol-link-copy ()
   (interactive)
   (org-kill-new (concat "org-protocol://media-link?video="
                         (org-id-copy))))
 
+#+end_src
+
+Now we can use the stored variables and on request open the location of the link in a buffer for note-taking.
+
+See =org-noter--create-session= for inspiration
+#+begin_src elisp
+(defun nanjigen/org-media-note--create-session ()
+  (let* ((notes-buffer
+          (make-indirect-buffer)))))
 #+end_src
 
 #+begin_src elisp
@@ -2483,7 +2728,6 @@ To automate the process, we can write extend the =org-export= backend with [[htt
 #+end_src
 
 cite:key reference exporter
-
 #+begin_src elisp
 (cl-defgeneric cite-link-export (path desc backend)
  "Generic function to export a brain link."
