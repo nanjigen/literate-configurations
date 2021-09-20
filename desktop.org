@@ -393,6 +393,8 @@ The file =~/.config/mimeapps.list= configures default applications for various c
   x-scheme-handler/https=firefox.desktop
   x-scheme-handler/about=firefox.desktop
   x-scheme-handler/unknown=firefox.desktop
+  x-scheme-handler/org-protocol=org-protocol.desktop
+  application/pdf=emacsclient.desktop;mupdf.desktop;libreoffice-draw.desktop;libreoffice-writer.desktop;
 
 #+end_src
 
