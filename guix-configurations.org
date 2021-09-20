@@ -30,6 +30,9 @@ Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels
               (openpgp-fingerprint
                 "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
         (channel
+          (name 'channel-n)
+          (url "https://gitlab.com/nanjigen/channel-n.git"))
+        (channel
           (name 'nonguix)
           (url "https://gitlab.com/nonguix/nonguix"))
         (channel
@@ -556,7 +559,7 @@ To install Guix on another machine, you first need to build need a USB image.  S
     #:use-module (gnu packages version-control)
     #:use-module (gnu packages vim)
     #:use-module (gnu packages curl)
-    #:use-module (gnu packages emacs)
+    #:use-module (gnu packages emacs-next)
     #:use-module (gnu packages linux)
     #:use-module (gnu packages mtools)
     #:use-module (gnu packages package-management)
@@ -572,7 +575,7 @@ To install Guix on another machine, you first need to build need a USB image.  S
       ;; Add the 'net.ifnames' argument to prevent network interfaces
       ;; from having really long names.  This can cause an issue with
       ;; wpa_supplicant when you try to connect to a wifi network.
-      (kernel-arguments '("quiet" "modprobe.blacklist=nouveau" "net.ifnames=0"))
+      (kernel-arguments '("acpi_backlight" "quiet" "modprobe.blacklist=nouveau" "net.ifnames=0"))
 
       ;; Add some extra packages useful for the installation process
       (packages
