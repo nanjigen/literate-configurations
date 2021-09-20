@@ -705,34 +705,43 @@ A little function to assist with executing ahk.exe's
 #+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
 ;;; desktop/exwm/+exwm-sm-core.el -*- lexical-binding: t; -*-
 
-(defun ahk-run (ahk)
-    "pass an AHK .exe on to start-process-shell-command in a temp buffer"
-    (setq sm-current-buffer (current-buffer))
-      (progn
-        (when (posframe-workable-p)
-          (posframe-show "*ahk-run*"
-                         :height 30
-                         :width 30
-                         :internal-border-width 2
-                         :internal-border-width 2
-                         :internal-border-width "purple"))
-        (switch-to-buffer-other-frame "*ahk-run*")
-        ;; (switch-to-buffer "*ahk-run*"))
-        (let ((process (start-process-shell-command
-                        "ahk-run"
-                        "*ahk-run*"
-                        "env WINEPREFIX='/home/volk/.local/share/wineprefixes/supermemo18'"
-                        "wine" ahk)))
-          (set-process-sentinel process 'ahk-run-sentinel))))
+;; (defun ahk-run (ahk)
+;;     "pass an AHK .exe on to start-process-shell-command in a temp buffer"
+;;     (setq sm-current-buffer (current-buffer))
+;;       (progn
+;;         (when (posframe-workable-p)
+;;           (posframe-show "*ahk-run*"
+;;                          :height 30
+;;                          :width 30
+;;                          :internal-border-width 2
+;;                          :internal-border-width 2
+;;                          :internal-border-width "purple"))
+;;         (switch-to-buffer-other-frame "*ahk-run*")
+;;         ;; (switch-to-buffer "*ahk-run*"))
+;;         (let ((process (start-process-shell-command
+;;                         "ahk-run"
+;;                         "*ahk-run*"
+;;                         "env WINEPREFIX='/home/volk/.local/share/wineprefixes/supermemo18'"
+;;                         "wine" ahk)))
+;;           (set-process-sentinel process 'ahk-run-sentinel))))
 
-(defun ahk-run-sentinel (p e)
-"quit the popup buffer after successful run of shell process"
- (when (= 0 (process-exit-status p))
-   (posframe-hide "*ahk-run*")
-   (switch-to-buffer sm-current-buffer)))
+;; (defun ahk-run-sentinel (p e)
+;; "quit the popup buffer after successful run of shell process"
+;;  (when (= 0 (process-exit-status p))
+;;    (posframe-hide "*ahk-run*")
+;;    (switch-to-buffer sm-current-buffer)))
 
 
   ;; (exwm-input-release-keyboard)
+#+end_src
+
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+
+(defun ahk-run (ahk)
+  (start-process-shell-command
+  "ahk-run"
+  "*ahk-run*"
+  (format "%s %s" "wineconsole" ahk)))
 #+end_src
 
 ** Basic movement functions
@@ -781,18 +790,42 @@ A little function to assist with executing ahk.exe's
   (interactive)
   (ahk-run "~/.scripts/ahk/goto-child.exe"))
 
+;; ;;;###autoload
+;; (defun exwm-sm-core-forward ()
+;;   "Go forward element"
+;;   (interactive)
+;;   (let ((exwm-input-line-mode-passthrough t))
+;;     (ahk-run "~/.scripts/ahk/forward.exe")))
+
+
 ;;;###autoload
 (defun exwm-sm-core-forward ()
   "Go forward element"
   (interactive)
-  (ahk-run "~/.scripts/ahk/forward.exe"))
+    (ahk-run "~/.scripts/ahk/forward.exe"))
 
 ;;;###autoload
 (defun exwm-sm-core-back ()
   "Go back element"
   (interactive)
-  (ahk-run "~/.scripts/ahk/back.exe"))
+    (ahk-run "~/.scripts/ahk/forward.exe"))
+;; ;;;###autoload
+;; (defun exwm-sm-core-back ()
+;;   "Go back element"
+;;   (interactive)
+;;   (async-shell-command (format "%s %s" "wine cmd.exe /C" "~/.scripts/ahk/back.exe")))
 
+(add-to-list
+ 'display-buffer-alist
+  '("\\*Async Shell Command\\*"
+     (display-buffer-no-window)
+     (allow-no-window . t)))
+
+(add-to-list
+ 'display-buffer-alist
+  '("\\*EXWM\\*"
+     (display-buffer-no-window)
+     (allow-no-window . t)))
 #+end_src
 
 ** Find and search operations
@@ -1089,6 +1122,35 @@ A little function to assist with executing ahk.exe's
 "Get the file path of the current element"
   (interactive)
   (ahk-run "~/.scripts/ahk/get-filepath.exe"))
+
+(let ((unix-path (replace-regexp-in-string "\n\\'" ""
+                  (shell-command-to-string
+                   (shell-quote-argument "winepath -u $(xclip -sel clip -o)"))))))
+(shell-command "xclip -sel clip -o")
+
+(subst-char-in-string ?\\ ?\ (gui--selection-value-internal 'CLIPBOARD))
+
+z:\home\vrika\documents\sm\neuron\elements\1\26\15\16953.HTM
+(defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
+  "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+  (with-current-buffer buffer
+    (let ((read-event (exwm-input--mimic-read-event button-event)))
+      (exwm--log "%s" read-event)
+      (if (and read-event
+               (exwm-input--event-passthrough-p read-event))
+          ;; The event should be forwarded to emacs
+          (progn
+            (exwm-input--cache-event read-event)
+            (exwm-input--unread-event button-event)
+
+            xcb:Allow:ReplayPointer)
+        ;; The event should be replayed
+        xcb:Allow:ReplayPointer))))
 
 #+end_src
 

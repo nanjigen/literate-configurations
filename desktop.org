@@ -84,7 +84,7 @@ Gtk/CursorThemeName "Adwaita"
 Xft/Antialias 1
 Xft/Hinting 0
 Xft/HintStyle "hintnone"
-Xft/DPI <<dpi()>> # 1024 * DPI
+# Xft/DPI <<dpi()>> # 1024 * DPI
 
 #+end_src
 
@@ -134,6 +134,7 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 
 ;; Fonts
 "font-fira-code"
+"font-fira-mono"
 "font-jetbrains-mono"
 "font-iosevka"
 "font-iosevka-aile"
@@ -457,7 +458,6 @@ I use [[https://www.gnu.org/software/mcron/][GNU mcron]] for scheduling tasks to
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
-"firefox"
 "qutebrowser"
 "nyxt"
 
@@ -576,6 +576,14 @@ msw https://microsoft.sharepoint.com
 #+end_src
 
 ** Mail
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+"mu"
+"mbsync"
+
+#+end_src
+
 ** Password Management
 
 *Guix Packages*
@@ -661,6 +669,7 @@ These packages are needed to enable many video formats to be played in browsers 
 "gst-plugins-ugly"
 "gst-libav"
 "intel-vaapi-driver"
+"xf86-video-intel"
 "libva-utils"
 
 #+end_src
