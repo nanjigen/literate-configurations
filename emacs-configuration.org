@@ -2795,8 +2795,6 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
   ;; EXWM does not bypass exwm-mode-map keybindings in line-mode, so the
   ;; default bindings are still mapped to C-c.  We remap that to C-s-c.
 
-  ;; (define-keya/body)
-
   (exwm-input-set-key (kbd "s-n") #'org-media-note-hydra/body)
   ;; (exwm-input-set-key (kbd "s-N") #'org-journal-new-entry)
   ;; (exwm-input-set-key (kbd "s-N") #'elfeed)
@@ -2812,25 +2810,13 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
   ;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
   ;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
   ;; (exwm-input-set-key (kbd "s-<f8>") #'scrot)
-  ;; (exwm-input-set-key (kbd "s-m") #'launch-mpsyt)
   ;; (exwm-input-set-key (kbd "s-m") #'major-mode-hydra)
   ;; (define-key exwm-mode-map (kbd "s-v") #'exwm-floating-toggle-floating)
-
   ;; (exwm-input-set-key (kbd "s-:") 'helm-M-x)
   ;; (exwm-input-set-key (kbd "s-;") 'evil-ex)
   ;; (exwm-input-set-key (kbd "s-g") 'bookmark-jump)
   ;; Shell (not a real one for the moment)
 
-  ;;    (push (concat (getenv "HOME") "/.local/share/applications/") counsel-linux-apps-directories)
-  ;;   (defun exwm/counsel-linux-app-format-function (name comment exec)
-  ;;     "Default Linux application name formatter.
-  ;; NAME is the name of the application, COMMENT its comment and EXEC
-  ;; the command to launch it."
-  ;;     (format "% -45s %s"
-  ;;             (propertize name 'face 'font-lock-builtin-face)
-  ;;             (or comment "")))
-  ;;   (setq counsel-linux-app-format-function #'exwm/counsel-linux-app-format-function)
-  ;;
   (exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
   ;; possible use helm because custom actions
   ;; (exwm-input-set-key (kbd "s-D") #'helm-run-external-command)
@@ -2843,7 +2829,10 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
   ;; (exwm-input-set-key (kbd "s-r") #'exwm-reset)
   (exwm-input-set-key (kbd "s-c") #'org-capture)
   ;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
+#+END_SRC
 
+Desktop specific functions
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
 ;; (use-package! desktop-environment
 ;;     :after exwm
 ;;     :config (desktop-environment-mode)
@@ -2935,46 +2924,6 @@ A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][f
 
 Extra helm stuff
 #+begin_src elisp :noweb no
-  ;; TODO get this working for helm-brain
-  ;; https://occasionallycogent.com/emacs_custom_helm_actions/index.html
-  ;; (after! org-brain
-  ;;   :config
-  ;;   (defun cogent/switch-to-buffer-split-vert (name)
-  ;;     (select-window (split-window-right))
-  ;;     (switch-to-buffer name))
-  ;;   (defun cogent/switch-to-buffer-split-horiz (name)
-  ;;     (select-window (split-window-below))
-  ;;     (switch-to-buffer name))
-
-  ;;   (defun cogent/helm-brain-switch-vert (parsed-output &optional highlight-matches)
-  ;;     (let ((helm-brain-display-buffer-normal-method #'cogent/switch-to-buffer-split-vert))
-  ;;       (helm-brain--async-action parsed-output highlight-matches)))
-  ;;   (defun cogent/helm-brain-switch-horiz (parsed-output &optional highlight-matches)
-  ;;     (let ((helm-brain-display-buffer-normal-method #'cogent/switch-to-buffer-split-horiz))
-  ;;       (helm-brain--async-action parsed-output highlight-matches)))
-
-  ;;   ;; helm-brain defines the source when it's loaded, so we can add the action
-  ;;   ;; right away
-  ;;   (helm-add-action-to-source
-  ;;    "Open in horizontal split `C-s'" #'cogent/helm-brain-switch-horiz
-  ;;    helm-brain-process-source)
-  ;;   (helm-add-action-to-source
-  ;;    "Open in vertical split `C-v'" #'cogent/helm-brain-switch-vert
-  ;;    helm-brain-process-source)
-
-  ;;   (defun cogent/helm-brain-switch-vert-command ()
-  ;;     (interactive)
-  ;;     (with-helm-alive-p
-  ;;       (helm-exit-and-execute-action #'cogent/helm-brain-switch-vert)))
-  ;;   (defun cogent/helm-brain-switch-horiz-command ()
-  ;;     (interactive)
-  ;;     (with-helm-alive-p
-  ;;       (helm-exit-and-execute-action #'cogent/helm-brain-switch-horiz)))
-
-  ;;   (general-def helm-brain-map
-  ;;     "C-<enter>" #'cogent/helm-brain-switch-horiz-command
-  ;;     "C-v" #'cogent/helm-brain-switch-vert-command))
-
   ;; (exwm-input-set-key (kbd "s-\\") #'exwm/multi-org-brain-helm)
 
   ;; (defun exwm/helm-org-rifle-gtd ()
@@ -2994,20 +2943,9 @@ Extra helm stuff
 #+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
   ;;; Some programs escape EXWM control and need be tamed.  See
   ;; https://github.com/ch11ng/exwm/issues/287
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-title "WineDesktop - Wine desktop")
-  ;;                                            (string= exwm-title "Wine") managed t))
-
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "WineDesktop - Wine desktop") managed t))
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Explorer.exe/Default - Wine desktop") managed t))
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Wine") managed t))
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "explorer.exe") managed t))
   (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Mousepad") managed t floating nil))
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "SuperMemo 18") managed t floating nil))
   (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "TotalWarhammer2")
                                              managed t floating nil fullscreen t char-mode t))
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "Wine") managed t floating nil))
 
   (load! "+sm-window-rules")
 
@@ -3275,6 +3213,43 @@ Can show completions at point for COMMAND using helm or ivy"
         when ecname
         collect (list :buffer-name name :exwm-class-name ecname)))
 #+end_src
+** +settings
+:PROPERTIES:
+:CREATED:  [2021-08-28 Sat 17:08]
+:ID:       5107683b-2b3d-423b-b791-8f60a6acec2d
+:END:
+
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+settings
+;;; desktop/exwm/+settings.el -*- lexical-binding: t; -*-
+
+;; variables
+;; (defvar exwm-terminal-command "xterm"
+;;   "Terminal command to run.")
+(defvar exwm-terminal-command "st"
+  "Terminal command to run.")
+
+(defvar exwm-locking-command "i3lock"
+  "Command to run when locking session")
+
+(defvar exwm-install-logind-lock-handler nil
+  "If this is non-nil and `exwm-locking-command' is set, register a D-BUS handler on the session lock signal.")
+
+(defvar exwm-app-launcher--prompt "$ "
+  "Prompt for the EXWM application launcher")
+
+(defvar exwm-hide-tiling-modeline nil
+  "Whether to hide modeline.")
+
+(defvar exwm-buffer-name-prefix "X:"
+  "A prefix to append to each buffer managed by exwm")
+
+;; (defvar exwm-enable-systray t
+;;   "Whether to enable EXWM's bundled system tray implementation.")
+
+(defvar exwm-workspace-switch-wrap t
+  "Whether `exwm/workspace-next' and `exwm/workspace-prev' should wrap.")
+#+end_src
+
 ** polybar integration
 :PROPERTIES:
 :CREATED:  [2021-08-28 Sat 17:04]
@@ -3312,43 +3287,6 @@ Can show completions at point for COMMAND using helm or ivy"
           #'exwm-workspace--update-ewmh-desktop-names)
 (add-hook 'exwm-init-hook
           #'sarg/polybar-mode)
-#+end_src
-
-** +settings
-:PROPERTIES:
-:CREATED:  [2021-08-28 Sat 17:08]
-:ID:       5107683b-2b3d-423b-b791-8f60a6acec2d
-:END:
-
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+settings
-;;; desktop/exwm/+settings.el -*- lexical-binding: t; -*-
-
-;; variables
-;; (defvar exwm-terminal-command "xterm"
-;;   "Terminal command to run.")
-(defvar exwm-terminal-command "st"
-  "Terminal command to run.")
-
-(defvar exwm-locking-command "i3lock"
-  "Command to run when locking session")
-
-(defvar exwm-install-logind-lock-handler nil
-  "If this is non-nil and `exwm-locking-command' is set, register a D-BUS handler on the session lock signal.")
-
-(defvar exwm-app-launcher--prompt "$ "
-  "Prompt for the EXWM application launcher")
-
-(defvar exwm-hide-tiling-modeline nil
-  "Whether to hide modeline.")
-
-(defvar exwm-buffer-name-prefix "X:"
-  "A prefix to append to each buffer managed by exwm")
-
-;; (defvar exwm-enable-systray t
-;;   "Whether to enable EXWM's bundled system tray implementation.")
-
-(defvar exwm-workspace-switch-wrap t
-  "Whether `exwm/workspace-next' and `exwm/workspace-prev' should wrap.")
 #+end_src
 
 * Newsfeed
