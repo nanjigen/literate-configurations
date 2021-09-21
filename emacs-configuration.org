@@ -16,7 +16,7 @@ Core files for a doom config. The installation script will identify these and in
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:16]
 :ID:       c155e8b5-b80f-4dc2-864a-1c9a57c03608
-:header-args: :tangle ~/.doom.d/init.el
+:header-args: :noweb yes :tangle ~/.doom.d/init.el
 :END:
 
 #+begin_src elisp
@@ -48,7 +48,9 @@ Core files for a doom config. The installation script will identify these and in
 
          :desktop
          exwm
+#+end_src
 
+#+begin_src elisp
          :ui
          ;;deft              ; notational velocity for Emacs
          doom              ; what makes DOOM look the way it does
@@ -62,8 +64,10 @@ Core files for a doom config. The installation script will identify these and in
          nav-flash         ; blink the current line after jumping
          ;;neotree           ; a project drawer, like NERDTree for vim
          ophints           ; highlight the region an operation acts on
-         (popup +defaults)   ; tame sudden yet inevitable temporary windows
-         ligatures       ; replace bits of code with pretty symbols
+         (popup
+          +all
+          +defaults)   ; tame sudden yet inevitable temporary windows
+         (ligatures +extra)       ; replace bits of code with pretty symbols
          ;;tabs              ; an tab bar for Emacs
          treemacs          ; a project drawer, like neotree but cooler
          unicode           ; extended unicode support for various languages
@@ -72,7 +76,9 @@ Core files for a doom config. The installation script will identify these and in
          window-select     ; visually switch windows
          workspaces        ; tab emulation, persistence & separate workspaces
          zen               ; distraction-free coding or writing
+#+end_src
 
+#+begin_src elisp
          :editor
          (evil +everywhere); come to the dark side, we have cookies
          file-templates    ; auto-snippets for empty files
@@ -88,9 +94,10 @@ Core files for a doom config. The installation script will identify these and in
          word-wrap         ; soft wrapping with language-aware indent
 
          :emacs
-         dired             ; making dired pretty [functional]
+         (dired +icons)    ; making dired pretty [functional]
          electric          ; smarter, keyword-based electric-indent
-         ibuffer         ; interactive buffer management
+         undo              ; persistent, smarter undo for your inevitable mistakes
+         ibuffer           ; interactive buffer management
          vc                ; version-control and Emacs, sitting in a tree
 
          :term
@@ -111,7 +118,7 @@ Core files for a doom config. The installation script will identify these and in
          ;;direnv
          ;;docker
          editorconfig      ; let someone else argue about tabs vs spaces
-         ein               ; tame Jupyter notebooks with emacs
+         ;; ein               ; tame Jupyter notebooks with emacs
          (eval +overlay)     ; run code, run (also, repls)
          ;;gist              ; interacting with github gists
          (lookup              ; navigate your code and its documentation
@@ -119,7 +126,8 @@ Core files for a doom config. The installation script will identify these and in
           +docsets)
          ;;lsp
          ;;macos             ; MacOS-specific commands
-         magit             ; a git porcelain for Emacs
+         (magit             ; a git porcelain for Emacs
+          +forge)
          ;;make              ; run make tasks from Emacs
          pass              ; password manager for nerds
          pdf               ; pdf enhancements
@@ -128,7 +136,9 @@ Core files for a doom config. The installation script will identify these and in
          ;;terraform         ; infrastructure as code
          ;;tmux              ; an API for interacting with tmux
          ;;upload            ; map local to remote projects via ssh/ftp
+#+end_src
 
+#+begin_src elisp
          :lang
          ;;agda              ; types of types of types of types...
          ;;assembly          ; assembly for fun or debugging
@@ -137,7 +147,7 @@ Core files for a doom config. The installation script will identify these and in
          common-lisp       ; if you've seen one lisp, you've seen them all
          ;;coq               ; proofs-as-programs
          ;;crystal           ; ruby at the speed of c
-         ;; csharp            ; unity, .NET, and mono shenanigans
+         csharp            ; unity, .NET, and mono shenanigans
          data              ; config/data formats
          ;;elixir            ; erlang done right
          ;;elm               ; care for a cup of TEA?
@@ -168,7 +178,6 @@ Core files for a doom config. The installation script will identify these and in
           +brain           ; make your brain huge with org-mode
           +dragndrop       ; drag & drop files/images into org buffers
           ;;+hugo            ; use Emacs for hugo blogging
-          ;; +ipython        ; ipython/jupyter support for babel (deprecated??)
           +jupyter        ; ipython/jupyter support for babel
           +journal
           +pretty
@@ -195,7 +204,8 @@ Core files for a doom config. The installation script will identify these and in
          ;;solidity          ; do you need a blockchain? No.
          ;;swift             ; who asked for emoji variables?
          ;;terra             ; Earth and Moon in alignment for performance.
-         ;;web               ; the tubes
+         web               ; the tubes
+         yaml                         ; JSON, but readable
 
          :email
          (mu4e +gmail)
