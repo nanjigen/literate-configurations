@@ -3311,7 +3311,38 @@ Can show completions at point for COMMAND using helm or ivy"
           #'sarg/polybar-mode)
 #+end_src
 
-* Newsfeed
+* System Utilites
+
+Tool for managing shepherd from Emacs
+#+begin_src emacs-lisp
+
+  (use-package daemons
+    :commands daemons)
+
+#+end_src
+
+*Guix Packages*
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+  "emacs-daemons"
+
+#+end_src
+
+* Credential Management
+
+#+begin_src elisp
+(use-package! password-store
+  :config
+  (setq auth-sources '(password-store
+                       "~/.authinfo.gpg")))
+
+                                        ;(use-package! auth-source-pass)
+                                        ;(auth-source-pass-enable)
+
+#+end_src
+
+TODO Use [[https://github.com/DamienCassou/auth-password-store][auth-source-pass]]?* Newsfeed
 :PROPERTIES:
 :CREATED:  [2021-05-16 Sun 16:33]
 :ID:       80c51341-56a9-4821-ba1e-fd7c1272880c
