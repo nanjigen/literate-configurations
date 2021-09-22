@@ -19,6 +19,7 @@ Core files for a doom config. The installation script will identify these and in
 :header-args: :noweb yes :tangle ~/.doom.d/init.el
 :END:
 
+Base packages with Doom defaults
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
@@ -254,7 +255,7 @@ Core files for a doom config. The installation script will identify these and in
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 
-(setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
+(setq doom-font (font-spec :family "Fira Mono" :size 14))
 ;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
 ;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
 ;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
