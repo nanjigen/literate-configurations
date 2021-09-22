@@ -2,7 +2,7 @@
 #+BRAIN_PARENTS: system
 #+TITLE: Desktop Environment
 #+PROPERTY: header-args :mkdirp yes
-#+auto_tangle: t
+#+auto_tangle: nil
 
 This file contains configuration for my overall desktop environment.  My workflow is driven by Emacs but there are still a number of applications, tools, themes, and fonts that I must install to have a complete desktop experience.
 
@@ -879,70 +879,6 @@ sudo ln -f ~/.doom.d/exwm.desktop /usr/share/xsessions/exwm.desktop
 :ID:       5ad74110-2721-44dd-ae60-224f752f80e9
 :END:
 Lets setup mbsync first and then move on to the mu4e configuration
-
-** Email addresses:                                                    :crypt:
-:PROPERTIES:
-:CREATED:  [2020-05-16 Sat 12:08]
-:ID:       c70d40b6-d368-46d6-8fda-a8d8f96db28f
-:END:
-
------BEGIN PGP MESSAGE-----
-
-jA0EBwMCLZFcahuH1sD/0sDjAWz4bJWzgsCjxBBtqRRIZqtrh/Vr5df8JMO5fOUV
-vWbwcEun0vfDwxv7SAHL/gQADc8iHFYujK2Dq6AAuCCd7vjQjBzukaBAI7nrH409
-NRIJANpzs/0Me2bSmuv7oo5OYW2TpUQKQ5wQNaUTQ74MtBCK7JKdSvx4g6PDx1IW
-lLfuQSv0A8aNDIDDGFT8xczOt8uvvWlSG/qGVFFCvQMbXOcwLShY4pBA09AJSGrA
-x466xNn/J7XdeUXzpbtbWsSVWBw9IzTRaDgwB4PqaWoKtmILaYAF/0Obf/RFigot
-6YBGs+OSNGcF1vC3mvqfEOAvm3GAKbsvSew6XRVmgTVmmhhHmVJxDYIeaYsEqFf2
-SVV1ETJZwT0Zb01q/6ki+sfc4LwA/k1tlmMlO93nERXGxcdIzKr2+gSrs5q/+Mc6
-59rkAwkcrb64EXeUnIuxE9yuMa/+VxMa+IZta7ZjopLwiCsfNqg8tHSjjdYfg34X
-5H3PFF5PqV2bgQdyRqReQScdfIHPxoNTIC2ZbbEhccS+PWVb8RDK0UDZSDS9q3Lr
-HQIzdd0=
-=xbZH
------END PGP MESSAGE-----
-
-** mbsync                                                              :crypt:
-:PROPERTIES:
-:CREATED:  [2020-07-29 Wed 17:16]
-:ID:       3bc99a8f-3e37-45c5-a662-2aaed569e389
-:header-args:conf: :tangle ~/.mbsyncrc
-:END:
-
------BEGIN PGP MESSAGE-----
-
-jA0EBwMCGKZ+jtPoQj3/0uoBdMkhpHLceV6ul08uJHWIl5BJtAW6ru664vhbVAi/
-pLILI0bLkIxqI+f6HwsRdo5ivnLBo6vxiagCacYsGYzgOUzh1aXEprMQP65tYSIX
-40D5NuuaLtK41BVsad9eS6l46ZCxdzk2D1wIh7bnsvdpitwX7npg+T1s/RjTFJXV
-hra+GJ6z/evnvC5tT30xNa64w74pmtsJKFI+Npc2Hxc/0gLz/wns3q2ZteKGtDq+
-mBy4fHOvbEWIMx7W9gdk6MsKCospfEZrWYM6xom+RXG27WPk7dLGtdhNh/FtJ7cr
-1o5WlEcZZpzOGVhFH4bwMUInK+AoQCln2AXp85ikSuixExCNsNrOGoukz1oGhNPr
-30unnyOQNd90QFJ/Bl53oKn3t85oC4SBiRr4HFkXYIe5lcrDELnYDd+priLbQX+e
-r2E1rErwQ1sagHlgAKQLTVy/slARAMNjdGdXhzF3NVK7aD4qZN1ECRR0QtU8wcDc
-M4sW0nnrpF+MnWRied0h7q63tZwxhJzxlXiM/G3o1iZpzIJrBrdjHXaxMIwDl6fz
-+cJPsaXac8D/mLWXICqUhu5h6KXw8lHy2+rI1udKkQ4ApBL8PLLAqYB+vdHSs9Je
-I3AA/FSzMpg98bJCQHou5kbR/tb/zx7aYFJHYDldAHrFAtIOKBOZoZR6fj9Keo1p
-h7anLJnpYQ9Jmlni5IBpD1QiOREb8DTAXVkQbE8DEmfHHSQ141E+WAe4pBctCueh
-hS6VywBXYpGiQfygpazo1Y4K7D4fnEz5tp4YJZhrU4/aWMI8CSVgKV/wp0nc+zqO
-mtBgZEThMKMHbkcX5X78V2Wxf+vUrx4dWFw7fhHJFb8jIipGgzzgaX50bWSSQwNj
-PO1MUj9qu+9ujjEDmk5lfJShE0PsffRGFl2HBJg/aRgrGYMpZ2fDTwBeNld6x4pz
-ZPhlhIMUdKOT7P1U+znQNku+F6PkKfAzM/Nshr48naLVjAQGlBshHv38pf5GYbth
-K0S9sspb3KqVjJqSsMvpfW5IxyeK1jUy7lJxIJ3MQPqEvW83XZGd7/6s9pE1a3Bz
-gEiBoqFP0F9DMcpo38yQyw3RFdHW5PYNki+vluD1py73YCTUOMxdVqwT+891kAp+
-O3PLWgRWfe0s/JXGBtV2ccfZ/JL//bht3XRs5xNntgpJO8lBe3PUVkFbpXrnrM5y
-3j1vJRWvWy8f1B6skF/1aB4VI3JMRxpbv5tqRiyPNPGMGI+e1256PZdp1Re+4IJe
-05uStuh7yiy/nrphrmBYFK9O7KibNJQi7HLpw8MYOAmxbSdSJ1McTBzwCXhWPiuF
-FKqxfWBZSfvHJif46sktQVGoxpnGVkiCLAmoPSJHwLCcwPMTzBdSEDtUlFxrjhxY
-GDx3isltoBkK5R/Bk+g+ogHtxg/bKb4qTIPHDuq8jMh3AVc4UU5DWz7H9ni58ug7
-+NqZbjdQVt0+6ycK0aHWg8YcX6yHTfZFbg0DTFUlAs2KNg0m/H30UUvn9VT5FHc9
-ASgq78g1qQkNryV/1hbyr1/ZOlG1vhIlO9duLhrjITVJoICBQjzQ7/X1DW+kSDbV
-tklyTH4Kj3CrpGkeIX26yAJ09rbU8vwUiOQPdIrPH+mfYdhiICH+O1rbfn9XTJ+Y
-I+aLrbOQISChgFnnEcMhjTm/r/fctk3kmGccQKrLYZQ2bqbAbJ2lp5AwXE85Its4
-HqfGRwimg/iKd+XI2H2tndbIAvxJDEuAa7ntpa5UaoF53+YjsED3fjdzRwf1JZDv
-7ie7ROZ2JUT8tfWZkbd42xtI+PC1rS1LI4v7JLKLB2A+NjqeKaEX6nNqH85yQVyo
-JDD8FpUCc9mCpG3l9hoOCZa/IPvh/3uN/RYh8cd2TiCOAC+Z0K3dp3pAaAtWJtQh
-zhfvC1UlPI/oyq8vVpCswJC46i3JIeFTIvXgtYTnPyEuW5aTAPQ=
-=ig7U
------END PGP MESSAGE-----
 
 ** email old
 :PROPERTIES:
