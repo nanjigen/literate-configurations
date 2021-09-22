@@ -208,12 +208,63 @@ I'm not sure that the =(symbol-value 'x)= syntax is the best way to go about get
   (mu4e t))
 #+end_src
 
-*** Installing mu4e on a new machine
+* mbsync                                                                :crypt:
+:PROPERTIES:
+:CREATED:  [2020-07-29 Wed 17:16]
+:ID:       3bc99a8f-3e37-45c5-a662-2aaed569e389
+:header-args:conf: :tangle ~/.mbsyncrc
+:END:
+
+-----BEGIN PGP MESSAGE-----
+
+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
+sXq5
+=lTDk
+-----END PGP MESSAGE-----
+* Installing mu4e on a new machine
 :PROPERTIES:
 :CREATED:  [2020-08-03 Mon 17:53]
 :ID:       7a1a121e-7e31-4890-b753-d77f9b4ddda1
 :END:
-**** Copy over config + maildir
+** Copy over config + maildir
 :PROPERTIES:
 :CREATED:  [2020-05-16 Sat 12:08]
 :ID:       8699b9b3-8eb6-4e94-8aea-3fa07e72dbac
@@ -226,14 +277,14 @@ After importing and trusting GPG2 keys, then copy everything over and run
   scp -r corewolf:~/.Maildir ~/
   scp -r corewolf:~/.mbsyncrc ~/
 #+end_src
-**** Rebuild mu
+** Rebuild mu
 :PROPERTIES:
 :CREATED:  [2020-05-16 Sat 12:08]
 :ID:       56c06253-bce6-48ee-81e0-6a589c60c6da
 :END:
 mu index --rebuild --maildir=~/.Maildir
 
-**** Get new app password from hotmail
+** Get new app password from hotmail
 :PROPERTIES:
 :CREATED:  [2020-05-16 Sat 12:08]
 :ID:       c4b8f685-9f94-415d-8e4b-9fe35a29479e
@@ -243,14 +294,14 @@ mu index --rebuild --maildir=~/.Maildir
 3. App passwords -> Create new app password
 4. Copy to .authinfo.gpg
 
-**** Then run mbsync
+** Then run mbsync
 :PROPERTIES:
 :CREATED:  [2020-05-16 Sat 12:08]
 :ID:       0e0363e7-43e2-4fc3-8fef-d57375d06d0c
 :END:
 mbsync
 
-**** Programmimatically send emails with mu4e
+** Programmimatically send emails with mu4e
 :PROPERTIES:
 :CREATED:  [2020-05-28 Thu 10:06]
 :ID:       bf470fb3-eeb0-413a-aa56-93cfa68e0981
