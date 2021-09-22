@@ -309,3 +309,16 @@ mbsync
 :RESOURCES:
 - [[https://www.reddit.com/r/emacs/comments/g4svr2/programmatically_send_emails_with_mu4e/][Programmatically send emails with mu4e : emacs]]
 :END:
+* Dependencies
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:19]
+:ID:       d0ddff6f-eadc-4dd9-8ed8-b77c8c01d94c
+:END:
+
+#+begin_src scheme :tangle ~/.config/guix/manifests/mail.scm
+
+  (specifications->manifest
+   '("mu"
+     "isync"))
+
+#+end_src
