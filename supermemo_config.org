@@ -341,11 +341,11 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
               (display-buffer
                (get-buffer-create "sm-frame")
                '((display-buffer-no-window)
-                 ;; (allow-no-window . t)
-                 )))
+                 (allow-no-window . t))))
             (when (string-match-p "sm-element-window" (buffer-name))
               (display-buffer
                (get-buffer-create "sm-element-window")
+               (doom-modeline-mode 1)
                '((display-buffer-same-window))))
             (when (string-match-p "sm-knowledge-tree" (buffer-name))
               (display-buffer
@@ -387,10 +387,7 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
 :header-args: :noweb-ref dbc rules
 :END:
 #+begin_src elisp :noweb yes
-;; (use-package! dbc
-;; :config
 
-<<exwm-class-hook>>
 
 <<exwm-title-hook>>
 
@@ -1186,13 +1183,15 @@ translate winpath
 
 (provide '+exwm-sm-core)
 #+end_src
+
+
 ** TODO Try get ~input-fake-key~ working with Wine
 :PROPERTIES:
 :CREATED:  [2020-12-08 Tue 15:05]
 :ID:       733fbf64-129d-4b63-8b92-8fcc569c5627
 :END:
 Testing some elisp functions to convert Windows paths from Wine to Linux
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+#+begin_src elisp :tangle no
 (defun my-translate-winpath ()
   "change :C\win\path to 'nix /path/path"
   (let ((path (current-kill 0 'do-not-move)))
@@ -1224,7 +1223,7 @@ Let's test this with Xdotool. It works, but isn't reliable.
 (defun exwm-sm-core-test ()
   "Send string to a given exwm buffer"
   (interactive)
-  (shell-command "sh ~/.scripts/xdotool/get_element_path.sh"))
+  ;; (shell-command "sh ~/.scripts/xdotool/get_element_path.sh"))
   (shell-command "sh ~/.scripts/xdotool/get_element_path.sh"))
 
 (defun exwm-sm-core-test ()
@@ -1305,10 +1304,8 @@ Trying the same but with a string.
 ;;   (find-file (my-translate-winpath)))
 #+end_src
 
-#+RESULTS:
-
 Try with this
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+#+begin_src elisp :tangle no
 (cl-defun exwm-input-send-sim-key (key)
   "Fake a key event according to the last input key sequence."
   (interactive)
@@ -1339,9 +1336,6 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
       (setq keys (vconcat keys (vector key)))
       (exwm-input--fake-key key)))
 #+end_src
-
-#+RESULTS:
-: my-exwm-input-send-next-key
 
 #+begin_src elisp :tangle no
 (defun exwm-sm-core-test()
@@ -1536,268 +1530,6 @@ By using a =hydra-title= like [[file:~/.emacs.d/.local/straight/repos/org-media-
 
 #+end_src
 
-* AHK
-:PROPERTIES:
-:CREATED:  [2020-11-30 Mon 17:08]
-:ID:       8d766356-bb00-4536-8974-6906b6c2837f
-:END:
-
-A good guide for ahk under linux https://code.google.com/archive/p/winetricks/wikis/AutoHotkey.wiki
-#+begin_src ahk :tangle ~/.scripts/ahk/activate.verb :mkdirp yes
-w_metadata activate apps \
-title="Hello, Autohotkey"
-
-load_activate()
-{
-w_ahk_do "
-;WinActivate, ahk_class TElWind
-;#IfWinActive, ahk_class, TElWind
-run, notepad.exe
-WinWait, Untitled - Notepad
-;ControlSend, lol, Test, ahk_class TElWind
-;ControlSend, Test2, {v}, ahk_class TElWind
-;#IfWinActive, ahk_class, TElWind
-;j::
-;WinActivate, ahk_exe sm18.exe
-;WinGetActiveTitle, Title
-;WinGetClass, Var, A
-;MsgBox ahk_class %Var%
-;MsgBox, The active window is "%Title%".
-send, l
-;return
-"
-}
-#+end_src
-
-Finding the class of a window
-#+begin_src ahk :tangle ~/.scripts/ahk/class.verb :mkdirp yes
-w_metadata class apps \
-title="Hello, Autohotkey"
-
-load_class()
-{
-w_ahk_do "
-j::
-;WinActivate, ahk_class TElWind
-;#IfWinActive, ahk_class, TElWind
-;WinActivate, ahk_class sm18.exe
-WinGetActiveTitle, Var
-;WinGetClass, Var, A
-;ControlGet, Var, A
-;MsgBox ahk_class %Var%
-MsgBox, The active window is "%Var%".
-;send, l
-return
-"
-}
-#+end_src
-
-Testing some sending code
-#+begin_src ahk :tangle ~/.scripts/ahk/send.verb :mkdirp yes
-w_metadata send apps \
-title="Hello, Autohotkey"
-
-load_send()
-{
-w_ahk_do "
-;j::
-;WinActivate, ahk_class TElWind
-;#IfWinActive, ahk_class, TElWind
-;#IfWinActive, ahk_class, Notepad
-;ControlSend, Edit1, Test, WinTitle, Untitled - Notepad
-;ControlSend, Edit1, Test, Untitled - Notepad
-ControlSend, Edit1, Test, home
-;WinGetActiveTitle, Var
-;WinGetClass, Var, A
-;MsgBox ahk_class %Var%
-;MsgBox, The active window is "%Var%".
-;send, l
-;return
-"
-}
-#+end_src
-
-This works well for copying the element path
-#+begin_src ahk :tangle ~/.scripts/ahk/senda.verb :mkdirp yes
-w_metadata senda apps \
-title="Hello, Autohotkey"
-
-load_senda()
-{
-w_ahk_do "
-#NoEnv  ; Recommended for performance and compatibility with futur§e AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-SetTitleMatchMode,2
-;WinActivate, ahk_exe sm18.exe
-;WinWaitActive, ahk_exe sm18.exe
-;WinActivate, ahk_class TElWind
-;WinWaitActive, WinTitle Untitled - Notepad
-#IfWinActive, ahk_class TElWind
-
-::sm-get-path::
-send, +{F10}
-;sleep,5
-send, f
-;sleep,5
-send, c
-;send, ^a
-"
-}
-#+end_src
-z:\\home\\vrika\\documents\\sm\\neuron\\elements\\16\\168.HTM
-z:\home\vrika\documents\sm\neuron\elements\16\168.HTM
-file:/home/vrika/Documents/SM/neuron/elements/16/167.HTM
-
-Change windows path to unix:
-
-#+begin_src elisp
-;; (defun my-translate-winpath ()
-  ;; (interactive)
-  ;; "change :C\win\path to 'nix /path/path"
-  (let ((path (current-kill 0 'do-not-move)))
-    (shell-command-to-string (format "~/.scripts/winpath.sh %s" path)))
-#+end_src
-
-#+begin_src elisp
-(defun my-translate-winpath ()
-  (interactive)
-  (progn
-  ;; (shell-command "sh ~/.scripts/xdotool/get_element_path.sh")
-  (shell-command "xclip -sel clip -o")
-  (shell-command "xdotool sleep 0.2 key --delay 50 shift+F10+f+c")
-;; (gui--selection-value-internal 'CLIPBOARD)
-  (setq sm-path (gui--selection-value-internal 'CLIPBOARD))
-    (let* ((path1 (s-chop-prefix "z:" sm-path))
-           (nixpath (s-replace "\\" "/" path1))
-           (docpath (s-replace "documents" "Documents" nixpath))
-           (finpath (s-replace "sm" "SM" docpath)))
-      (setq sm-path-nix finpath))))
-;; (list path path2)
-;; (shell-command-to-string (format "~/.scripts/winpath.sh" ))
-#+end_src
-
-#+RESULTS:
-: my-translate-winpath
-
-#+begin_src elisp
-(defun exwm-sm-core-test ()
-  "Send string to a given exwm buffer"
-  (interactive)
-  (my-exwm-send-string "sm-get-path ")
-  (sit-for 0.3)
-  (let ((path (my-translate-winpath)))
-    (find-file path)))
-#+end_src
-
-#+RESULTS:
-: my-translate-winpath
-
-#+begin_src elisp
-(defun my-exwm-send-string (string)
-  "Send STRING to `exwm-mode' buffer or just insert it."
-  (if (eq major-mode 'exwm-mode)
-      (mapc #'exwm-input--fake-key (string-to-list string))
-    (insert string)))
-#+end_src
-z:\home\vrika\documents\sm\neuron\elements\5.HTM
-#+RESULTS:
-: my-exwm-send-string
-
-#+begin_src elisp
-;; (subst-char-in-string ?\ ?/ (regexp-quote "\home"))
-;; (regexp-quote "^home")
-;; (convert-standard-filename "z:\home\vrika\documents\sm\neuron\elements\16\168.HTM")
-;; (setq windows-path (unescape-windows-path "\home\vrika"))
-
-;; (setq windows-path1 "\home\vrika")
-;; (wsl-path-convert-file-name "\home\vrika")
-;; (s-replace "\\" "/" "\home")
-;; (s-replace "\\" "/" windows-path)
-;; (replace-regexp-in-string "\\\\" "\\\\\\\\" "\home\vrika")
-;; (message windows-path1)
-;; (defun unescape-windows-path (pth)
-;;   ;; (interactive "*sWindows path:")
-;;    (replace-regexp-in-string "\\\\" "\\\\\\\\" pth))
-
-;; (defun paste-windows-path (pth)
-;;   (interactive "*sWindows path:")
-;;   (insert
-;;    (replace-regexp-in-string "\\\\" "\\\\\\\\" pth)))
-;; (message (current-kill 0 'do-not-move))
-;; (shell-command-to-string "sed -e 's#^J:##' -e 's#\\#/#g' <<< 'test'")
-
-(convert-standard-filename "~/Documents")
-#+end_src
-
-#+RESULTS:
-: ~/Documents
-
-#+begin_src sh :tangle ~/.scripts/winpath.sh
-function winpath(){
-    line=$(sed -e 's#^J:##' -e 's#\\#/#g' <<< "$1")
-    echo "$line"
-}
-#+end_src
-
-#+begin_src sh
-#!/bin/bash
-clip=$(xclip -selection c -o)
-line=$(sed -e 's#^z:##' -e 's#\\#/#g' <<< "$clip")
-echo "$line"
-#+end_src
-
-#+RESULTS:
-
-#+begin_src ahk :tangle ~/.scripts/ahk/hotstring.verb :mkdirp yes
-w_metadata hotstring apps \
-title="Hello, Autohotkey"
-
-load_hotstring()
-{
-w_ahk_do "
-:*:get::get it boi
-"
-}
-#+end_src
-
-#+begin_src sh :dir ~/.scripts/ahk/ :session test
-env WINEPREFIX=/home/vrika/.local/share/wineprefixes/supermemo18 winetricks activate.verb
-#+end_src
-
-#+RESULTS:
-|                                              |               |                       |                                     |            |                                                                  |        |          |     |                |
-| Executing                                    | mkdir         | -p                    | /home/vrika/.local/share/wineprefixes |            |                                                                  |        |          |     |                |
-| Using                                        | winetricks    | 20200412              | -                                   | sha256sum: | 40ff4c67804584b73d4d36153e1f64ca426d739f1790bd748f5ded0865e8cc7f | with   | wine-5.2 | and | WINEARCH=win32 |
-| Executing                                    | w_do_call     | activate              |                                     |            |                                                                  |        |          |     |                |
-| Executing                                    | mkdir         | -p                    | /home/vrika/.local/share/wineprefixes |            |                                                                  |        |          |     |                |
-| Executing                                    | load_activate |                       |                                     |            |                                                                  |        |          |     |                |
-| Executing                                    | wine          | x:\ahk\AutoHotkey.exe | C:\windows\Temp\activate.ahk        |            |                                                                  |        |          |     |                |
-| 00b9:fixme:keyboard:X11DRV_GetKeyboardLayout | couldn't      | return                | keyboard                            | layout     | for                                                              | thread |       81 |     |                |
-
-** Snippet
-:PROPERTIES:
-:CREATED:  [2020-12-01 Tue 22:38]
-:ID:       e177ba0d-cfc1-41d7-bc09-4b2e3a1edef9
-:END:
-
-#+begin_src yas
-# -*- mode: snippet -*-
-# name: SuperMemo Ref
-# key: sm-ref
-# --
-
-#SuperMemo Reference:
-#Title: (org-web-tools--html-title (org-web-tools--get-first-url))
-#Date: Imported on Oct 15, 2020, 18:50:29
-#Source: Wikipedia
-#Link: (org-web-tools--get-first-url)
-#Comment: Lisp (programming language)
-#Parent: 17: Programming
-#Concept group: Root: neuron (1: neuron)
-#+end_src
-
 * sm desktop
 :PROPERTIES:
 :CREATED:  [2020-10-19 Mon 13:36]
@@ -1817,12 +1549,6 @@ Icon=/home/volk/.local/share/wineprefixes/ms-office/drive_c/SuperMemo/smicon.png
 StartupWMClass=sm18.exe
 #+end_src
 
-* SM in a VM and RPC
-:PROPERTIES:
-:CREATED:  [2020-12-11 Fri 21:15]
-:ID:       fafd87f0-c7c8-467d-861c-d0fc634d9893
-:END:
-
 * SM with Emacs
 :PROPERTIES:
 :CREATED:  [2021-01-04 Mon 15:52]
@@ -1835,93 +1561,119 @@ StartupWMClass=sm18.exe
 :END:
 
 Using =inotifywait= from the ~inotif-tools~ program we can watch the =$SM-COLLECTION/elements= folder recursively for file open events made by SuperMemo:
-#+begin_src elisp
-(start-process
- "inotifywait"
- "*inotifywait*"
- "inotifywait" "-mrq" "-e" "open" "/home/nanjigen/Documents/SM/neuron/elements" "--include" ".HTM")
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
+;;; desktop/exwm/+sm-sentinel.el -*- lexical-binding: t; -*-
+
+(defun sm-element-inotify-process ()
+  "Watch for reads of element files in the collection dir"
+  (interactive)
+  (start-process
+   "inotifywait"
+   "*inotifywait*"
+   "inotifywait" "-mrq" "-e" "open" "/home/nanjigen/Documents/SM/neuron/elements" "--include" ".HTM"))
+
+#+end_src
+
+And to watch image access:
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
+(defun sm-image-inotify-process ()
+  "Watch for reads of image files in the collection dir"
+  (interactive)
+  (start-process
+   "inotifywait-image"
+   "*inotifywait-image*"
+   "inotifywait" "-mrq" "-e" "open" "/home/nanjigen/Documents/SM/neuron/elements" "--include" "\.(jpg|gif|png|svg)"))
 #+end_src
 
 #+RESULTS:
 : #<process inotifywait>
 
 Setup a sentinel to watch for changes to the process buffer =*inotifywait*=
-#+begin_src elisp
+This is mostly for testing purposes
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
 (defun msg-me (process event)
   (princ
    (format "Process: %s had the event '%s'" process event)))
 (set-process-sentinel (get-process "inotifywait") 'msg-me)
+
 #+end_src
 
-#+begin_src elisp
-(kill-process (get-process "inotifywait"))
-#+end_src
-
-#+begin_src elisp
-(set-process-filter (get-process "inotifywait") 'keep-output)
-#+end_src
-
-#+RESULTS:
-: keep-output
-
-#+begin_src elisp
+The function below captures all the paths outputted from the ~inotifywait~ process as seperate symbols in a single list. This is then transferred to a holding variable of the same make-up, and the original list is emptied. This way, on every file read when an element is accessed by SuperMemo, only those file paths are kept in the variable, instead of appending each new file found to the list.
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
 (defun keep-output (process output)
-    (setq kept (cons output kept)))
-
-(setq kept nil)
-;; (setq kept sm-paths)
-(setq sm-paths nil)
-#+end_src
-
-#+begin_src elisp
-(defun keep-output (process output)
+  "Store the paths of elements caught by inotify"
   (progn
-    (setq kept (cons output kept))
+    (setq captured-path (cons output captured-path))
     (sleep-for 0.1)
-    (store-sm-element-paths)
-    ;; (message %s (store-element-paths))
-    ;; (sleep-for 0.3)
-    (setq kept nil)))
+    (list-sm-element-paths)
+    (setq captured-path nil)))
+
+(defun keep-image-path (process output)
+  "Store the paths of elements caught by inotify"
+  (progn
+    (setq captured-image-path (cons output captured-image-path))
+    (sleep-for 0.1)
+    (setq image-file-list (s-lines (s-replace " OPEN " "" (car captured-image-path))))
+    (setq captured-image-path nil)))
+
 #+end_src
 
-#+RESULTS:
-: keep-output
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
+(defvar captured-image-path nil
+  "The path captured by the inotify sentinel")
 
-#+begin_src elisp
-(eval 'kept)
+(defvar captured-path nil
+  "The path captured by the inotify sentinel")
+
 #+end_src
 
-#+RESULTS:
+The below is some logic for determining if what was captured is a Topic or an element pair such as Q/A or a cloze. It then stores the path values as such.
 
-#+begin_src elisp
-(eval 'sm-paths)
-#+end_src
-
-#+RESULTS:
-| /home/nanjigen/Documents/SM/neuron/elements/2/16/4/22850.HTM | /home/nanjigen/Documents/SM/neuron/elements/2/16/5/22854.HTM |
-
-#+begin_src elisp
-(defun store-sm-element-paths ()
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
+(defun list-sm-element-paths ()
+  "Text munge captured paths"
+  (setq sm-file-list (s-lines (s-replace " OPEN " "" (car captured-path))))
   (interactive)
-  (if (> (length kept) 1)
-      (let* ((answer-path (nth 0 (split-string (car kept) " ")))
-             (answer-file (substring
-                           (nth 2 (split-string (car kept) " ")) 0 -1))
-             (question-path (nth 0 (split-string (cadr kept) " ")))
-             (question-file (substring
-                             (nth 2 (split-string (cadr kept) " ")) 0 -1))
-             (answer (format "%s%s" answer-path answer-file))
-             (question (format "%s%s" question-path question-file)))
-        (setq sm-paths (list answer question)))
-    (let* ((article-path (nth 0 (split-string (car kept) " ")))
-           (article-file (substring
-                          (nth 2 (split-string (car kept) " ")) 0 -1))
-           (article (format "%s%s" article-path article-file)))
-      (setq sm-paths article))))
+  (if (> (length sm-file-list) 1)
+      (progn
+        (setq sm-element-item-p t)
+        (setq sm-element-article-p nil))
+    (progn
+      (setq sm-element-item-p nil)
+      (setq sm-element-article-p t))))
+
+#+end_src
+
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-sentinel.el
+(defvar sm-element-item-p nil
+  "Whether currently viewed element is an item.")
+
+(defvar sm-element-article-p nil
+  "Whether currently viewed element is an article")
+
+#+end_src
+
+Get process and set sentinels:
+#+begin_src elisp
+
+(set-process-filter (get-process "inotifywait") 'keep-output)
+(set-process-filter (get-process "inotifywait-image") 'keep-image-path)
+
 #+end_src
 
 #+begin_src elisp
 (process-sentinel (get-process "inotifywait"))
+#+end_src
+
+Edit files:
+#+begin_src elisp
+(defun edit-component-as-org ()
+  (interactive)
+  (if sm-element-item-p t
+    (let ((question (nth 0 file-list))
+          (answer (nth 1 file-list)))
+      (find-file question))))
+
 #+end_src
 
 Then we can parse these file read through to various =setq's= to be read in the background.
