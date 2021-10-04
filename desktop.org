@@ -9,6 +9,8 @@ This file contains configuration for my overall desktop environment.  My workflo
 * Table of Contents
 :PROPERTIES:
 :TOC:      :include all :ignore this
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       55cc1e4a-481e-4d08-a123-9aa0d718b7bd
 :END:
 :CONTENTS:
 - [[#system-settings][System Settings]]
@@ -54,6 +56,10 @@ This file contains configuration for my overall desktop environment.  My workflo
 :END:
 
 * System Settings
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       e17037c6-caeb-43aa-a9b7-d2dd6ebde19a
+:END:
 
 Load system-specific settings from =.emacs.d/per-system-settings.el= and unpack relevant values into blocks so that they can be used in configuration file blocks.  These settings are configured in [[file:Systems.org::*Per-System Settings][Systems.org]].
 
@@ -68,6 +74,10 @@ Load system-specific settings from =.emacs.d/per-system-settings.el= and unpack 
 #+end_src
 
 * Fonts and Themes
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       6a1ed333-6391-4c59-816f-0975dab66d9d
+:END:
 
 I use [[https://github.com/derat/xsettingsd][xsettingsd]] as a minimal settings daemon for Xorg applications.  It replaces similar daemons from desktop environments like GNOME and XFCE and enables me to use a simple configuration file like the following:
 
@@ -89,8 +99,6 @@ Xft/HintStyle "hintnone"
 #+end_src
 
 I also have to do an extra step to make sure Emacs can find the font path from the "desktop" profile.
-
-*~/.config/fontconfig/fonts.conf:*
 
 #+begin_src xml :tangle ~/.config/fontconfig/fonts.conf
 
@@ -150,10 +158,12 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 #+end_src
 
 * Desktop Notifications via Dunst
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       296c851d-e557-446b-ba51-879e4622f612
+:END:
 
 [[https://dunst-project.org/][Dunst]] is a minimal interface for displaying desktop notifications.  It is quite hackable but I'm not currently taking much advantage of its power.  One useful feature is the ability to recall notification history; the keybinding is =C-`= in my configuration (though I'd prefer if I could invoke it from an Emacs keybinding somehow).
-
-*~/.config/dunst/dunstrc:*
 
 #+begin_src conf :tangle ~/.config/dunst/dunstrc :noweb yes
 
@@ -372,8 +382,10 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 #+end_src
 
 * Automatic Disk Mounting with Udiskie
-
-*Guix Packages*
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       c111674c-0ad4-41a8-a4bc-51706c0df2d7
+:END:
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
@@ -382,6 +394,10 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 #+end_src
 
 * Default Applications
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       74c87dcd-4869-408a-b0f9-b83c5450d949
+:END:
 
 The file =~/.config/mimeapps.list= configures default applications for various content types.  Right now I'm using it to control which browser opens URLs from other applications.
 
@@ -394,11 +410,15 @@ The file =~/.config/mimeapps.list= configures default applications for various c
   x-scheme-handler/about=firefox.desktop
   x-scheme-handler/unknown=firefox.desktop
   x-scheme-handler/org-protocol=org-protocol.desktop
-  application/pdf=emacsclient.desktop;mupdf.desktop;libreoffice-draw.desktop;libreoffice-writer.desktop;
+  application/pdf=emacsclient.desktop;mupdf.desktop;libreoffice-draw.desktop
 
 #+end_src
 
 * User Services
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       5d712d72-2f6a-4e02-9f77-062512443956
+:END:
 
 I use [[https://www.gnu.org/software/shepherd/][GNU Shepherd]] to manage services that run in the background when I log in.
 
@@ -441,6 +461,10 @@ I use [[https://www.gnu.org/software/shepherd/][GNU Shepherd]] to manage service
 #+end_src
 
 * Scheduled Tasks
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       a3443352-278d-4f3a-a70d-b267e67c17a1
+:END:
 
 I use [[https://www.gnu.org/software/mcron/][GNU mcron]] for scheduling tasks to run periodically in the background.
 
@@ -453,140 +477,36 @@ I use [[https://www.gnu.org/software/mcron/][GNU mcron]] for scheduling tasks to
 #+end_src
 
 * Applications
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       e52ef51e-6f8d-40bb-84cc-ed6b529741df
+:END:
 
 ** Browsers
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       0adab059-07d5-444a-85a6-e072e55a7bf1
+:END:
 
 *Guix Packages*
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
-"qutebrowser"
 "nyxt"
 
 #+end_src
 
-*** Qutebrowser
-
-[[https://github.com/qutebrowser/qutebrowser][Qutebrowser]] is a great keyboard-centric browser which uses the Chromium rendering engine via QT 5's WebEngine component.  I've configured it to act more like Vimb for window-per-tab behavior that integrates well into Emacs.  One thing I like about this browser is that it does a much better job of remembering what windows you had open when it exits so that you can maintain your session more easily.  I also like that when you reopen a tab/window, the history of that window is still present.
-
-#+begin_src python :tangle ~/.config/qutebrowser/config.py :noweb yes
-
-  # Open every tab as a new window, Vimb style
-  c.tabs.tabs_are_windows = True
-  c.tabs.show = "multiple"
-  c.tabs.last_close = "close"
-
-  c.auto_save.session = True
-  c.scrolling.smooth = True
-  c.session.lazy_restore = True
-  c.content.autoplay = False
-
-  # Scale pages and UI better for hidpi
-  c.zoom.default = "<<get-setting(name="qutebrowser/default-zoom")>>%"
-  c.fonts.hints = "bold 20pt monospace"
-
-  # Better default fonts
-  c.fonts.web.family.standard = "Bitstream Vera Sans"
-  c.fonts.web.family.serif = "Bitstream Vera Serif"
-  c.fonts.web.family.sans_serif = "Bitstream Vera Sans"
-  c.fonts.web.family.fixed = "Fira Mono"
-  c.fonts.statusbar = "18pt Cantarell"
-
-  # Use dark mode where possible
-  c.colors.webpage.darkmode.enabled = True
-  c.colors.webpage.darkmode.policy.images = "never"
-  c.colors.webpage.bg = "black"
-
-  # Automatically turn on insert mode when a loaded page focuses a text field
-  c.input.insert_mode.auto_load = True
-
-  # Edit fields in Emacs with Ctrl+E
-  c.editor.command = ["emacsclient", "+{line}:{column}", "{file}"]
-
-  # Make Ctrl+g quit everything like in Emacs
-  config.bind('<Ctrl-g>', 'leave-mode', mode='insert')
-  config.bind('<Ctrl-g>', 'leave-mode', mode='command')
-  config.bind('<Ctrl-g>', 'leave-mode', mode='prompt')
-  config.bind('<Ctrl-g>', 'leave-mode', mode='hint')
-  config.bind('v', 'spawn ~/.dotfiles/bin/umpv {url}')
-  config.bind('V', 'hint links spawn ~/.dotfiles/bin/umpv {hint-url}')
-
-  # Tweak some keybindings
-  config.unbind('d') # Don't close window on lower-case 'd'
-  config.bind('yy', 'yank')
-
-  # Vim-style movement keys in command mode
-  config.bind('<Ctrl-j>', 'completion-item-focus --history next', mode='command')
-  config.bind('<Ctrl-k>', 'completion-item-focus --history prev', mode='command')
-
-  # More binding hints here: https://gitlab.com/Kaligule/qutebrowser-emacs-config/blob/master/config.py
-
-  # Load the autoconfig file (quteconfig.py)
-  config.load_autoconfig()
-
-#+end_src
-
-#+begin_src conf :tangle ~/.config/qutebrowser/quickmarks
-
-1p https://my.1password.com/vaults/kyxq62du37adb3lpjh2sphdq4i/allitems/tkr5tuo4gqyuco4x25upt6iaia
-gn https://github.com/notifications
-dot https://github.com/daviwil/dotfiles
-efs https://github.com/daviwil/emacs-from-scratch
-sc https://github.com/SystemCrafters
-scv https://github.com/SystemCrafters/video-planning
-ddg https://duckduckgo.com/?q $0
-gh https://github.com/$0
-gm https://www.iro.umontreal.ca/~gambit/doc/gambit.html
-gam https://github.com/gambit/gambit
-zig https://github.com/ziglang/zig
-zigd https://ziglang.org/documentation/master/
-zigl https://ziglang.org/documentation/master/std
-sub https://github.com/substratic/
-sube https://github.com/substratic/engine
-subb https://github.com/substratic/build
-subf https://github.com/substratic/forge
-subc https://github.com/substratic/crash-the-stack
-tspl https://scheme.com/tspl4/
-mail https://fastmail.com
-cups http://localhost:631
-az https://portal.azure.com
-azdo https://dev.azure.com/azure-sdk/
-ajs https://github.com/Azure/azure-sdk-for-js
-adl https://github.com/Azure/adl
-dajs https://github.com/daviwil/azure-sdk-for-js
-anet https://github.com/Azure/azure-sdk-for-net
-aja https://github.com/Azure/azure-sdk-for-java
-apy https://github.com/Azure/azure-sdk-for-python
-ats https://github.com/Azure/autorest.typescript
-ats3 https://github.com/Azure/autorest.typescript.v3
-atest https://github.com/Azure/autorest.testserver
-amf https://github.com/Azure/autorest.modelerfour
-ar https://github.com/Azure/autorest
-arpy https://github.com/Azure/autorest.python
-arc https://github.com/Azure/autorest.csharp
-are https://github.com/Azure/autorest/tree/master/docs/extensions
-arp https://github.com/orgs/Azure/projects/48
-ac https://github.com/Azure/autorest.compare
-ap https://github.com/Azure/perks
-specs https://github.com/Azure/azure-rest-api-specs
-oai2 https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
-oai3 https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md
-npm https://www.npmjs.com/search?q $0
-oms https://outlook.com/microsoft.com
-msw https://microsoft.sharepoint.com
-
-#+end_src
-
-** Mail
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"mu"
-"mbsync"
-
-#+end_src
+*** nyxt
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 16:04]
+:ID:       d8324ada-b16a-48f2-ab9a-f92f023d69ba
+:END:
 
 ** Password Management
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       7c10e52c-8e0e-42bc-980e-af048a02dce9
+:END:
 
 *Guix Packages*
 
@@ -597,6 +517,10 @@ msw https://microsoft.sharepoint.com
 #+end_src
 
 ** Audio Device Control
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       f002285a-4de2-4b08-bf55-f827c4edbe28
+:END:
 
 *Guix Packages*
 
@@ -608,12 +532,18 @@ msw https://microsoft.sharepoint.com
 #+end_src
 
 ** Media Players
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       bd06b4d3-0009-4c6e-a556-0894e8bb2fff
+:END:
 
-*** mpv
+*** TODO rewrite mpv config in fennel
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       3a0bba28-68c7-4966-a1a7-214978fadda3
+:END:
 
 [[https://mpv.io/][mpv]] is a simple yet powerful video player.  Paired with [[http://ytdl-org.github.io/youtube-dl/][youtube-dl]] it can even stream YouTube videos.  [[https://github.com/hoyon/mpv-mpris][mpv-mpris]] allows playback control via [[https://github.com/altdesktop/playerctl][playerctl]].
-
-*~/.config/mpv/mpv.conf*
 
 #+begin_src conf :tangle ~/.config/mpv/mpv.conf :noweb yes
 
@@ -657,6 +587,10 @@ keep-open
 #+end_src
 
 *** Codecs and Drivers
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       9ebfe5cc-204b-4588-ba1e-a36e283f1664
+:END:
 
 These packages are needed to enable many video formats to be played in browsers and video players.  VAAPI drivers are also used to enable hardware-accelerated video decoding.
 
@@ -670,13 +604,15 @@ These packages are needed to enable many video formats to be played in browsers 
 "gst-plugins-bad"
 "gst-plugins-ugly"
 "gst-libav"
-"intel-vaapi-driver"
-"xf86-video-intel"
 "libva-utils"
 
 #+end_src
 
 ** Image Viewers and Editors
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       aa9e6c67-7555-4dd7-a3ee-735330f816d9
+:END:
 
 *Guix Packages*
 
@@ -688,56 +624,28 @@ These packages are needed to enable many video formats to be played in browsers 
 
 #+end_src
 
-** Games
-
-Glorious time wasters!  I keep these in a separate Guix profile so that I don't have them installed automatically on every machine.  To opt in, I have to run =activate-profiles games=.
-
-*~/.config/guix/manifests/desktop.scm:*
-
-#+begin_src scheme :tangle ~/.config/guix/manifests/games.scm :noweb yes
-
-(specifications->manifest
- '("aisleriot"
-   "gnome-mahjongg"))
-
-#+end_src
-
 ** Document Readers
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       55bbc078-10fe-4474-9d5d-6f698069c63c
+:END:
 
-#+begin_src conf :tangle ~/.config/zathura/zathurarc
+I use ~emacs-pdf-tools~ extensively. Installing it via ~guix~ takes care of building everything much more reliably than as a ~straight~ package.
 
-# Automatically adjust the document to full width
-set adjust-open width
-
-# Set the title to the filename
-set window-title-basename true
-
-# Larger scroll steps with j/k
-set scroll-step 150
-
-# Adjusting the document
-map [normal] E adjust_window best-fit
-map [fullscreen] E adjust_window best-fit
-map [normal] e adjust_window width
-map [fullscreen] e adjust_window width
-
-# Toggling the inverted colours
-map <C-i> recolor
-map <C-g> abort
-
-#+end_src
-
+~Libreoffice~ for dealing with the odd non-text document.
 *Guix Packages*
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
-"zathura"
-"zathura-pdf-mupdf"
 "emacs-pdf-tools"
 
 #+end_src
 
 ** Syncthing
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       fec6c914-f377-40d4-8a59-b9baac602278
+:END:
 
 *Guix Packages*
 
@@ -749,6 +657,10 @@ map <C-g> abort
 #+end_src
 
 ** Flatpak
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       39571a84-622b-4817-8e0f-56d1d19a6201
+:END:
 
 I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to install applications that are otherwise difficult to install in Guix because of application frameworks, etc.
 
@@ -775,6 +687,10 @@ I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to instal
 #+end_src
 
 ** Printing
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       09bc7c8b-8419-47a5-8b14-999723b6f0d1
+:END:
 
 *Guix Packages*
 
@@ -785,6 +701,10 @@ I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to instal
 #+end_src
 
 ** Desktop Tools
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       d7dd2e0c-d13c-4a9d-aa0d-550a8f58642b
+:END:
 
 *Guix Packages*
 
@@ -804,6 +724,10 @@ I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to instal
 #+end_src
 
 ** System Tools
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       f060d6b1-d5be-41fd-af19-e4263f5cf33b
+:END:
 
 *Guix Packages*
 
@@ -816,6 +740,10 @@ I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to instal
 #+end_src
 
 ** Xorg Tools
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       5660e7af-f72b-4493-8dec-d18eb96655c6
+:END:
 
 *Guix Packages*
 
@@ -836,6 +764,10 @@ I use Flatpak and the [[https://flathub.org/home][Flathub]] repository to instal
 #+end_src
 
 * Desktop Profile
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       360bce0b-a9c5-4065-85c1-c89763373bce
+:END:
 
 The =desktop.scm= manifest holds the list of packages that I use to configure my desktop environment.  The package names are pulled from the relevant sections titled *Guix Packages* in this file (=Desktop.org=).
 
@@ -851,8 +783,16 @@ The =desktop.scm= manifest holds the list of packages that I use to configure my
 #+end_src
 
 * Notes
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       a2c19b8d-6796-4555-af76-a07e29df7d37
+:END:
 
 ** Bluetooth Setup
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 13:54]
+:ID:       3450b3f1-986e-4f9c-afa6-ab0889ecd830
+:END:
 
 If you need to manually connect to Bluetooth audio devices using =bluetoothctl=,
 as I currently do in Guix, you'll need to enter these commands at the
