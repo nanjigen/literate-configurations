@@ -2201,6 +2201,11 @@ Auto-tangle on save is comfy and having it in a package gives a clean config.
 
 #+end_src
 
+** org-crypt with VC'd files
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:54]
+:ID:       c48a3b97-1082-4b9c-9441-6e08fee05223
+:END:
 I have some personal information in some of my configuration files. ~org-crypt~ takes care of this at the header level, useful for public files. Some of this information, however, is embedded in code, and I want to be able to tangle those files still. [[https://ag91.github.io/blog/2020/10/30/org-crypt-and-tangling-source-blocks/][Some code from Andrea]] helps us:
 #+begin_src elisp
 (defun ag/reveal-and-move-back ()
@@ -2240,6 +2245,11 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (package! exwm-edit)
 (package! dmenu)
 (package! posframe)
+(package! hydra-posframe :recipe
+  (:host github
+   :repo "Ladicle/hydra-posframe"))
+;; (package! helm-posframe)
+;; (package! ivy-posframe)
 (package! ace-link)
 (package! helm-exwm)
 (package! helm-org-rifle)
@@ -2903,6 +2913,10 @@ Can show completions at point for COMMAND using helm or ivy"
 #+end_src
 
 * System Utilites
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 17:44]
+:ID:       906fbb29-2592-48f6-a884-0e376354a21f
+:END:
 
 Tool for managing shepherd from Emacs
 #+begin_src emacs-lisp
@@ -2921,6 +2935,10 @@ Tool for managing shepherd from Emacs
 #+end_src
 
 * Credential Management
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 17:44]
+:ID:       0a15f0ec-cf61-4b25-ad85-875ab0174866
+:END:
 
 #+begin_src elisp
 (use-package! password-store
