@@ -105,7 +105,28 @@ Element
 sm18.exe/Second Language
 #+end_example:
 
-We can test if our regex captures this
+We can test if our regex captures a given buffer:
+
+#+begin_src elisp :noweb yes
+;;TODO use `cl-loop' here instead with its buffer spec
+(seq-filter (lambda (buf)
+              (string-match-p
+               <<element-window-rx>>
+               (buffer-name buf)))
+            (buffer-list))
+#+end_src
+
+** Key SuperMemo windows
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 13:15]
+:ID:       523441d5-46f3-45e4-9900-c9ce786dd9f7
+:END:
+We'll start with the outlier first as its the most important window. Normally, SuperMemo will start with the first scheduled item of the day loaded into the elements window. The element name bleeds into the =WM_TITLE= variable and since we can't predict which element would be presented first on any given day, we will have to use a work around to get a stable title.
+
+The following makes use of Supermemo's ability to set a constant element via the bla bla menu. While this was originally intended to display quotes or the like it works nicely for us as the same text will be shown via =WM_TITLE= and by extension by in the =exwm-title= variable.
+Besides, Emacs can be rigged to have this kind of functionality at startup and perform it even better.
+
+Here I use =home= as the only text in the element body, but you can use whatever you like. I've written the hooks in such a way that the buffer-name will remain constant even after progressing past this initial home element.
 
 #+name: element-window-rx
 #+begin_src elisp
@@ -115,44 +136,13 @@ We can test if our regex captures this
 #+RESULTS: element-window-rx
 : ^home$
 
-#+begin_src elisp :noweb yes
-(seq-filter (lambda (buf)
-              (string-match-p
-               <<element-window-rx>>
-               (buffer-name buf)))
-            (buffer-list))
-#+end_src
-
-#+RESULTS:
-
-lol
-#+begin_src elisp :noweb yes
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-test-class-hook ()
-            (when (string-match "Mousepad" exwm-class-name)
-              (exwm-workspace-rename-buffer exwm-title))))
-#+end_src
-
-#+RESULTS:
-| sm-element-test-class-hook | my-exwm-update-title-hook |
-
 #+NAME: element-data-rx
 #+begin_src elisp
-(rx (| (seq (or "Topic" "Element") space "#" (one-or-more digit) ":") (seq "Element data")))
+(rx
+ (|
+  (seq (or "Topic" "Element") space "#" (one-or-more digit) ":")
+  (seq "Element data")))
 #+end_src
-
-#+RESULTS: element-data-rx
-: \(?:Element\|Topic\)[[:space:]]#[[:digit:]]+:\|Element data
-
-#+begin_src elisp :noweb yes
-(seq-filter (lambda (buf)
-              (string-match-p
-               <<element-data-rx>>
-               (buffer-name buf)))
-            (buffer-list))
-#+end_src
-
-#+RESULTS:
 
 Next capture the knowledge tree:
 "X:sm18.exe/neuron"
@@ -164,198 +154,132 @@ Next capture the knowledge tree:
 #+RESULTS: knowledge-tree-rx
 : ^neuron$
 
-#+begin_src elisp :noweb yes
-(seq-filter (lambda (buf)
-              (string-match-p
-               <<knowledge-tree-rx>>
-               (buffer-name buf)))
-            (buffer-list))
-#+end_src
-
-#+RESULTS:
-
 We'll also attempt to suppress the empty(?) buffer created by Supermemo.
-#+NAME: empty-sm-rx
+This seems to be a frame made for SM.
+#+NAME: empty-sm-frame-rx
 #+begin_src elisp
-(rx "z:\\home\\vrika\\documents\\sm")
+(regexp-quote "z:\\home\\nanjigen\\documents\\sm")
 #+end_src
 
-#+RESULTS: empty-sm-rx
+#+RESULTS: empty-sm-frame-rx
 : z:\\home\\vrika\\documents\\sm
-
-#+begin_src elisp :noweb yes :noweb-ref empty-sm-window
-(seq-filter (lambda (buf)
-              (string-match-p
-              <<empty-sm-rx>>
-               (buffer-name buf)))
-            (buffer-list))
-#+end_src
-
-#+NAME: concepts-rx
-#+begin_src elisp
-(rx "Concepts")
-#+end_src
-
-#+RESULTS: concepts-rx
-: Concepts
-
-#+begin_src elisp :noweb yes
-(seq-filter (lambda (buf)
-              (string-match-p
-               <<concepts-rx>>
-               (buffer-name buf)))
-            (buffer-list))
-#+end_src
 
 Now we'll throw this together as a set of buffer rules:
 
-** hooking sm-buffers
+** Creating the =sm18.exe= class
 :PROPERTIES:
 :CREATED:  [2020-11-20 Fri 10:39]
 :ID:       c0a59157-a741-4824-b25e-4b8cab63a2d9
 :END:
 
-Currently the catch-all [[file:~/.doom.d/modules/desktop/exwm/+funcs.el::defun exwm/rename-buffer (][exwm/rename-buffer]] function captures the sm buffers on each update of the
-=title-hook=. We'll cook up some rules to leave handling these buffers to another custom hooked function.
+The catch-all [[file:~/.doom.d/modules/desktop/exwm/+funcs.el::defun exwm/rename-buffer (][exwm/rename-buffer]] function captures the sm buffers on each update of the =title-hook=. We need to exclude members of the =sm18.exe= class from this over-general hook:
 
-Currently the [[file:~/.local/share/applications/supermemo18.supermemo18.desktop::StartupWMClass=sm18.exe][StartupWMClass]] for sm18 is not propagating out to the actuall WM_CLASS as =sm18.exe=, possibly as a limitation of =wine-5.2= We'll have to clobber all ~Wine~ applications for now.
-
-Excluding based on =class=. (this doesn't seem to do it though)
-#+begin_src elisp :noweb yes :noweb-ref exwm-class-hook
-(add-hook 'exwm-update-class-hook
-          (defun my-exwm-update-class-hook ()
-            (unless (or (string-prefix-p "Wine" exwm-class-name))
-                        (string-prefix-p "Internet Explorer" exwm-class-name)
-                        (string-prefix-p "sm18.exe" exwm-class-name)
-                        ;; (string-prefix-p "SuperMemo" exwm-class-name)
-                        ;; (string-prefix-p "Explorer" exwm-class-name))
-              (exwm/rename-buffer))))
-#+end_src
-
-#+RESULTS:
-| my-exwm-update-class-hook |
-
-Exclusion based on =exwm-title=:
+Exclusion from the generic =exwm/rename-buffer= function based on =exwm-class=:
 #+begin_src elisp :noweb yes :noweb-ref exwm-title-hook
 (add-hook 'exwm-update-title-hook
           (defun my-exwm-update-title-hook ()
-            (unless (or (string-prefix-p <<element-window-rx>> exwm-title)
-                        (string-prefix-p <<knowledge-tree-rx>> exwm-title)
-                        (string-prefix-p <<element-data-rx>> exwm-title)
-                        (string-prefix-p <<concepts-rx>> exwm-title)
-                        (string-prefix-p <<empty-sm-rx>> exwm-title)
-                        ;; (string-prefix-p (rx "z:\\home\\vrika\\documents\\sm") exwm-title)
-                        ;; The below may be necessary
-                        ;; (string-prefix-p (rx (seq "Mousepad")) exwm-title))
-                        (string-prefix-p "Internet Explorer" exwm-class-name)
-                        (string-prefix-p "Choose Collection" exwm-class-name)
-                        (string-prefix-p "RAIL" exwm-class-name)
-                        (string-prefix-p "sm18.exe" exwm-class-name)
-                        (string-prefix-p "Wine" exwm-class-name))
+            (unless (or (string-prefix-p "sm18.exe" exwm-class-name))
               (exwm/rename-buffer))))
+
 #+end_src
 
-#+RESULTS:
-| my-exwm-update-title-hook |
+However, currently the [[file:~/.local/share/applications/supermemo18.supermemo18.desktop::StartupWMClass=sm18.exe][StartupWMClass]] for sm18 is not propagating out to the actuall WM_CLASS as =sm18.exe=, possibly as a limitation of =wine-5.2= (actually, the =.desktop= entry doesn't work for me at all).
 
-#+begin_src elisp :noweb yes :noweb-ref element-window-hook :results silent
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-test-title-hook ()
-            (when (string-match <<element-window-rx>> exwm-title)
-              (exwm-workspace-rename-buffer "sm-element-window"))))
+The below now works by hooking into the stable =exwm-instance-name=
+
+#+begin_src elisp :noweb yes :noweb-ref exwm-class-hook
+(add-hook 'exwm-update-class-hook
+          (defun rename-sm-class ()
+            "Rename sm18.exe class"
+            (when (string-match (rx "sm18.exe") exwm-instance-name)
+              (setq exwm-class-name exwm-instance-name))))
+
+(add-hook 'exwm-update-class-hook
+          (defun my-exwm-update-class-hook ()
+            (unless (or (string-prefix-p "sm18.exe" exwm-class-name))
+              (exwm/rename-buffer))))
+
 #+end_src
 
-#+begin_src elisp :noweb yes :noweb-ref knowledge-tree-hook :results silent
-(add-hook 'exwm-update-title-hook
-          (defun sm-knowledge-tree-title-hook ()
-            (when (string-match <<knowledge-tree-rx>> exwm-title)
-              (exwm-workspace-rename-buffer "sm-knowledge-tree"))))
+** Regex and buffer alists
+:PROPERTIES:
+:CREATED:  [2021-10-02 Sat 11:25]
+:ID:       fe2492e4-5d72-481b-8c9b-2b8358055ea7
+:END:
+A cleaner approach than multiple ~when~ statements is to store the target =buffer-name= and =exwm-title= regex's as key . value pairs, respectively [fn:1].
+
+I should probably be writing this as =cons= and not using backquotes.
+#+begin_src elisp :noweb yes :noweb-ref sm-window hooks
+(setq exwm-sm-core-buffer-alist
+      (list `("sm-element-window" . ,<<element-window-rx>>)
+            `("sm-knowledge-tree" . ,<<knowledge-tree-rx>>)
+            '("sm-template-registry" . "Template Registry")
+            `("sm-element-data" . ,
+               <<element-data-rx>>)
+            `("sm-frame" . ,<<empty-sm-frame-rx>>)))
+
 #+end_src
-
-#+begin_src elisp :noweb yes :noweb-ref element-data-hook :results silent
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-data-title-hook ()
-            (when (string-match <<element-data-rx>> exwm-title)
-              (exwm-workspace-rename-buffer "sm-element-data"))))
-#+end_src
-
-#+begin_src elisp :noweb yes :noweb-ref empty-sm-hook :results silent
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-frame-title-hook ()
-            (if (string-match (rx "z:\\home\\vrika\\documents\\sm") exwm-title)
-              (exwm-workspace-rename-buffer "sm-frame"))))
-#+end_src
-
-#+begin_src elisp :noweb yes :noweb-ref empty-sm-hook2 :results silent
-(add-hook 'exwm-update-title-hook
-          (defun sm-frame-title-hook ()
-            (if (string-match (rx "c:\\users\\dan\\documents\\sm") exwm-title)
-              (exwm-workspace-rename-buffer "sm-frame"))))
-#+end_src
-
-Instead of having several seperate hooks we can define one function with several conditions:
-Could I write a list for this section?
-
-I think that I could write a macro for this
 
 #+begin_src elisp :noweb yes :noweb-ref sm-window hooks
 (add-hook 'exwm-update-title-hook
-          (defun sm-element-frame-title-hook ()
-            (when (string-match (rx "z:\\home\\vrika\\documents\\sm") exwm-title)
-                (exwm-workspace-rename-buffer "sm-frame"))
-            (when (string-match (rx bol "home" eol) exwm-title)
-              (exwm-workspace-rename-buffer "sm-element-window"))
-            (when (string-match (rx bol "neuron" eol) exwm-title)
-              (exwm-workspace-rename-buffer "sm-knowledge-tree"))
-            (when (string-match (rx (| (seq (or "Topic" "Element") space "#" (one-or-more digit) ":") (seq "Element data"))) exwm-title)
-              (exwm-workspace-rename-buffer "sm-element-data"))
-            (when (string-match (rx bol "Images") exwm-title)
-              (exwm-workspace-rename-buffer "sm-images"))
-            (when (string-match (rx bol "Repetition sorting criteria") exwm-title)
-              (exwm-workspace-rename-buffer "sm-sorting"))
-            (when (string-match (rx bol "Subset") exwm-title)
-              (exwm-workspace-rename-buffer "Subset"))
-            (when (string-match (rx bol "Repair Options") exwm-title)
-              (exwm-workspace-rename-buffer "sm-repair-collection"))
-            (when (string-match (rx bol "Analysis") exwm-title)
-              (exwm-workspace-rename-buffer "sm-statistics-analysis"))
-            (when (string-match (rx bol "Question") exwm-title)
-              (exwm-workspace-rename-buffer "sm-question-window"))
-            (when (string-match (rx bol "Modify Priorities") exwm-title)
-              (exwm-workspace-rename-buffer "sm-modify-priority"))
-            (when (string-match (rx bol "Element Priority") exwm-title)
-              (exwm-workspace-rename-buffer "sm-priority"))
-            (when (string-match (rx bol "Copying") exwm-title)
-              (exwm-workspace-rename-buffer "sm-backup-copy"))
-            (when (string-match (rx bol "Information") exwm-title)
-              (exwm-workspace-rename-buffer "sm-info-window"))
-            (when (string-match (rx bol "Options") exwm-title)
-              (exwm-workspace-rename-buffer "sm-options-window"))
-            (when (string-match (rx bol "Find elements") exwm-title)
-              (exwm-workspace-rename-buffer "sm-element-finder"))
-            ))
+          (defun sm-core-window-title-hook ()
+            "Manage the core names"
+            (cl-loop for (key . value) in exwm-sm-core-buffer-alist
+                     if (string-match value exwm-title)
+                     do (exwm-workspace-rename-buffer key)
+                        (setq exwm-title key))))
+
 #+end_src
 
-Then we add manually all the potential windows SM might spawn to =exwm-manage-configurations= so they can float over the main windows:
+#+begin_src elisp :noweb yes :noweb-ref sm-window hooks
+(setq exwm-sm-floating-buffer-alist
+      '(("sm-images" . "Images")
+        ("sm-sorting-criteria" . "Repetition sorting criteria")
+        ("sm-concepts" . "Concepts")
+        ("sm-new-concept" . "New Concept")
+        ("sm-subset" . "Subset")
+        ("sm-repair-options" . "Repair Options")
+        ("sm-statistics" . "Analysis")
+        ("sm-modify-priority" . "Element Priority")
+        ("sm-backup-copy" . "Copying")
+        ("sm-info-window" . "Information")
+        ("sm-algo-choice" . "Choices")
+        ("sm-options-window" . "Options")
+        ("sm-fonts-window" . "Fonts")
+        ("sm-outstanding" . "Outstanding")
+        ("sm-commander" . "SuperMemo Commander")
+        ;; ("sm-template-registry" . "Template Registry")
+        ("sm-element-finder" . "Find elements")))
+
+#+end_src
+
+#+begin_src elisp :noweb yes :noweb-ref sm-window hooks
+(add-hook 'exwm-update-title-hook
+          (defun sm-window-title-hook ()
+            "Iterate over naming alist and rename `exwm-title' to key"
+            (cl-loop for (key . value) in exwm-sm-floating-buffer-alist
+                     if (string-match (regexp-quote value) exwm-title)
+                     do (exwm-workspace-rename-buffer key)
+                        (setq exwm-title key))))
+
+#+end_src
+
+[fn:1] I can't find a reason to avoid the small amount of hardcoding done here. The fine-grained control outweighs any convenience automating naming would bring (as it would introduce unpredicability in the buffer naming).
+
+Here we loop over the predefined buffer names in =exwm-sm-window-names=, adding them iteratively to =exwm-manage-configurations=. The two different loops are to differentiate floating vs non-floating windows:
 
 #+begin_src elisp :noweb yes :noweb-ref sm managed configurations
-(add-to-list 'exwm-manage-configurations '((string-match (rx bol "Images") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Concepts") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Choices") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Template") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Subset") exwm-title) managed t floating nil))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "SuperMemo Commander") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Repetition sorting criteria") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Repair Options") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Analysis") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Question") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Element Priority") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Modify Priorities") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Element Priority") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Options") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Information") exwm-title) managed t floating t))
-(add-to-list 'exwm-manage-configurations '((string-match (rx "Find elements") exwm-title) managed t floating t))
+;; (setq exwm-manage-configurations nil)
+;; (add-to-list 'exwm-manage-configurations '((string= exwm-instance-name "sm18-core") managed t floating nil))
+(add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
 
+(cl-loop for (key . value) in exwm-sm-core-buffer-alist
+         do (push `((string= exwm-title ,key) managed t floating nil) exwm-manage-configurations))
+
+(cl-loop for (key . value) in exwm-sm-floating-buffer-alist
+         do (push `((string= exwm-title ,key) managed t floating t) exwm-manage-configurations))
+
+(add-to-list 'exwm-manage-configurations '((string= exwm-class-name "notepad.exe") managed t floating nil))
 #+end_src
 
 #+begin_src elisp :noweb yes :noweb-ref window assignments :results silent
@@ -373,62 +297,10 @@ Then we add manually all the potential windows SM might spawn to =exwm-manage-co
               (exwm-workspace-move-window target))))
 #+end_src
 
-Was this for "New Concepts"?
-#+begin_src elisp :noweb yes :noweb-ref concepts-hook :results silent
-(add-to-list 'exwm-manage-configurations '((string= exwm-title <<concepts-rx>>) managed t floating t))
-
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-concepts-title-hook ()
-            (when (string-match <<concepts-rx>> exwm-title)
-              (exwm-workspace-rename-buffer "concepts"))))
-
-(add-to-list 'exwm-manage-configurations '((string= exwm-title (rx (seq "New Concept"))) managed t floating t))
-
-(add-hook 'exwm-update-title-hook
-          (defun sm-element-concepts1-title-hook ()
-            (when (string-match (rx (seq "New Concept")) exwm-title)
-              (exwm-workspace-rename-buffer "New Concept"))))
-
-(add-hook 'exwm-update-title-hook
-          (defun iexplorer-title-hook ()
-            (when (string-match (rx (seq "Internet Explorer")) exwm-title)
-              (exwm-workspace-rename-buffer "iexplorer"))))
-
-(add-hook 'exwm-update-title-hook
-          (defun sma-title-hook ()
-            (when (string-match (rx (seq "Choose Collection")) exwm-title)
-              (exwm-workspace-rename-buffer "supermemoassistant"))))
-
-;; (add-to-list 'exwm-manage-configurations
-;;    '((string= (buffer-name) "sm-element-window")
-;;      (string= (buffer-name) "sm-knowledge-tree")
-;;      (string= (buffer-name) "sm-element-data")
-;;       workspace 3))
-
-;; (add-to-list 'exwm-manage-configurations
-;;    '((string= (buffer-name) "sm-element-window")
-;;      workspace 3))
-
-(add-to-list 'exwm-manage-configurations
-   '((string= exwm-instance-name "sm18.exe")
-     workspace 3 managed t floating nil))
-
-(add-to-list 'exwm-manage-configurations
-   '((string= exwm-instance-name "SuperMemo 18")
-     workspace 3 managed t floating nil))
-#+end_src
-
 #+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+sm-window-rules.el
 ;;; desktop/exwm/+sm-window-rules.el -*- lexical-binding: t; -*-
-;; <<empty-sm-hook>>
 
-;; <<element-window-hook>>
-
-;; <<knowledge-tree-hook>>
-
-;; <<element-data-hook>>
-
-;; <<concepts-hook>>
+<<exwm-class-hook>>
 
 <<sm-window hooks>>
 
@@ -491,29 +363,10 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
                         ;; (inhibit-same-window . t)
                         (side . bottom)
                         (slot . 1)
-                        (window-height . 0.21)))))
-            ))
+                        (window-height . 0.21)))))))
 #+end_src
 
-#+begin_src elisp :noweb yes :results silent
-  ;; (add-hook 'exwm-manage-finish-hook
-  ;;           (lambda ()
-  ;;             (when (string-match-p "sm-knowledge-tree" (buffer-name))
-  ;;               (display-buffer-in-side-window (current-buffer)
-  ;;                                              '((side . left)
-  ;;                                                (slot . 0)
-  ;;                                                (window-height . 0.16))))))
-#+end_src
 
-#+begin_src elisp :noweb yes :results silent
-  ;; (add-hook 'exwm-manage-finish-hook
-  ;;           (lambda ()
-  ;;             (when (string-match-p "sm-element-data" (buffer-name))
-  ;;               (display-buffer-in-side-window (current-buffer)
-  ;;                                              '((side . bottom)
-  ;;                                                (slot . 0)
-  ;;                                                (window-height . 0.20))))))
-#+end_src
 
 #+begin_src elisp :tangle no :noweb yes :results silent
 ;; (remove-hook 'exwm-manage-finish-hook
@@ -525,123 +378,6 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
 ;;                                              '((side . bottom)
 ;;                                                (slot . 0)
 ;;                                                (window-width . 0.23))))))
-#+end_src
-
-** dbc
-:PROPERTIES:
-:CREATED:  [2020-10-19 Mon 13:31]
-:ID:       bbd768ea-8399-40f1-a256-9af276fa9796
-:END:
-
-An alternative would be to use the [[https://gitlab.com/matsievskiysv/display-buffer-control][dbc]] package, a wrapper around ~display-buffer~ which makes configuration a little easier:
-
-*** Element window window
-:PROPERTIES:
-:CREATED:  [2020-11-30 Mon 17:08]
-:ID:       aeb600d7-3e63-46d0-a536-656885c5d139
-:END:
-
-#+begin_src elisp :noweb yes :results silent :noweb-ref element window rule
-(dbc-add-ruleset "expose" '((display-buffer-reuse-window display-buffer-pop-up-frame) .
-                            ((reusable-frames . 0))))
-
-(dbc-add-rule "expose" "main" :newname "sm-element-window")
-#+end_src
-
-*** Knowledge tree window
-:PROPERTIES:
-:CREATED:  [2020-10-19 Mon 13:36]
-:ID:       f413ac69-a518-4fae-9228-6c298771a214
-:END:
-
-dbc ruleset for the knowledge tree
-
-#+begin_src elisp :results silent :noweb-ref left rule
-(dbc-add-ruleset "left" '((display-buffer-reuse-window display-buffer-in-side-window) .
-                          ((side . left) (slot . -1) (window-width . 0.22))) 5)
-
-(dbc-add-rule "left" "tree" :newname "sm-knowledge-tree")
-#+end_src
-
-Remove the rule for testing purposes
-#+begin_src elisp :noweb yes :results silent
-(dbc-remove-rule "left" "tree")
-#+end_src
-
-#+begin_src elisp :noweb yes
-(dbc-add-rule "bottom" "bar" :newname <<lower-bar-rx>>)
-#+end_src
-
-*** Element data window
-:PROPERTIES:
-:CREATED:  [2020-11-30 Mon 17:08]
-:ID:       e9c424ac-738f-4688-ad9c-8cdbbfd5d568
-:END:
-
-#+begin_src elisp :results silent :noweb-ref element tray rule
-(dbc-add-ruleset "bottom" '((display-buffer-reuse-window display-buffer-in-side-window) .
-                            ((side . bottom) (slot . 0) (window-height . 0.23))) 10)
-
-(dbc-add-rule "bottom" "tray" :newname "sm-element-data")
-#+end_src
-
-#+begin_src elisp :results silent
-(dbc-remove-ruleset "bottom")
-#+end_src
-
-#+begin_src elisp
-(dbc-remove-rule "bottom" "tray")
-#+end_src
-
-*** Empty frame
-:PROPERTIES:
-:CREATED:  [2020-11-30 Mon 17:08]
-:ID:       549b81e7-1902-4bd5-bb1c-4a82268a6a71
-:END:
-
-There seems to be somekind of empty frame that Supermemo produces. When inside this frame/window it can cause all the other SM related windows to freak out and rapidly cylce through them hanging the system temporarily.
-
-#+begin_src elisp :noweb yes :results silent
-;; (dbc-add-rule "left" "test" :newname (rx (seq "Mousepad")))
-(dbc-add-rule "left" "test123" :newname "Mousepad")
-#+end_src
-
-#+begin_src elisp :results silent
-(dbc-add-ruleset "supress" '((display-buffer-no-window)) 1)
-#+end_src
-
-#+begin_src elisp :noweb yes
-(dbc-add-rule "supress" "empty" :newname <<empty-sm>>)
-#+end_src
-
-#+begin_src elisp :noweb yes
-(use-package! dbc
-  :after exwm
-  :config
-  ;; (dbc-remove-ruleset "expose" '((display-buffer-reuse-window display-buffer-pop-up-frame) .
-  ;;                             ((reusable-frames . 0))))
-
-  (dbc-add-ruleset "top" dbc-same-window-action 100)
-
-  (dbc-add-ruleset "left" '((display-buffer-reuse-window display-buffer-in-side-window) .
-                            ((side . left) (slot . -1) (window-width . 0.22))) 5)
-
-
-  (dbc-add-ruleset "bottom" '((display-buffer-reuse-window display-buffer-in-side-window) .
-                              ((side . bottom) (slot . 0) (window-height . 0.23))) 10)
-
-  (add-hook 'exwm-manage-finish-hook
-            (lambda ()
-              (dbc-add-rule "top" "main" :newname "sm-element-window")))
-
-  (add-hook 'exwm-manage-finish-hook
-            (lambda ()
-              (dbc-add-rule "left" "tree" :newname "sm-knowledge-tree")))
-
-  (add-hook 'exwm-manage-finish-hook
-            (lambda ()
-              (dbc-add-rule "bottom" "tray" :newname "sm-element-data")))
-  )
 #+end_src
 
 ** Final buffer tangle
@@ -675,73 +411,123 @@ There seems to be somekind of empty frame that Supermemo produces. When inside t
 :END:
 Here we'll define the core keypress events we'd want to send to Supermemo.
 
-simulation keys
-#+begin_src elisp
-(setq exwm-input-simulation-keys
-      '(
-        ;; ([?\C-b] . [left])
-        ;; ([?\C-f] . [right])
-        ;; ([?\C-p] . [up])
-        ;; ([?\C-n] . [down])
-        ;; ([?\C-a] . [home])
-        ;; ([?\C-e] . [end])
-        ;; ([?\M-v] . [prior])
-        ([?\C-c] . [left])
-        ([?\C-v] . [?\C-v])
-        ([?\C-j] . [?\C-j])
-        ([?\M-x] . [?\M-x])))
-#+end_src
-
-#+RESULTS:
-: (([3] . [left]) ([22] . [22]) ([10] . [10]) ([134217848] . [134217848]))
-
-** Advanced functions with AHK
+** TODO xdotool keypress faking
 :PROPERTIES:
 :CREATED:  [2021-04-20 Tue 15:53]
 :ID:       ace7c6f8-9504-4596-a159-a4436e5d1147
 :END:
 
-A little function to assist with executing ahk.exe's
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
-;;; desktop/exwm/+exwm-sm-core.el -*- lexical-binding: t; -*-
-
-;; (defun ahk-run (ahk)
-;;     "pass an AHK .exe on to start-process-shell-command in a temp buffer"
-;;     (setq sm-current-buffer (current-buffer))
-;;       (progn
-;;         (when (posframe-workable-p)
-;;           (posframe-show "*ahk-run*"
-;;                          :height 30
-;;                          :width 30
-;;                          :internal-border-width 2
-;;                          :internal-border-width 2
-;;                          :internal-border-width "purple"))
-;;         (switch-to-buffer-other-frame "*ahk-run*")
-;;         ;; (switch-to-buffer "*ahk-run*"))
-;;         (let ((process (start-process-shell-command
-;;                         "ahk-run"
-;;                         "*ahk-run*"
-;;                         "env WINEPREFIX='/home/volk/.local/share/wineprefixes/supermemo18'"
-;;                         "wine" ahk)))
-;;           (set-process-sentinel process 'ahk-run-sentinel))))
-
-;; (defun ahk-run-sentinel (p e)
-;; "quit the popup buffer after successful run of shell process"
-;;  (when (= 0 (process-exit-status p))
-;;    (posframe-hide "*ahk-run*")
-;;    (switch-to-buffer sm-current-buffer)))
-
-
-  ;; (exwm-input-release-keyboard)
+#+begin_src elisp
+(defun exwm-sm-xdotool-send-key (keypress)
+  "Send a reload event to Firefox."
+  (interactive)
+  (let ((key keypress)
+        (window-id exwm--id))
+        (shell-command
+         (format "xdotool key --window %s --delay 220 %s" window-id key))))
 #+end_src
 
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+#+begin_src elisp :noweb yes :noweb-ref xdotool-send
+(defun exwm-sm-xdotool-send-key (mod-key keypress)
+  "Send a reload event to Firefox."
+  (interactive)
+  (let ((key keypress)
+        ;; (window-id exwm--id)
+        (modifier mod-key))
+    (shell-command
+     (format "xdotool keydown %s sleep 0.1" modifier))
+    (exwm-input--fake-key key)
+    (shell-command
+     (format "xdotool keyup %s"  modifier))))
+#+end_src
 
-(defun ahk-run (ahk)
-  (start-process-shell-command
-  "ahk-run"
-  "*ahk-run*"
-  (format "%s %s" "wineconsole" ahk)))
+#+begin_src elisp
+(defun exwm-sm-core-word ()
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'right))
+#+end_src
+
+#+begin_src elisp
+(defun exwm-sm-xdotool-send-key (keypress)
+  "Send a reload event to Firefox."
+  (interactive)
+  (let ((key keypress)
+        (window-id exwm--id))
+    (start-process-shell-command
+     "xdotool"
+     "*xdotool*"
+     (format "xdotool key --window %s --delay 220 %s" window-id key))))
+#+end_src
+
+Using ~shell-command-to-string~
+The delay here is quiet noticeable
+#+begin_src elisp :noweb yes :noweb-ref shell-command xdo
+(defun exwm-sm-xdotool-send-key (keypress)
+  "Send a reload event to Firefox."
+  (interactive)
+  (let ((key keypress))
+        (exwm/enter-char-mode)
+        (exwm/enter-char-mode)
+        ;; (while exwm-input-line-mode-passthrough
+        ;;   (exwm/enter-char-mode))
+        (shell-command-to-string (format "xdotool key --delay 220 %s" key))
+        (exwm/enter-normal-state)))
+#+end_src
+
+Using ~make-process~
+#+begin_src elisp :noweb yes :noweb-ref make-proc xdo
+(defun exwm-sm-xdotool-send-key (keypress)
+  "Send a reload event to Firefox."
+  (interactive)
+  (let ((key keypress))
+        (exwm/enter-char-mode)
+        ;; (while exwm-input-line-mode-passthrough
+        ;;   (exwm/enter-char-mode))
+        (make-process
+         :name "xdotool"
+         ;; :buffer (current-buffer)
+         :command '("xdotool" "key --delay 200 %s" key)
+        (exwm/enter-normal-state))))
+#+end_src
+
+#+begin_src elisp
+(defun exwm-sm-xdotool-send-string (string-text)
+  "Send text-string to buffer via xdotool."
+  (interactive)
+  (let ((text string-text)
+        (window-id exwm--id))
+        (shell-command
+         (format "xdotool type --window %s --delay 220 %s" window-id text))))
+#+end_src
+
+** HACK Emulating mouse events
+:PROPERTIES:
+:CREATED:  [2021-10-02 Sat 11:25]
+:ID:       f95049ad-539c-47d0-9b7e-b185593ff9eb
+:END:
+
+Before moving on to the rest of core, we need to emulate mouse button presses when in ~line-mode~
+#+begin_src elisp :noweb yes :noweb-ref mouse input simulation
+(defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
+  "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+  (with-current-buffer buffer
+    (let ((read-event (exwm-input--mimic-read-event button-event)))
+      (exwm--log "%s" read-event)
+      (if (and read-event
+               (exwm-input--event-passthrough-p read-event))
+          ;; The event should be forwarded to emacs
+          (progn
+            (exwm-input--cache-event read-event)
+            (exwm-input--unread-event button-event)
+
+            xcb:Allow:ReplayPointer)
+        ;; The event should be replayed
+        xcb:Allow:ReplayPointer))))
 #+end_src
 
 ** Basic movement functions
