@@ -1372,11 +1372,11 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
 (require 'evil-core)
 (require '+exwm-sm-core)
 
-;; (defvar exwm-sm-evil-sm-class-name '("Excel" "excel.exe" "WineDesktop - Wine desktop" "explorer.exe" "Wine" "Wine desktop")
-;;   "The class name use for detecting if a SM buffer is selected.")
+(defvar exwm-sm-evil-sm-class-name '("sm18.exe")
+  "The class name use for detecting if a SM buffer is selected.")
 
-(defvar exwm-sm-evil-sm-buffer-name '(sm-element-window)
-  "The buffer name used for detecting if a SM buffer is selected.")
+;; (defvar exwm-sm-evil-sm-buffer-name '(sm-element-window)
+;;   "The buffer name used for detecting if a SM buffer is selected.")
 
 ;;; State transitions
 (defun exwm-sm-evil-normal ()
@@ -1391,10 +1391,20 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
   (setq-local exwm-input-line-mode-passthrough nil)
   (evil-insert-state))
 
+(defun exwm-sm-evil-visual ()
+  "Visual mode!"
+  (interactive)
+  (setq-local exwm-input-line-mode-passthrough t)
+  (shell-command
+   (format "xdotool keydown Shift sleep 0.1"))
+  (evil-visual-state))
+
 (defun exwm-sm-evil-exit-visual ()
   "Exit visual state properly."
   (interactive)
   ;; Unmark any selection
+  (shell-command
+   (format "xdotool keyup Shift"))
   (exwm-sm-core-left)
   (exwm-sm-core-right)
   (exwm-sm-evil-normal))
@@ -1408,18 +1418,30 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
 ;;; Keys
 (defvar exwm-sm-evil-mode-map (make-sparse-keymap))
 
+    ;;;; Transitions
 ;; Bind normal
 (define-key exwm-sm-evil-mode-map [remap evil-exit-visual-state] 'exwm-sm-evil-exit-visual)
 (define-key exwm-sm-evil-mode-map [remap evil-normal-state] 'exwm-sm-evil-normal)
 (define-key exwm-sm-evil-mode-map [remap evil-force-normal-state] 'exwm-sm-evil-normal)
+(define-key exwm-sm-evil-mode-map [remap evil-visual-state] 'exwm-sm-evil-visual)
 ;; Bind insert
 (define-key exwm-sm-evil-mode-map [remap evil-insert-state] 'exwm-sm-evil-insert)
 (define-key exwm-sm-evil-mode-map [remap evil-insert] 'exwm-sm-evil-insert)
 (define-key exwm-sm-evil-mode-map [remap evil-substitute] 'exwm-sm-evil-insert)
 (define-key exwm-sm-evil-mode-map [remap evil-append] 'exwm-sm-evil-insert)
 
-        ;;;; Normal
+#+end_src
+
+** Normal mode maps
+:PROPERTIES:
+:CREATED:  [2021-10-02 Sat 11:25]
+:ID:       fdf9c4a5-abeb-424c-97f5-8eddf3ccf5bc
+:END:
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;;;; Normal
 ;; Basic movements
+
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "w") 'exwm-sm-core-forward-word-test)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "k") 'exwm-sm-core-up)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "j") 'exwm-sm-core-down)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "h") 'exwm-sm-core-left)
@@ -1428,36 +1450,155 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "J") 'exwm-sm-core-goto-child)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "H") 'exwm-sm-core-back)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "L") 'exwm-sm-core-forward)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "w") 'exwm-sm-core-word)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "b") 'exwm-sm-core-word-back)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "0") 'exwm-sm-core-beginning-of-line)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "$") 'exwm-sm-core-end-of-line)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "/") 'exwm-sm-core-find)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "t") 'exwm-sm-core-test)
+;; (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "<escape>") 'exwm-sm-core-escape)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "<return>") '(lambda () (interactive) (exwm-input--fake-key 'return)))
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "RET") '(lambda () (interactive) (exwm-input--fake-key 'return)))
 
+;;; Motion State
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "gg") 'exwm-sm-core-goto-first-line)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "G") 'exwm-sm-core-goto-last-line)
+
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "gq") 'exwm-sm-core-edit-question)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "ga") 'exwm-sm-core-edit-answer)
+
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-u") 'exwm-sm-core-scroll-up)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-d") 'exwm-sm-core-scroll-up)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-b") 'exwm-sm-core-scroll-page-up)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-e") 'exwm-sm-core-scroll-line-down)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-f") 'exwm-sm-core-scroll-page-down)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-y") 'exwm-sm-core-scroll-line-up)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "RET") 'exwm-sm-core-execute-rep)
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
 ;;; Editing text
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "y") 'exwm-sm-core-copy)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "d") 'exwm-sm-core-cut)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "p") 'exwm-sm-core-paste)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "u") 'exwm-sm-core-undo)
-(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "R") 'exwm-sm-core-redo)
-;; Editing elements
-(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "e") 'exwm-sm-core-answer)
-(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "E") 'exwm-sm-core-question)
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "C-r") 'exwm-sm-core-redo)
 
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
 ;;; Learn operations
-(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "d") 'exwm-sm-core-contents-dismiss-element)
+;; (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "d") 'exwm-sm-core-contents-dismiss-element)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "x") 'exwm-sm-core-extract)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "X") 'exwm-sm-core-schedule-extract)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "SPC") 'exwm-sm-core-learn)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd ",") 'nanjigen/sm-hydra/body)
-(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "<return>") 'exwm-sm-core-rep)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "P") 'exwm-sm-core-prioritize)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "s") 'exwm-sm-core-reschedule)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "o") 'exwm-sm-core-get-filepath)
 (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "r") 'exwm-sm-core-replay)
 
+(map! :map exwm-sm-evil-mode-map
+      :n "SPC" #'exwm-sm-core-learn)
+
+#+end_src
+
+** Visual maps
+:PROPERTIES:
+:CREATED:  [2021-10-02 Sat 11:25]
+:ID:       f291281f-7415-4251-9ee2-263263661236
+:END:
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;; Selection
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "V") '(lambda
+                                                             ()
+                                                             (interactive)
+                                                             (exwm-input--fake-key 'end)
+                                                             (exwm-sm-evil-visual)
+                                                             (exwm-input--fake-key 'up)))
+(evil-define-key 'normal exwm-sm-evil-mode-map (kbd "v") '(lambda
+                                                             ()
+                                                             (interactive)
+                                                             (exwm-sm-evil-visual)
+                                                             (exwm-input--fake-key 'right)))
+
+#+end_src
+
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;;;; Visual
+;; Basic movements
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "k") 'exwm-sm-core-up)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "j") 'exwm-sm-core-down)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "h") 'exwm-sm-core-left)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "l") 'exwm-sm-core-right)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "K") 'exwm-sm-core-goto-parent)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "J") 'exwm-sm-core-goto-child)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "H") 'exwm-sm-core-back)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "L") 'exwm-sm-core-forward)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "w") 'exwm-sm-core-word)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "b") 'exwm-sm-core-word-back)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "{") 'exwm-sm-core-visual-backward-paragraph)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "}") 'exwm-sm-core-visual-forward-paragraph)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "b") 'exwm-sm-core-word-back)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "/") 'exwm-sm-core-find)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "t") 'exwm-sm-core-test)
+;; (evil-define-key 'normal exwm-sm-evil-mode-map (kbd "<escape>") 'exwm-sm-core-escape)
+(evil-define-key 'visual exwm-firefox-evil-mode-map (kbd "<return>") '(lambda () (interactive) (exwm-input--fake-key 'return)))
+(evil-define-key 'visual exwm-firefox-evil-mode-map (kbd "RET") '(lambda () (interactive) (exwm-input--fake-key 'return)))
+
+;;; Motion State
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "gg") 'exwm-sm-core-goto-first-line)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "G") 'exwm-sm-core-goto-last-line)
+
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "gq") 'exwm-sm-core-edit-question)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "ga") 'exwm-sm-core-edit-answer)
+
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-u") 'exwm-sm-core-scroll-up)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-d") 'exwm-sm-core-scroll-up)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-b") 'exwm-sm-core-scroll-page-up)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-e") 'exwm-sm-core-scroll-line-down)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-f") 'exwm-sm-core-scroll-page-down)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-y") 'exwm-sm-core-scroll-line-up)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "RET") 'exwm-sm-core-execute-rep)
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;; Selection
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "y") 'exwm-sm-core-copy)
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;;; Editing text
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "y") 'exwm-sm-core-copy)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "d") 'exwm-sm-core-cut)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "p") 'exwm-sm-core-paste)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "u") 'exwm-sm-core-undo)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "C-r") 'exwm-sm-core-redo)
+
+#+end_src
+
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
+;;; Learn operations
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "x") 'exwm-sm-core-extract)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "X") 'exwm-sm-core-schedule-extract)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "SPC") 'exwm-sm-core-learn)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd ",") 'nanjigen/sm-hydra/body)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "P") 'exwm-sm-core-prioritize)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "s") 'exwm-sm-core-reschedule)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "o") 'exwm-sm-core-get-filepath)
+(evil-define-key 'visual exwm-sm-evil-mode-map (kbd "r") 'exwm-sm-core-replay)
 
 (map! :map exwm-sm-evil-mode-map
       :n "SPC" #'exwm-sm-core-learn)
 
-
+#+end_src
+** End
+:PROPERTIES:
+:CREATED:  [2021-10-02 Sat 11:25]
+:ID:       ca5c53de-2eb7-4445-9b25-6641ac7f6733
+:END:
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-evil.el
 ;;; Mode
 ;;;###autoload
 (define-minor-mode exwm-sm-evil-mode nil nil nil exwm-sm-evil-mode-map
@@ -1470,7 +1611,7 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
   "Activates exwm-sm mode when buffer is SM.
 SM variant can be assigned in 'exwm-sm-evil-sm-name`"
   (interactive)
-  (if (member exwm-class-name exwm-sm-evil-sm-buffer-name)
+  (if (member exwm-class-name exwm-sm-evil-sm-class-name)
       (exwm-sm-evil-mode 1)))
 
 (provide '+exwm-sm-evil)
