@@ -40,7 +40,7 @@ We use ~:defer~ here so that we can give the mail address secrets to load later 
         mu4e-update-interval (* 10 60)
         message-kill-buffer-on-exit t
         ;; mu4e-headers-auto-update nil ; no refresh cos lose current filter
-        mu4e-change-filenames-when-moving t ; Preferred for mbsync according to man page.
+        mu4e-change-filenames-when-moving t ; Preferred for mbsync according to man page.)
 
         ;; Don't bother me with context on startup
         ;; mu4e-context-policy nil
@@ -49,8 +49,8 @@ We use ~:defer~ here so that we can give the mail address secrets to load later 
         ;; Use Ivy for mu4e completions (maildir folders, etc)
         (setq mu4e-completing-read-function #'ivy-completing-read)
         ;; mu4e-attachment-dir "~/Downloads"
-        mu4e-save-multiple-attachments-without-asking t
-        mu4e-compose-signature-auto-include nil)
+        ;; mu4e-save-multiple-attachments-without-asking t
+        ;; mu4e-compose-signature-auto-include nil)
 
   ;; Display
   (setq message-yank-prefix "")
@@ -301,7 +301,7 @@ mu index --rebuild --maildir=~/.Maildir
 :END:
 mbsync
 
-** Programmimatically send emails with mu4e
+** TODO Programmimatically send emails with mu4e
 :PROPERTIES:
 :CREATED:  [2020-05-28 Thu 10:06]
 :ID:       bf470fb3-eeb0-413a-aa56-93cfa68e0981
