@@ -341,11 +341,11 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
               (display-buffer
                (get-buffer-create "sm-frame")
                '((display-buffer-no-window)
-                 ;; (allow-no-window . t)
-                 )))
+                 (allow-no-window . t))))
             (when (string-match-p "sm-element-window" (buffer-name))
               (display-buffer
                (get-buffer-create "sm-element-window")
+               (doom-modeline-mode 1)
                '((display-buffer-same-window))))
             (when (string-match-p "sm-knowledge-tree" (buffer-name))
               (display-buffer
@@ -387,10 +387,7 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
 :header-args: :noweb-ref dbc rules
 :END:
 #+begin_src elisp :noweb yes
-;; (use-package! dbc
-;; :config
 
-<<exwm-class-hook>>
 
 <<exwm-title-hook>>
 
@@ -535,9 +532,15 @@ button event."
 :CREATED:  [2021-04-20 Tue 15:53]
 :ID:       08f4795c-fb26-4b13-8a48-99a03d67cb53
 :END:
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+#+begin_src elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+;;; desktop/exwm/+exwm-sm-evil.el -*- lexical-binding: t; -*-
+
 (require 'exwm)
 (require 'exwm-input)
+
+<<xdotool-send>>
+
+<<mouse input simulation>>
 
 ;;; Basic navigation
 ;;;###autoload
@@ -565,42 +568,104 @@ button event."
   (exwm-input--fake-key 'right))
 
 ;;;###autoload
+(defun exwm-sm-core-word ()
+  "Word noun"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'right))
+
+;;;###autoload
+(defun exwm-sm-core-word-back ()
+  "Back word"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'left))
+
+;;;###autoload
+(defun exwm-sm-core-beginning-of-line ()
+  "Go to line start"
+  (interactive)
+  (exwm-input--fake-key 'home))
+
+;;;###autoload
+(defun exwm-sm-core-end-of-line ()
+  "Go to line end"
+  (interactive)
+  (exwm-input--fake-key 'end))
+
+;;;###autoload
 (defun exwm-sm-core-goto-parent ()
   "Go to parent of current element"
   (interactive)
-  (ahk-run "~/.scripts/ahk/goto-parent.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'up))
 
 ;;;###autoload
 (defun exwm-sm-core-goto-child ()
   "Go to the first child of current element"
   (interactive)
-  (ahk-run "~/.scripts/ahk/goto-child.exe"))
-
-;; ;;;###autoload
-;; (defun exwm-sm-core-forward ()
-;;   "Go forward element"
-;;   (interactive)
-;;   (let ((exwm-input-line-mode-passthrough t))
-;;     (ahk-run "~/.scripts/ahk/forward.exe")))
-
+  (exwm-sm-xdotool-send-key "ctrl" 'down))
 
 ;;;###autoload
 (defun exwm-sm-core-forward ()
   "Go forward element"
   (interactive)
-    (ahk-run "~/.scripts/ahk/forward.exe"))
+  (exwm-sm-xdotool-send-key "alt" 'right))
 
 ;;;###autoload
 (defun exwm-sm-core-back ()
   "Go back element"
   (interactive)
-    (ahk-run "~/.scripts/ahk/forward.exe"))
-;; ;;;###autoload
-;; (defun exwm-sm-core-back ()
-;;   "Go back element"
-;;   (interactive)
-;;   (async-shell-command (format "%s %s" "wine cmd.exe /C" "~/.scripts/ahk/back.exe")))
+  (exwm-sm-xdotool-send-key "alt" 'left))
 
+;;;###autoload
+(defun exwm-sm-core-goto-first-line ()
+  "Go to top of component page"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'home))
+
+;;;###autoload
+(defun exwm-sm-core-goto-last-line ()
+  "Go to bottom of component page
+Note that this goes past the references"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'end))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-up ()
+  "Scroll up"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl+End"))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-down ()
+  "Scroll Down"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl+End"))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-page-up ()
+  "Scroll up by page length"
+  (interactive)
+  (exwm-sm-xdotool-send-key "Page_Up"))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-line-down ()
+  "Scroll one visual line down"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl+End"))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-page-down ()
+  "Scroll down by page length"
+  (interactive)
+  (exwm-sm-xdotool-send-key "Page_Down"))
+
+;;;###autoload
+(defun exwm-sm-core-scroll-line-up ()
+  "Scroll one visual line up"
+  (interactive)
+  (exwm-sm-xdotool-send-key "Page_Down"))
+#+end_src
+
+#+begin_src elisp :tangle no
 (add-to-list
  'display-buffer-alist
   '("\\*Async Shell Command\\*"
@@ -612,6 +677,36 @@ button event."
   '("\\*EXWM\\*"
      (display-buffer-no-window)
      (allow-no-window . t)))
+#+end_src
+
+** Selection
+:PROPERTIES:
+:CREATED:  [2021-04-21 Wed 12:45]
+:ID:       468001dc-ec7e-454c-aef6-5559c240f146
+:END:
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
+;;;; Selection
+
+;;;###autoload
+(defun exwm-sm-core-visual-char ()
+  "Start visual char selection."
+  (interactive)
+  (exwm-sm-xdotool-send-key "Shift" 'right))
+
+;;;###autoload
+(defun exwm-sm-core-visual-line ()
+"Start visual line selection."
+  (interactive)
+  (exwm-input--fake-key 'home)
+  (exwm-sm-xdotool-send-key "Shift+End")
+  (evil-visual-state))
+
+;;;###autoload
+(defun exwm-sm-core-select-all ()
+  "Select whole page."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl+a"))
+
 #+end_src
 
 ** Find and search operations
@@ -626,37 +721,43 @@ button event."
 (defun exwm-sm-core-find ()
   "Find general."
   (interactive)
-  (ahk-run "~/.scripts/ahk/find.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f))
 
 ;;;###autoload
 (defun exwm-sm-core-search ()
   "Search for texts containing a given string."
   (interactive)
-  (ahk-run "~/.scripts/ahk/search.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'r))
 
 ;;;###autoload
 (defun exwm-sm-core-find-elements ()
   "Find elements."
   (interactive)
-  (ahk-run "~/.scripts/ahk/find-elements.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f))
 
 ;;;###autoload
 (defun exwm-sm-core-search-phrase ()
   "Search currently selected phrase."
   (interactive)
-  (ahk-run "~/.scripts/ahk/search-phrase.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f3))
+
+;;;###autoload
+(defun exwm-sm-core-search-element-id ()
+  "Goto element with a given element-id"
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'g))
 
 ;;;###autoload
 (defun exwm-sm-core-find-next ()
   "Find next."
   (interactive)
-  (exwm-input--fake-key ?\C-g))
+  (exwm-sm-xdotool-send-key "ctrl" 'g))
 
 ;;;###autoload
 (defun exwm-sm-core-find-previous ()
   "Find previous."
   (interactive)
-  (exwm-input--fake-key ?\C-\S-g))
+  (exwm-sm-xdotool-send-key "ctrl Shift" 'g))
 
 #+end_src
 
@@ -667,140 +768,103 @@ button event."
 :END:
 #+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
 ;;; Editing
-;;;###autoload
 
+;;;###autoload
+(defun exwm-sm-core-escape ()
+  (interactive)
+  (exwm-input--fake-key 'escape))
+
+;;;###autoload
 (defun exwm-sm-core-paste ()
-  "Paste from clipboard."
-   (interactive)
-   (ahk-run "~/.scripts/ahk/paste.exe"))
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'v))
 
 (defun exwm-sm-core-paste-html ()
   "Paste html from clipboard."
    (interactive)
-   (ahk-run "~/.scripts/ahk/paste-html.exe"))
+   (exwm-sm-xdotool-send-key "Shift" 'f10)
+   (exwm-input--fake-key 'x)
+   (exwm-input--fake-key 'p))
 
 ;;;###autoload
 (defun exwm-sm-core-copy ()
   "Copy to clipboard."
    (interactive)
-   (ahk-run "~/.scripts/ahk/copy-clipboard.exe"))
+   (exwm-sm-xdotool-send-key "ctrl" 'c))
 
 ;;;###autoload
 (defun exwm-sm-core-cut ()
   "Cut text."
    (interactive)
-   (ahk-run "~/.scripts/ahk/cut.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-delete ()
-  "Delete text."
-   (interactive)
-   (ahk-run "~/.scripts/ahk/delete.exe"))
+   (exwm-sm-xdotool-send-key "ctrl" 'x))
 
 ;;;###autoload
 (defun exwm-sm-core-undo ()
   "Undo."
    (interactive)
-   (ahk-run "~/.scripts/ahk/undo.exe"))
+   (exwm-sm-xdotool-send-key "ctrl" 'u))
 
 ;;;###autoload
 (defun exwm-sm-core-redo ()
   "Redo."
    (interactive)
-   (ahk-run "~/.scripts/ahk/redo.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-forward-word ()
-  "Move word forward."
-  (interactive)
-  (exwm-input--fake-key 'C-right))
-
-;;;###autoload
-(defun exwm-sm-core-back-word ()
-  "Move word backward."
-  (interactive)
-  (exwm-input--fake-key 'C-left))
+   (exwm-sm-xdotool-send-key "ctrl Shift" 'z))
 
 ;;;###autoload
 (defun exwm-sm-core-bold ()
   "Embolden selected text"
   (interactive)
-  (ahk-run "~/.scripts/ahk/bold-font.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'b))
 
 ;;;###autoload
 (defun exwm-sm-core-italic ()
   "Italicise selected text."
   (interactive)
-  (ahk-run "~/.scripts/ahk/italic-font.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'i))
 
 ;;;###autoload
 (defun exwm-sm-decrease-font ()
   "Decrease selected font size"
   (interactive)
-  (ahk-run "~/.scripts/ahk/decrease-font-size.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" '\[))
 
 ;;;###autoload
 (defun exwm-sm-increase-font ()
   "Increase selected font size"
   (interactive)
-  (ahk-run "~/.scripts/ahk/increase-font-size.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" '\]))
 
 ;;;###autoload
 (defun exwm-sm-core-edit-question ()
   "Edit the question component"
   (interactive)
-  (ahk-run "~/.scripts/ahk/edit-question.exe"))
+  (exwm-input--fake-key 'escape)
+  (exwm-input--fake-key 'q))
 
 ;;;###autoload
 (defun exwm-sm-core-edit-answer ()
   "Edit the first answer"
   (interactive)
-  (ahk-run "~/.scripts/ahk/edit-answer.exe"))
+  (exwm-input--fake-key 'escape)
+  (exwm-input--fake-key 'a))
 
 ;;;###autoload
 (defun exwm-sm-core-edit-file ()
   "Edit .HTM file"
   (interactive)
-  (ahk-run "~/.scripts/ahk/edit-file.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f9))
 
 ;;;###autoload
 (defun exwm-sm-core-edit-next-component ()
   "Edit the next component in element window"
   (interactive)
-  (ahk-run "~/.scripts/ahk/edit-next-component.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 't))
 
 ;;;###autoload
 (defun exwm-sm-core-edit-switch-mode ()
   "Cycle presentation -> editing -> dragging modes"
   (interactive)
-  (ahk-run "~/.scripts/ahk/edit-next-component.exe"))
-
-#+end_src
-
-** Selection
-:PROPERTIES:
-:CREATED:  [2021-04-21 Wed 12:45]
-:ID:       468001dc-ec7e-454c-aef6-5559c240f146
-:END:
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
-;;;; Selection
-;;;###autoload
-(defun exwm-sm-core-forward-word-select ()
-  "Move word forward and select."
-  (interactive)
-  (exwm-input--fake-key 'C-S-right))
-
-;;;###autoload
-(defun exwm-sm-core-back-word-select ()
-  "Move word backward and select."
-  (interactive)
-  (exwm-input--fake-key 'C-S-left))
-
-;;;###autoload
-(defun exwm-sm-core-select-all ()
-  "Select whole page."
-  (interactive)
-  (exwm-input--fake-key ?\C-a))
+  (exwm-sm-xdotool-send-key "ctrl" 'e))
 
 #+end_src
 
@@ -814,131 +878,109 @@ button event."
 (defun exwm-sm-core-elements-dismiss-element ()
 "Dismiss element while in element window"
   (interactive)
-  (ahk-run "~/.scripts/ahk/element-dismiss-element.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-contents-dismiss-element ()
-"Dismiss element while in contents window"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/contents-dismiss-element.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-delete-element ()
-  "Delete/dismiss currently displayed element"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/dismiss-delete.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'd))
 
 ;;;###autoload
 (defun exwm-sm-core-element-params ()
   "Bring up apply template menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/element-params.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'p))
 
 ;;;###autoload
 (defun exwm-sm-core-insert-image ()
   "Insert image into component."
   (interactive)
-  (ahk-run "~/.scripts/ahk/insert-image.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'F8))
 
 ;;;###autoload
 (defun exwm-sm-core-insert-splitline ()
-  "Insert image into component."
+  "Insert splitline in the component menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/insert-splitline.exe"))
+  (exwm-sm-xdotool-send-key "Shift alt" 'h))
 
 ;;;###autoload
 (defun exwm-sm-core-cycle-image-stretch ()
   "Cycle stretch of image component."
   (interactive)
-  (ahk-run "~/.scripts/ahk/cycle-image-stretch.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'q))
 
 ;;;###autoload
 (defun exwm-sm-core-apply-template ()
   "Bring up apply template menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/element-apply-template.exe"))
+  (exwm-sm-xdotool-send-key "ctrl Shift" 'm))
 
 ;;;###autoload
 (defun exwm-sm-core-item-picture ()
   "Apply Item Picture template to element"
   (interactive)
-  (ahk-run "~/.scripts/ahk/item-picture.exe"))
+  (exwm-sm-core-apply-template)
+  (exwm-sm-xdotool-send-string "Item Article"))
+
+;;;###autoload
+(defun exwm-sm-core-item-picture ()
+  "Apply Item Picture template to element"
+  (interactive)
+  (exwm-sm-core-apply-template)
+  (exwm-sm-xdotool-send-string "Item Picture"))
 
 ;;;###autoload
 (defun exwm-sm-core-import-component ()
   "Import component in element window"
   (interactive)
-  (ahk-run "~/.scripts/ahk/import-component.exe"))
+  ;; TODO direct this to the `sm-element-window'
+  (exwm-sm-xdotool-send-key "ctrl" 'q))
 
 ;;;###autoload
 (defun exwm-sm-core-reorder-components ()
   "Bring up reorder components menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/reorder-components.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'o))
 
 ;;;###autoload
 (defun exwm-sm-core-reference-label ()
   "Bring up references menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/reference-label-menu.exe"))
+  (exwm-sm-xdotool-send-key "alt" 'q))
 
 ;;;###autoload
 (defun exwm-sm-core-test-rep-cycle ()
   "Emulate learning mode to test element/components"
   (interactive)
-  (ahk-run "~/.scripts/ahk/test-rep-cycle.exe"))
+  (exwm-sm-xdotool-send-key "ctrl alt" 'l))
 
 ;;;###autoload
 (defun exwm-sm-core-tile-components ()
   "Go into tiling menu for component tiling"
   (interactive)
-  (ahk-run "~/.scripts/ahk/tile-components.exe"))
+  (exwm-sm-xdotool-send-key "ctrl alt" 't))
 
 (defun exwm-sm-core-ancestors ()
 "Bring up element ancestors menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/ancestors.exe"))
+  (exwm-sm-xdotool-send-key "ctrl Shift" 'x))
 
 (defun exwm-sm-core-create-hyperlink ()
 "Create hyperlink over selected text"
   (interactive)
-  (ahk-run "~/.scripts/ahk/create-hyperlink.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'k))
 
-(defun exwm-sm-core-get-filepath ()
-"Get the file path of the current element"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/get-filepath.exe"))
+;; (defun exwm-sm-core-get-filepath ()
+;; "Get the file path of the current element"
+;;   (interactive)
+;;   (exwm-sm-xdotool-send-key "~/.scripts/ahk/get-filepath.exe"))
+#+end_src
 
+translate winpath
+#+begin_src elisp :tangle no
 (let ((unix-path (replace-regexp-in-string "\n\\'" ""
                   (shell-command-to-string
                    (shell-quote-argument "winepath -u $(xclip -sel clip -o)"))))))
 (shell-command "xclip -sel clip -o")
 
 (subst-char-in-string ?\\ ?\ (gui--selection-value-internal 'CLIPBOARD))
-
-z:\home\vrika\documents\sm\neuron\elements\1\26\15\16953.HTM
-(defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
-  "Handle button events in line mode.
-BUFFER is the `exwm-mode' buffer the event was generated
-on. BUTTON-EVENT is the X event converted into an Emacs event.
-
-The return value is used as event_mode to release the original
-button event."
-  (with-current-buffer buffer
-    (let ((read-event (exwm-input--mimic-read-event button-event)))
-      (exwm--log "%s" read-event)
-      (if (and read-event
-               (exwm-input--event-passthrough-p read-event))
-          ;; The event should be forwarded to emacs
-          (progn
-            (exwm-input--cache-event read-event)
-            (exwm-input--unread-event button-event)
-
-            xcb:Allow:ReplayPointer)
-        ;; The event should be replayed
-        xcb:Allow:ReplayPointer))))
-
 #+end_src
+
 
 ** Learn operations
 :PROPERTIES:
@@ -946,127 +988,132 @@ button event."
 :ID:       88b59ad6-d7ea-4e85-b828-c147fa4bb902
 :END:
 #+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+exwm-sm-core.el
-;;;; Learn operations
+;;; Learn operations
 
 ;;;###autoload
 (defun exwm-sm-core-learn ()
-  "Start learning"
+  "Start learning."
   (interactive)
-  (ahk-run "~/.scripts/ahk/learn.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-replay ()
-  "Replay component"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/replay.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-cloze ()
-  "Extract selected text"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/cloze.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-extract ()
-  "Extract selected text"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/extract.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-schedule-extract ()
-  "Extract and schedule for a later time"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/schedule-extract.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-prioritize ()
-  "Modify priority of current element"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/priority.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-reschedule ()
-  "Learning: Reschedule to another day"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/reschedule.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-postpone ()
-  "Schedule review later today"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/later-today.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-element-dismiss-element ()
-  "Dismiss element from element window"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/element-dismiss-element.exe"))
-
-;;;###autoload
-(defun exwm-sm-core-remember ()
-  "Introduce element into learning que"
-  (interactive)
-  (ahk-run "~/.scripts/ahk/remember.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'l))
 
 ;;;###autoload
 (defun exwm-sm-core-execute-rep ()
-  "Execute a mid-interval rep at later date"
+  "Execute repition."
   (interactive)
-  (ahk-run "~/.scripts/ahk/execute-rep.exe"))
+  (exwm-input--fake-key 'enter))
+
+;;;###autoload
+(defun exwm-sm-core-replay ()
+  "Replay component."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'F10))
+
+;;;###autoload
+(defun exwm-sm-core-cloze ()
+  "Extract selected text."
+  (interactive)
+  (exwm-sm-xdotool-send-key "alt" 'z))
+
+;;;###autoload
+(defun exwm-sm-core-extract ()
+  "Extract selected text."
+  (interactive)
+  (exwm-sm-xdotool-send-key "alt" 'x))
+
+;;;###autoload
+(defun exwm-sm-core-schedule-extract ()
+  "Extract and schedule for a later time."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl alt" 'x))
+
+;;;###autoload
+(defun exwm-sm-core-prioritize ()
+  "Modify priority of current element."
+  (interactive)
+  ;;TODO perhaps enter char-mode or create hydra on window
+  (exwm-sm-xdotool-send-key "alt" 'p))
+
+;;;###autoload
+(defun exwm-sm-core-reschedule ()
+  "Learning: Reschedule to another day."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'j))
+
+;;;###autoload
+(defun exwm-sm-core-postpone ()
+  "Schedule review later today."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl Shift" 'j))
+
+;;;###autoload
+(defun exwm-sm-core-remember ()
+  "Introduce element into learning que."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl" 'm))
+
+;;;###autoload
+(defun exwm-sm-core-execute-rep ()
+  "Execute a mid-interval rep at later date."
+  (interactive)
+  (exwm-sm-xdotool-send-key "ctrl Shift" 'r))
 
 ;;;###autoload
 (defun exwm-sm-core-cancel-grade ()
-  "Undo grading on element"
+  "Undo grading on element."
   (interactive)
-  (ahk-run "~/.scripts/ahk/cancel-grade.exe"))
+  (exwm-sm-xdotool-send-key "alt" 'g))
 
 ;;;###autoload
 (defun exwm-sm-core-branch-learning ()
-  "Subset review of a selection of a branch in contents"
+  "Subset review of a selection of a branch in contents."
   (interactive)
-  (ahk-run "~/.scripts/ahk/branch-learning.exe"))
+;;; TODO somekind of buffer check
+  (exwm-sm-xdotool-send-key "ctrl" 'l))
 
 ;;;###autoload
 (defun exwm-sm-core-random-learning ()
-  "Random learning"
+  "Random learning."
   (interactive)
-  (ahk-run "~/.scripts/ahk/random-learning.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f11))
 
 ;;;###autoload
 (defun exwm-sm-core-random-test ()
-  "Random test"
+  "Random test."
   (interactive)
-  (ahk-run "~/.scripts/ahk/random-test.exe"))
+  ;; TODO target browser window
+  (exwm-sm-xdotool-send-key "ctrl" 'f11))
 
 ;;;###autoload
 (defun exwm-sm-core-set-read-point ()
-  "Set the read-point"
+  "Set the read-point."
   (interactive)
-  (ahk-run "~/.scripts/ahk/set-read-point.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f7))
 
 ;;;###autoload
 (defun exwm-sm-core-mercy ()
-  "Activate mercy"
+  "Activate mercy."
   (interactive)
-  (ahk-run "~/.scripts/ahk/mercy.exe"))
+  (exwm-sm-xdotool-send-key "Shift alt" 'm))
 
 ;;;###autoload
 (defun exwm-sm-core-neural ()
-  "Go neural"
+  "Go neural."
   (interactive)
-  (ahk-run "~/.scripts/ahk/go-neural.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'F2))
 
 ;;;###autoload
 (defun exwm-sm-core-sorting-criteria ()
-  "Open sorting criteria window"
+  "Open sorting criteria window."
   (interactive)
-  (ahk-run "~/.scripts/ahk/sorting-criteria.exe"))
+  (exwm-sm-xdotool-send-key "alt" 'l)
+  (exwm-input--fake-key 'o)
+  (exwm-input--fake-key 'c))
 
 ;;;###autoload
 (defun exwm-sm-core-subset-learning ()
-  "Subset learning"
+  "Subset learning."
   (interactive)
-  (ahk-run "~/.scripts/ahk/subset-learning.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'l))
 
 #+end_src
 
@@ -1080,13 +1127,13 @@ button event."
 (defun exwm-sm-convert-to-concept ()
   "Convert element to concept"
   (interactive)
-  (ahk-run "~/.scripts/ahk/convert-to-concept.exe"))
+  (exwm-sm-xdotool-send-key "ctrl+k"))
 
 ;;;###autoload
 (defun exwm-sm-new-article ()
   "Create new article"
   (interactive)
-  (ahk-run "~/.scripts/ahk/new-article.exe"))
+  (exwm-sm-xdotool-send-key "ctrl+n"))
 
 #+end_src
 
@@ -1102,25 +1149,25 @@ button event."
 (defun exwm-sm-core-sm-commander ()
   "Summon the SuperMemo Commander"
   (interactive)
-  (ahk-run "~/.scripts/ahk/sm-commander.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'return))
 
 ;;;###autoload
-(defun exwm-sm-core-sm-repair-collection ()
+(defun exwm-sm-core-repair-collection ()
   "Bring up the collection repair menu"
   (interactive)
-  (ahk-run "~/.scripts/ahk/repair-collection.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f12))
 
 ;;;###autoload
 (defun exwm-sm-core-restore-layout ()
   "Restore the default window layout"
   (interactive)
-  (ahk-run "~/.scripts/ahk/restore-layout.exe"))
+  (exwm-sm-xdotool-send-key "ctrl" 'f5))
 
 ;;;###autoload
 (defun exwm-sm-core-statistics-analysis ()
   "Open stats window"
   (interactive)
-  (ahk-run "~/.scripts/ahk/statistics-analysis.exe"))
+  (exwm-sm-xdotool-send-key "Shift+alt+a"))
 
 ;;;###autoload
 (defun exwm-sm-core-open-file ()
@@ -1301,69 +1348,11 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
   (exwm-input--fake-key ?\C-v))
 
   ;; (exwm-input-release-keyboard)
-;;; Find
-;;;###autoload
-(defun exwm-sm-core-find ()
-  "Find."
-  (interactive)
-  (exwm-input--fake-key ?\C-f))
-
-;;;###autoload
-(defun exwm-sm-core-quick-find ()
-  "Quick find."
-  (interactive)
-  (exwm-input--fake-key ?/))
-
-;;;###autoload
-(defun exwm-sm-core-find-next ()
-  "Find next."
-  (interactive)
-  (exwm-input--fake-key ?\C-g))
-
-;;;###autoload
-(defun exwm-sm-core-find-previous ()
-  "Find previous."
-  (interactive)
-  (exwm-input--fake-key ?\C-\S-g))
-
-
-;;;###autoload
-(defun exwm-sm-core-test()
-  "Find previous."
-  (interactive)
-  (exwm-input--fake-key ?\-g))
-
-;;; Editing
-;; ;;;###autoload
 (defun exwm-sm-core-test ()
   "Copy text."
   (interactive)
   (exwm-input--invoke--m))
 (exwm-input-invoke-factory "m")
-
-;; (defun exwm-sm-core-test ()
-;;   "Copy text."
-;;   (interactive)
-;;   (with-current-buffer (window-buffer)
-;;     (fhd/exwm-input-char-mode)
-;;     (exwm-input--invoke--m)))
-
-;; (exwm-input--fake-key ?\C-v)))
-
-;; (defun invoke-ctl-v-map ()
-;;   (interactive)
-;;   (exwm-input--cache-event ?\C-v t)
-;;   (exwm-input--unread-event ?\C-v))
-
-;; (defun exwm-sm-core-paste ()
-;;   "Paste text."
-;;   (interactive)
-;;   (exwm-input-send-next-key (exwm-input--fake-key ?\C-p)))
-
-;; (defun exwm-sm-core-paste ()
-;;   "Paste text."
-;;   (interactive)
-;;   (exwm-input-send-next-key 2 ?\C-p))
 
 ;;;###autoload
 (defun exwm-sm-core-copy ()
@@ -1371,180 +1360,7 @@ multiple keys.  If END-KEY is non-nil, stop sending keys if it's pressed."
   (interactive)
   (exwm-input--fake-key ?\C-c))
 
-;;;###autoload
-(defun exwm-sm-core-cut ()
-  "Cut text."
-  (interactive)
-  (exwm-input--fake-key ?\C-x))
-
-;;;###autoload
-(defun exwm-sm-core-paste ()
-  "Paste text."
-  (interactive)
-  (exwm-input--fake-key ?\C-v))
-
-;;;###autoload
-(defun exwm-sm-core-delete ()
-  "Delete text."
-  (interactive)
-  (exwm-input--fake-key 'delete))
-
-;;;###autoload
-(defun exwm-sm-core-undo ()
-  "Undo."
-  (interactive)
-  (exwm-input--fake-key ?\C-z))
-
-;;;###autoload
-(defun exwm-sm-core-redo ()
-  "Redo."
-  (interactive)
-  (exwm-input--fake-key ?\C-\S-z))
-
-;;;###autoload
-(defun exwm-sm-core-redo-last ()
-  "redo last undo (in html text editing)."
-  (interactive)
-  (exwm-input--fake-key ?\C-y))
-
-;;;###autoload
-(defun exwm-sm-core-forward-word ()
-  "Move word forward."
-  (interactive)
-  (exwm-input--fake-key 'C-right))
-
-;;;###autoload
-(defun exwm-sm-core-back-word ()
-  "Move word backward."
-  (interactive)
-  (exwm-input--fake-key 'C-left))
-
-;;;###autoload
-(defun exwm-sm-core-edit-answer ()
-  "Edit the first answer"
-  (interactive)
-  (exwm-input--fake-key ?\a))
-
-;;;###autoload
-(defun exwm-sm-core-edit-texts ()
-  "Edit texts"
-  (interactive)
-  (exwm-input--fake-key ?\e))
-
-;;;###autoload
-(defun exwm-sm-core-edit-question ()
-  "Edit the first question"
-  (interactive)
-  (exwm-input--fake-key ?\q))
-
-;;;###autoload
-(defun exwm-sm-core-delete-element ()
-  "Delete currently displayed element"
-  (interactive)
-  (exwm-input--fake-key 'delete))
-
-;; ;;;###autoload
-;; (defun exwm-sm-core-xxx ()
-;;   "xxx"
-;;   (interactive)
-;;   (exwm-input--fake-key 'xxx))
-
-;; ;;;###autoload
-;; (defun exwm-sm-core-xxx ()
-;;   "xxx"
-;;   (interactive)
-;;   (exwm-input--fake-key 'xxx))
-
-;;;; Selection
-;;;###autoload
-(defun exwm-sm-core-forward-word-select ()
-  "Move word forward and select."
-  (interactive)
-  (exwm-input--fake-key 'C-S-right))
-
-;;;###autoload
-(defun exwm-sm-core-back-word-select ()
-  "Move word backward and select."
-  (interactive)
-  (exwm-input--fake-key 'C-S-left))
-
-;;;###autoload
-(defun exwm-sm-core-select-all ()
-  "Select whole page."
-  (interactive)
-  (exwm-input--fake-key ?\C-a))
-
-;;;; Learn operations
-
-;;;###autoload
-(defun exwm-sm-core-learn ()
-  "Start learning"
-  (interactive)
-  (exwm-input--fake-key ?\C-l))
-
-;;;###autoload
-(defun exwm-sm-core-prioritize ()
-  "Modify priority of current element"
-  (interactive)
-  (exwm-input--fake-key 'M-p))
-
-;;;###autoload
-(defun exwm-sm-core-reschedule ()
-  "Learning: Reschedule to another day"
-  (interactive)
-  (exwm-input--fake-key ?\C-j))
-
-;;;###autoload
-(defun exwm-sm-core-postpone ()
-  "Schedule review later today"
-  (interactive)
-  (exwm-input--fake-key ?\C-\S-j))
-
-;; ;;;###autoload
-;; (defun exwm-sm-core-xxx ()
-;;   "xxx"
-;;   (interactive)
-;;   (exwm-input--fake-key 'xxx))
-
-;;;###autoload
-(defun exwm-sm-core-extract ()
-  "Extract selected text"
-  (interactive)
-  (exwm-input--fake-key 'M-x))
-
-;;;###autoload
-(defun exwm-sm-core-neural ()
-  "Go neural"
-  (interactive)
-  (exwm-input--fake-key 'C-f2))
-
-
-;;; Misc
-;;;###autoload
-(defun exwm-sm-core-cancel ()
-  "General cancel action."
-  (interactive)
-  ;; Needs to get user out of search bar, this is the only way i've found to do it
-  (exwm-input--fake-key 'escape)
-  (exwm-input--fake-key 'tab))
-
-;;;###autoload
-(defun exwm-sm-core-open-file ()
-  "Open file."
-  (interactive)
-  (exwm-input--fake-key ?\C-o))
-
-;;;###autoload
-(defun exwm-sm-core-quit ()
-  "Quit sm."
-  (interactive)
-  (exwm-input--fake-key ?\C-q))
-
-(provide '+exwm-sm-core)
 #+end_src
-
-#+RESULTS:
-: +exwm-sm-core
 
 * sm-evil
 :PROPERTIES:
