@@ -1825,7 +1825,7 @@ Then we can parse these file read through to various =setq's= to be read in the 
 :END:
 
 The wineprefix and drive_c should be named ~$PATHS~
-#+begin_src elisp
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-emacs-protocol.el
 (defun nanjigen/launch-sm-process ()
   "Launch SM as a process with 'start-process-shell-command'"
   (interactive)
@@ -1837,10 +1837,29 @@ The wineprefix and drive_c should be named ~$PATHS~
                                 " wine "
                                 "/home/nanjigen/.local/share/wineprefixes/supermemo18/drive_c/SuperMemo/sm18.exe"
                                 "") "\"")))
+
 #+end_src
 
 #+RESULTS:
 : nanjigen/launch-sm-process
+
+#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+sm-emacs-protocol.el
+(defun nanjigen/launch-notepad-process ()
+  "Launch SM as a process with 'start-process-shell-command'"
+  (interactive)
+  (start-process-shell-command
+   "Notepad"
+   "*notepad.exe*"
+   (combine-and-quote-strings '("env WINEPREFIX="
+                                "/home/nanjigen/.local/share/wineprefixes/supermemo18"
+                                " wine "
+                                "notepad.exe"
+                                "") "\"")))
+
+#+end_src
+
+#+RESULTS:
+: nanjigen/launch-notepad-process
 
 #+begin_src elisp
 (process-list)
@@ -1851,21 +1870,21 @@ The wineprefix and drive_c should be named ~$PATHS~
 
 #+begin_src elisp
 ;; (process-command (get-process "SuperMemo18"))
+;; (alist-get 'comm (process-attributes
+;;                   (process-id (get-process "SuperMemo18"))))
 ;; (process-id (get-process "SuperMemo18"))
 ;; (get-process "SuperMemo18")
 ;; (process-name (get-process "SuperMemo18"))
 ;; (let* ((child-procs (alist-get 'comm (process-attributes 3335)))
 ;;        ()))
-;; (process-attributes 3335)
+(process-attributes (process-id (get-process "SuperMemo18")))
 
 ;; (exwm--update-class 3335)
 ;; (exwm--id->buffer 8178896)
-(add-hook 'exwm-update-class-hook
-(defun rename-sm-class ()
-  "Rename sm18.exe class"
-  (when (string-match (rx "sm18.exe") exwm-instance-name)
-    (setq exwm-class-name exwm-instance-name))))
 #+end_src
+
+#+RESULTS:
+: ((args . /home/nanjigen/.local/share/wineprefixes/supermemo18/drive_c/SuperMemo/sm18.exe) (pmem . 0.9888432805055687) (pcpu . 0.5553476355470778) (etime 0 828 310000 0) (rss . 97864) (vsize . 2725560) (start 24910 33423 939463 133000) (thcount . 4) (nice . 0) (pri . 20) (ctime 0 0 0 0) (cstime 0 0 0 0) (cutime 0 0 0 0) (time 0 4 600000 0) (stime 0 1 450000 0) (utime 0 3 150000 0) (cmajflt . 0) (cminflt . 228) (majflt . 16202) (minflt . 68015) (tpgid . 3806) (ttname . /dev/pts0) (sess . 3806) (pgrp . 3806) (ppid . 22545) (state . S) (comm . sm18.exe) (group . users) (egid . 998) (user . nanjigen) (euid . 1000))
 
 #+begin_src sh
 guix install dotnet@3
@@ -1874,38 +1893,14 @@ guix install dotnet@3
 #+RESULTS:
 
 #+begin_src sh
-# xprop -id 3335
+# xprop -id 3806
 # pgrep sm18.exe
-xdotool search --pid 3335
+# xdotool search --pid 3806
 # xdotool search --pid 3335 -- set_window --class sm18
-# xdotool search --name sm-element-window
+xdotool search --name home
 
 #+end_src
-
 #+RESULTS:
-| 81788965 |
-| 81788959 |
-| 81788961 |
-| 81788931 |
-| 81788930 |
-| 81788929 |
-| 81788936 |
-| 81788937 |
-| 81788938 |
-| 81788939 |
-| 81788940 |
-| 81788941 |
-| 81788945 |
-| 81788946 |
-| 81788953 |
-| 81788954 |
-| 81788955 |
-| 81788962 |
-| 81788960 |
-| 81788963 |
-| 81788964 |
-| 81788966 |
-| 81788968 |
 
 81788961
 ** sm yasnippet
@@ -2397,7 +2392,7 @@ RIGHT seek  5
 LEFT  seek -5
 UP    seek  60
 DOWN  seek -60
-# Do smaller, always exact (non-keyframe-limited), seeks with shift.
+# Do smaller, always exact (non-keyframe-limited), seeks with Shift.
 # Don't show them on the OSD (no-osd).
 Shift+RIGHT no-osd seek  1 exact
 Shift+LEFT  no-osd seek -1 exact
@@ -3180,4 +3175,271 @@ Attempting to move to max point in tree from https://emacs.stackexchange.com/que
 
 ;; This triggers the function but not at the right time
 ;; (add-hook 'org-drill-display-answer-hook #'follow-noter-page-link)
+#+end_src
+* SM in a VM and RPC
+:PROPERTIES:
+:CREATED:  [2020-12-11 Fri 21:15]
+:ID:       fafd87f0-c7c8-467d-861c-d0fc634d9893
+:END:
+
+* AHK
+:PROPERTIES:
+:CREATED:  [2020-11-30 Mon 17:08]
+:ID:       8d766356-bb00-4536-8974-6906b6c2837f
+:END:
+
+A good guide for ahk under linux https://code.google.com/archive/p/winetricks/wikis/AutoHotkey.wiki
+#+begin_src ahk :tangle ~/.scripts/ahk/activate.verb :mkdirp yes
+w_metadata activate apps \
+title="Hello, Autohotkey"
+
+load_activate()
+{
+w_ahk_do "
+;WinActivate, ahk_class TElWind
+;#IfWinActive, ahk_class, TElWind
+run, notepad.exe
+WinWait, Untitled - Notepad
+;ControlSend, lol, Test, ahk_class TElWind
+;ControlSend, Test2, {v}, ahk_class TElWind
+;#IfWinActive, ahk_class, TElWind
+;j::
+;WinActivate, ahk_exe sm18.exe
+;WinGetActiveTitle, Title
+;WinGetClass, Var, A
+;MsgBox ahk_class %Var%
+;MsgBox, The active window is "%Title%".
+send, l
+;return
+"
+}
+#+end_src
+
+Finding the class of a window
+#+begin_src ahk :tangle ~/.scripts/ahk/class.verb :mkdirp yes
+w_metadata class apps \
+title="Hello, Autohotkey"
+
+load_class()
+{
+w_ahk_do "
+j::
+;WinActivate, ahk_class TElWind
+;#IfWinActive, ahk_class, TElWind
+;WinActivate, ahk_class sm18.exe
+WinGetActiveTitle, Var
+;WinGetClass, Var, A
+;ControlGet, Var, A
+;MsgBox ahk_class %Var%
+MsgBox, The active window is "%Var%".
+;send, l
+return
+"
+}
+#+end_src
+
+Testing some sending code
+#+begin_src ahk :tangle ~/.scripts/ahk/send.verb :mkdirp yes
+w_metadata send apps \
+title="Hello, Autohotkey"
+
+load_send()
+{
+w_ahk_do "
+;j::
+;WinActivate, ahk_class TElWind
+;#IfWinActive, ahk_class, TElWind
+;#IfWinActive, ahk_class, Notepad
+;ControlSend, Edit1, Test, WinTitle, Untitled - Notepad
+;ControlSend, Edit1, Test, Untitled - Notepad
+ControlSend, Edit1, Test, home
+;WinGetActiveTitle, Var
+;WinGetClass, Var, A
+;MsgBox ahk_class %Var%
+;MsgBox, The active window is "%Var%".
+;send, l
+;return
+"
+}
+#+end_src
+
+This works well for copying the element path
+#+begin_src ahk :tangle ~/.scripts/ahk/senda.verb :mkdirp yes
+w_metadata senda apps \
+title="Hello, Autohotkey"
+
+load_senda()
+{
+w_ahk_do "
+#NoEnv  ; Recommended for performance and compatibility with futur§e AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+SetTitleMatchMode,2
+;WinActivate, ahk_exe sm18.exe
+;WinWaitActive, ahk_exe sm18.exe
+;WinActivate, ahk_class TElWind
+;WinWaitActive, WinTitle Untitled - Notepad
+#IfWinActive, ahk_class TElWind
+
+::sm-get-path::
+send, +{F10}
+;sleep,5
+send, f
+;sleep,5
+send, c
+;send, ^a
+"
+}
+#+end_src
+z:\\home\\vrika\\documents\\sm\\neuron\\elements\\16\\168.HTM
+z:\home\vrika\documents\sm\neuron\elements\16\168.HTM
+file:/home/vrika/Documents/SM/neuron/elements/16/167.HTM
+
+Change windows path to unix:
+
+#+begin_src elisp
+;; (defun my-translate-winpath ()
+  ;; (interactive)
+  ;; "change :C\win\path to 'nix /path/path"
+  (let ((path (current-kill 0 'do-not-move)))
+    (shell-command-to-string (format "~/.scripts/winpath.sh %s" path)))
+#+end_src
+
+#+begin_src elisp
+(defun my-translate-winpath ()
+  (interactive)
+  (progn
+  ;; (shell-command "sh ~/.scripts/xdotool/get_element_path.sh")
+  (shell-command "xclip -sel clip -o")
+  (shell-command "xdotool sleep 0.2 key --delay 50 Shift+F10+f+c")
+;; (gui--selection-value-internal 'CLIPBOARD)
+  (setq sm-path (gui--selection-value-internal 'CLIPBOARD))
+    (let* ((path1 (s-chop-prefix "z:" sm-path))
+           (nixpath (s-replace "\\" "/" path1))
+           (docpath (s-replace "documents" "Documents" nixpath))
+           (finpath (s-replace "sm" "SM" docpath)))
+      (setq sm-path-nix finpath))))
+;; (list path path2)
+;; (shell-command-to-string (format "~/.scripts/winpath.sh" ))
+#+end_src
+
+#+RESULTS:
+: my-translate-winpath
+
+#+begin_src elisp
+(defun exwm-sm-core-test ()
+  "Send string to a given exwm buffer"
+  (interactive)
+  (my-exwm-send-string "sm-get-path ")
+  (sit-for 0.3)
+  (let ((path (my-translate-winpath)))
+    (find-file path)))
+#+end_src
+
+#+RESULTS:
+: my-translate-winpath
+
+#+begin_src elisp
+(defun my-exwm-send-string (string)
+  "Send STRING to `exwm-mode' buffer or just insert it."
+  (if (eq major-mode 'exwm-mode)
+      (mapc #'exwm-input--fake-key (string-to-list string))
+    (insert string)))
+#+end_src
+z:\home\vrika\documents\sm\neuron\elements\5.HTM
+#+RESULTS:
+: my-exwm-send-string
+
+#+begin_src elisp
+;; (subst-char-in-string ?\ ?/ (regexp-quote "\home"))
+;; (regexp-quote "^home")
+;; (convert-standard-filename "z:\home\vrika\documents\sm\neuron\elements\16\168.HTM")
+;; (setq windows-path (unescape-windows-path "\home\vrika"))
+
+;; (setq windows-path1 "\home\vrika")
+;; (wsl-path-convert-file-name "\home\vrika")
+;; (s-replace "\\" "/" "\home")
+;; (s-replace "\\" "/" windows-path)
+;; (replace-regexp-in-string "\\\\" "\\\\\\\\" "\home\vrika")
+;; (message windows-path1)
+;; (defun unescape-windows-path (pth)
+;;   ;; (interactive "*sWindows path:")
+;;    (replace-regexp-in-string "\\\\" "\\\\\\\\" pth))
+
+;; (defun paste-windows-path (pth)
+;;   (interactive "*sWindows path:")
+;;   (insert
+;;    (replace-regexp-in-string "\\\\" "\\\\\\\\" pth)))
+;; (message (current-kill 0 'do-not-move))
+;; (shell-command-to-string "sed -e 's#^J:##' -e 's#\\#/#g' <<< 'test'")
+
+(convert-standard-filename "~/Documents")
+#+end_src
+
+#+RESULTS:
+: ~/Documents
+
+#+begin_src sh :tangle ~/.scripts/winpath.sh
+function winpath(){
+    line=$(sed -e 's#^J:##' -e 's#\\#/#g' <<< "$1")
+    echo "$line"
+}
+#+end_src
+
+#+begin_src sh
+#!/bin/bash
+clip=$(xclip -selection c -o)
+line=$(sed -e 's#^z:##' -e 's#\\#/#g' <<< "$clip")
+echo "$line"
+#+end_src
+
+#+RESULTS:
+
+#+begin_src ahk :tangle ~/.scripts/ahk/hotstring.verb :mkdirp yes
+w_metadata hotstring apps \
+title="Hello, Autohotkey"
+
+load_hotstring()
+{
+w_ahk_do "
+:*:get::get it boi
+"
+}
+#+end_src
+
+#+begin_src sh :dir ~/.scripts/ahk/ :session test
+env WINEPREFIX=/home/vrika/.local/share/wineprefixes/supermemo18 winetricks activate.verb
+#+end_src
+
+#+RESULTS:
+|                                              |               |                       |                                     |            |                                                                  |        |          |     |                |
+| Executing                                    | mkdir         | -p                    | /home/vrika/.local/share/wineprefixes |            |                                                                  |        |          |     |                |
+| Using                                        | winetricks    | 20200412              | -                                   | sha256sum: | 40ff4c67804584b73d4d36153e1f64ca426d739f1790bd748f5ded0865e8cc7f | with   | wine-5.2 | and | WINEARCH=win32 |
+| Executing                                    | w_do_call     | activate              |                                     |            |                                                                  |        |          |     |                |
+| Executing                                    | mkdir         | -p                    | /home/vrika/.local/share/wineprefixes |            |                                                                  |        |          |     |                |
+| Executing                                    | load_activate |                       |                                     |            |                                                                  |        |          |     |                |
+| Executing                                    | wine          | x:\ahk\AutoHotkey.exe | C:\windows\Temp\activate.ahk        |            |                                                                  |        |          |     |                |
+| 00b9:fixme:keyboard:X11DRV_GetKeyboardLayout | couldn't      | return                | keyboard                            | layout     | for                                                              | thread |       81 |     |                |
+
+** Snippet
+:PROPERTIES:
+:CREATED:  [2020-12-01 Tue 22:38]
+:ID:       e177ba0d-cfc1-41d7-bc09-4b2e3a1edef9
+:END:
+
+#+begin_src yas
+# -*- mode: snippet -*-
+# name: SuperMemo Ref
+# key: sm-ref
+# --
+
+#SuperMemo Reference:
+#Title: (org-web-tools--html-title (org-web-tools--get-first-url))
+#Date: Imported on Oct 15, 2020, 18:50:29
+#Source: Wikipedia
+#Link: (org-web-tools--get-first-url)
+#Comment: Lisp (programming language)
+#Parent: 17: Programming
+#Concept group: Root: neuron (1: neuron)
 #+end_src
