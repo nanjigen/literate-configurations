@@ -403,6 +403,14 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 #+end_src
 
+T530 specific drivers
+#+begin_src scheme
+
+"intel-vaapi-driver"
+"xf86-video-intel"
+
+#+end_src
+
 *** umbreon
 :PROPERTIES:
 :CREATED:  [2020-12-21 Mon 12:10]
