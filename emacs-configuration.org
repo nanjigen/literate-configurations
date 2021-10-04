@@ -2566,11 +2566,15 @@ Extra helm stuff
 #+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
   ;;; Some programs escape EXWM control and need be tamed.  See
   ;; https://github.com/ch11ng/exwm/issues/287
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
+  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
   (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "TotalWarhammer2")
                                              managed t floating nil fullscreen t char-mode t))
 
   (load! "+sm-window-rules")
+  (load! "+sm-emacs-protocol")
+  (load! "+exwm-sm-core")
+  (load! "+exwm-sm-evil")
+  (load! "+sm-hydra")
 
   ;; FIXME See if I can get this randr code working without affecting the above.
   (use-package! exwm-randr
@@ -2624,6 +2628,19 @@ Extra helm stuff
   ;; (setq exwm-randr-workspace-monitor-plist '())
 
   (exwm-randr-enable)
+#+END_SRC
+
+Posframes for hydra:
+#+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
+(use-package! hydra-posframe
+  :hook (after-init . hydra-posframe-enable))
+
+(use-package! posframe)
+
+(with-eval-after-load 'posframe
+    (define-advice posframe-show (:filter-return (frame) exwm-deparent)
+      (set-frame-parameter frame 'parent-frame nil)
+      frame))
   #+END_SRC
 
   #+BEGIN_SRC elisp :noweb-ref exwm-edit
