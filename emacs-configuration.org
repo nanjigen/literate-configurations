@@ -577,7 +577,9 @@ Let's start with fontification and other org ricing.
         org-catch-invisible-edits 'show-and-error
         org-cycle-separator-lines 0
         org-tags-column -79
-        org-modules '(org-habit))
+        org-modules '(org-habit
+                      org-eshell
+                      org-bookmark))
  ;; org-bibtex
  ;; org-docview
  ;; org-info
@@ -719,6 +721,10 @@ Presentation setup
 #+end_src
 
 *** agenda and org-ql views
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 17:44]
+:ID:       b35385d8-04fb-4b8a-a209-17050b650e3a
+:END:
 #+begin_src elisp :noweb-ref org-org
 (use-package! org-super-agenda
   ;; :commands (org-super-agenda-mode)
@@ -822,6 +828,10 @@ Presentation setup
 #+end_src
 
 *** org-capture
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 17:44]
+:ID:       df7c5e56-3318-43c7-9723-0bb46c50119b
+:END:
 #+begin_src elisp :noweb-ref org-org
 (use-package! org-depend
   :after org
@@ -1003,7 +1013,7 @@ This is imported into the file (I should create more)
 ,#+LATEX_HEADER: \usepackage{setspace}
 ,#+LATEX_HEADER: \usepackage[a4paper,% left=3cm,right=1cm]{geometry}
 %% top=1in,bottom=1in,% footskip=.25in]
-,#+LATEX_HEADER: \addbibresource{/home/$USER/Documents/LaTeX/uni.bib}
+,#+LATEX_HEADER: \addbibresource{/home/nanjigen/Documents/LaTeX/uni.bib}
 #+end_src
 
 These export options are required for embedding ~lua~ code into ~latex~ snippets in org-mode blocks.
@@ -1281,7 +1291,10 @@ Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/j
 
   (map! :map org-brain-visualize-mode-map "L" #'org-brain-cliplink-resource)
   (add-hook 'org-brain-after-visualize-hook #'visual-line-mode)
+#+end_src
 
+Some display mods
+#+begin_src elisp
   ;; Prettier line drawing
 
   (defface aa2u-face '((t . nil))
@@ -1297,6 +1310,10 @@ Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/j
   (with-eval-after-load 'org-brain
     (add-hook 'org-brain-after-visualize-hook #'aa2u-org-brain-buffer))
 
+#+end_src
+
+Some iconification stolen from [[https://github.com/vedang/emacs-up/blob/f8635f3875704b5a1a3966f4fd8558d2b331d47c/el-get-init-files/init-org-brain.el#L97][here]]:
+#+begin_src elisp
   (defun org-brain-insert-resource-icon (link)
     "Insert an icon, based on content of org-mode LINK."
     (insert (format "%s "
@@ -1315,6 +1332,9 @@ Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/j
     (add-hook 'org-brain-after-resource-button-functions
               'org-brain-insert-resource-icon))
 
+#+end_src
+
+#+begin_src elisp
   ;; Setup org-expiry and define a org-agenda function to compare timestamps
   (use-package! org-expiry
     :after org-brain
@@ -1347,6 +1367,11 @@ Instead of creating a new ~pretty-hydra~, instead use the [[https://github.com/j
 
 #+end_src
 
+**** org-brain helm
+:PROPERTIES:
+:CREATED:  [2021-09-22 Wed 17:49]
+:ID:       a2bdf032-75f4-40ae-a05d-410ed5791142
+:END:
 A new =helm= for =org-brain=, =helm-org-brain=, which offers more features and easier configuration than the provided default.
 Mainly, a Helm action that allows opening the current entry (or marked entries) in another visible window, bound to ~C-c o~ (much like the ~helm-buffer-switch-other-window~ action).
 #+begin_src elisp
@@ -1472,77 +1497,6 @@ Maybe also have a function to rifle the visualized node? [[https://github.com/ju
 ;;   (interactive)
 ;;   (helm-org-rifle-directories (list org-brain-path)))
 
-#+end_src
-
-#+begin_src elisp
-;; Prettier line drawing
-
-(defface aa2u-face '((t . nil))
-  "Face for aa2u box drawing characters")
-(advice-add #'aa2u-1c :filter-return
-            (lambda (str) (propertize str 'face 'aa2u-face)))
-(defun aa2u-org-brain-buffer ()
-  (let ((inhibit-read-only t))
-    (make-local-variable 'face-remapping-alist)
-    (add-to-list 'face-remapping-alist
-                 '(aa2u-face . org-brain-wires))
-    (ignore-errors (aa2u (point-min) (point-max)))))
-(with-eval-after-load 'org-brain
-  (add-hook 'org-brain-after-visualize-hook #'aa2u-org-brain-buffer))
-
-#+end_src
-
-Some iconification stolen from [[https://github.com/vedang/emacs-up/blob/f8635f3875704b5a1a3966f4fd8558d2b331d47c/el-get-init-files/init-org-brain.el#L97][here]]:
-#+begin_src elisp
-(defun org-brain-insert-resource-icon (link)
-  "Insert an icon, based on content of org-mode LINK."
-  (insert (format "%s "
-                  (cond ((string-prefix-p "brain:" link)
-                         (all-the-icons-fileicon "brain"))
-                        ((string-prefix-p "info:" link)
-                         (all-the-icons-octicon "info"))
-                        ((string-prefix-p "help:" link)
-                         (all-the-icons-material "help"))
-                        ((string-prefix-p "http" link)
-                         (all-the-icons-icon-for-url link))
-                        (t
-                         (all-the-icons-icon-for-file link))))))
-
-(with-eval-after-load 'all-the-icons
-  (add-hook 'org-brain-after-resource-button-functions
-            'org-brain-insert-resource-icon))
-
-;; Setup org-expiry and define a org-agenda function to compare timestamps
-(use-package! org-expiry
-  :after org-brain
-  :config
-  (setq org-expiry-inactive-timestamps t)
-  (defun org-expiry-created-comp (a b)
-    "Compare `org-expiry-created-property-name' properties of A and B."
-    (let ((ta (ignore-errors
-                (org-time-string-to-seconds
-                 (org-entry-get (get-text-property 0 'org-marker a)
-                                org-expiry-created-property-name))))
-          (tb (ignore-errors
-                (org-time-string-to-seconds
-                 (org-entry-get (get-text-property 0 'org-marker b)
-                                org-expiry-created-property-name)))))
-      (cond ((if ta (and tb (< ta tb)) tb) -1)
-            ((if tb (and ta (< tb ta)) ta) +1))))
-
-  ;; Add CREATED property when adding a new org-brain headline entry
-  (add-hook 'org-brain-new-entry-hook #'org-expiry-insert-created)
-
-  ;; Finally add a function which lets us watch the entries chronologically
-  (defun org-brain-timeline ()
-    "List all org-brain headlines in chronological order."
-    (interactive)
-    (let ((org-agenda-files (org-brain-files))
-          (org-agenda-cmp-user-defined #'org-expiry-created-comp)
-          (org-agenda-sorting-strategy '(user-defined-down)))
-      (org-tags-view nil (format "+%s>\"\"" org-expiry-created-property-name))))
-
-  )
 #+end_src
 
 *** org-noter
@@ -2195,7 +2149,50 @@ Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poo
 #+begin_src elisp :tangle no
 ;; (setq org-mode-hook #'display-line-numbers-mode)
 #+end_src
+** org-babel
 
+Helper functions to make literate programming more comfy. The following is adapted from fuxial's conf
+https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/lang/org-private/autoload/org-babel.el
+#+begin_src elisp
+;;;###autoload
+(defun +org-private/get-name-src-block ()
+  (interactive)
+  (let ((completion-ignore-case t)
+        (case-fold-search t)
+        (all-block-names (org-babel-src-block-names)))
+    (ivy-read "Named Source Blocks: " all-block-names
+              :require-match t
+              :history 'get-name-src-block-history
+              :preselect (let (select (thing-at-point 'symbol))
+                           (if select (substring-no-properties select)))
+              :caller '+org-private/get-name-src-block
+              :action #'+org-private/get-name-src-block-action-insert)))
+
+;;;###autoload
+(defun +org-private/get-name-src-block-action-insert (x)
+  (insert (concat org-babel-noweb-wrap-start x org-babel-noweb-wrap-end)))
+
+#+end_src
+** org-sticky-header
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:53]
+:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
+:END:
+Another alphapapa package, this is extremely useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
+#+begin_src elisp
+(use-package! org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq org-sticky-header-full-path 'full
+        org-sticky-header-outline-path-separator " › "))
+
+#+end_src
+
+** org-auto-tangle
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:53]
+:ID:       11000a20-ca17-4261-ae22-989b26b38c9b
+:END:
 Auto-tangle on save is comfy and having it in a package gives a clean config.
 #+begin_src elisp
 (use-package! org-auto-tangle
@@ -2217,16 +2214,6 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (add-hook 'org-babel-pre-tangle-hook 'ag/org-reveal-after-save-on)
 (add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
 
-#+end_src
-
-A [[https://github.com/hlissner/doom-emacs/issues/4129#issuecomment-733540360][fix]] for the ="Don’t know how to format org-mode code"= [[https://github.com/hlissner/doom-emacs/issues/4129][error]] in Doom. No longer needed
-#+begin_src elisp :tangle no
-(setq +format-on-save-enabled-modes
-      '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
-            sql-mode         ; sqlformat is currently broken
-            tex-mode         ; latexindent is broken
-            ;; org-mode         ; a doom bug (may be fixed now)
-            latex-mode))
 #+end_src
 
 * EXWM
