@@ -341,11 +341,11 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
               (display-buffer
                (get-buffer-create "sm-frame")
                '((display-buffer-no-window)
-                 (allow-no-window . t))))
+                 ;; (allow-no-window . t)
+                 )))
             (when (string-match-p "sm-element-window" (buffer-name))
               (display-buffer
                (get-buffer-create "sm-element-window")
-               (doom-modeline-mode 1)
                '((display-buffer-same-window))))
             (when (string-match-p "sm-knowledge-tree" (buffer-name))
               (display-buffer
@@ -387,7 +387,10 @@ However, this doesn't work as expected an we have to wrap this rules in an exwm 
 :header-args: :noweb-ref dbc rules
 :END:
 #+begin_src elisp :noweb yes
+;; (use-package! dbc
+;; :config
 
+<<exwm-class-hook>>
 
 <<exwm-title-hook>>
 
