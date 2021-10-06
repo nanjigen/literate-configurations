@@ -2254,6 +2254,7 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (package! helm-exwm)
 (package! helm-org-rifle)
 (package! pulseaudio-control)
+(package! desktop-environment)
 (package! scrot.el :recipe
   (:host github
    :repo "dakra/scrot.el"
@@ -2533,12 +2534,16 @@ Window and buffer manipulation
 
   (exwm-input-set-key (kbd "s-'") #'helm-bookmarks)
   ;; (exwm-input-set-key (kbd "s-i") #'exwm-edit--compose)
-  (exwm-input-set-key (kbd "s--") #'pulseaudio-control-decrease-volume)
-  (exwm-input-set-key (kbd "s-=") #'pulseaudio-control-increase-volume)
-  (exwm-input-set-key (kbd "s-0") #'pulseaudio-control-toggle-current-sink-mute)
-  ;; (exwm-input-set-key (kbd "s--") #'amixer-down)
-  ;; (exwm-input-set-key (kbd "s-=") #'amixer-up)
-  (exwm-input-set-key (kbd "<XF86AudioMute>") #'pulseaudio-control-toggle-current-sink-mute)
+  (exwm-input-set-key (kbd "s--") #'desktop-environment-volume-decrement)
+  (exwm-input-set-key (kbd "s-=") #'desktop-environment-volume-increment-slowly)
+  (exwm-input-set-key (kbd "s-0") #'desktop-environment-toggle-mute)
+  (exwm-input-set-key (kbd "<XF86AudioMute>") #'desktop-environment-toggle-mute)
+  (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") #'desktop-environment-volume-decrement)
+  (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") #'desktop-environment-volume-increment-slowly)
+  (exwm-input-set-key (kbd "<XF86AudioPrev>") #'desktop-environment-music-previous)
+  (exwm-input-set-key (kbd "<XF86AudioNext>") #'desktop-environment-music-next)
+  (exwm-input-set-key (kbd "<XF86AudioStop>") #'desktop-environment-music-stop)
+  (exwm-input-set-key (kbd "<XF86AudioPlay>") #'desktop-environment-toggle-music)
 
   ;;   (use-package xbacklight
   ;; :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
