@@ -701,6 +701,7 @@ Next we'll build the organisational aspect of org-mode.
                         ("#email" . ?m)
                         ("#lowenergy" . ?l)
                         ("#translation" . ?t)
+                        ("#incremental" . ?t)
                         ;; ("web" . ?t)
                         ;; ("reading" . ?t)
                         (:newline)
