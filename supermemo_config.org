@@ -245,7 +245,7 @@ I should probably be writing this as =cons= and not using backquotes.
         ("sm-info-window" . "Information")
         ("sm-algo-choice" . "Choices")
         ("sm-options-window" . "Options")
-        ("sm-fonts-window" . "Fonts")
+        ("sm-fonts-window" . "Font")
         ("sm-outstanding" . "Outstanding")
         ("sm-commander" . "SuperMemo Commander")
         ;; ("sm-template-registry" . "Template Registry")
