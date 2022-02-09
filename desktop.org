@@ -4,56 +4,7 @@
 #+PROPERTY: header-args:sh   :tangle-mode (identity #o555)
 #+PROPERTY: header-args:conf :tangle-mode (identity #o555)
 
-This file contains configuration for my overall desktop environment.  My workflow is driven by Emacs but there are still a number of applications, tools, themes, and fonts that I must install to have a complete desktop experience.
-
-* Table of Contents
-:PROPERTIES:
-:TOC:      :include all :ignore this
-:CREATED:  [2021-09-22 Wed 13:54]
-:ID:       55cc1e4a-481e-4d08-a123-9aa0d718b7bd
-:END:
-:CONTENTS:
-- [[#system-settings][System Settings]]
-- [[#fonts-and-themes][Fonts and Themes]]
-- [[#window-management][Window Management]]
-  - [[#helper-functions][Helper Functions]]
-  - [[#configuration][Configuration]]
-  - [[#desktop-configuration][Desktop Configuration]]
-  - [[#panel][Panel]]
-  - [[#keybindings][Keybindings]]
-  - [[#useful-links][Useful Links]]
-- [[#panel-via-polybar][Panel via Polybar]]
-- [[#desktop-notifications-via-dunst][Desktop Notifications via Dunst]]
-- [[#automatic-disk-mounting-with-udiskie][Automatic Disk Mounting with Udiskie]]
-- [[#display-management][Display Management]]
-- [[#default-applications][Default Applications]]
-- [[#user-services][User Services]]
-- [[#scheduled-tasks][Scheduled Tasks]]
-- [[#applications][Applications]]
-  - [[#browsers][Browsers]]
-    - [[#qutebrowser][Qutebrowser]]
-    - [[#vimb][vimb]]
-  - [[#mail][Mail]]
-  - [[#password-management][Password Management]]
-    - [[#syncing-passwords][Syncing Passwords]]
-  - [[#audio-device-control][Audio Device Control]]
-  - [[#media-players][Media Players]]
-    - [[#mpv][mpv]]
-    - [[#codecs-and-drivers][Codecs and Drivers]]
-  - [[#image-viewers-and-editors][Image Viewers and Editors]]
-  - [[#games][Games]]
-  - [[#document-readers][Document Readers]]
-  - [[#syncthing][Syncthing]]
-  - [[#flatpak][Flatpak]]
-  - [[#printing][Printing]]
-  - [[#desktop-tools][Desktop Tools]]
-  - [[#system-tools][System Tools]]
-  - [[#xorg-tools][Xorg Tools]]
-- [[#desktop-profile][Desktop Profile]]
-- [[#notes][Notes]]
-  - [[#bluetooth-setup][Bluetooth Setup]]
-- [[#provide-the-dw-desktop-package][Provide the dw-desktop package]]
-:END:
+Desktop configuration mostly lifted from daviwil, needing some edits
 
 * System Settings
 :PROPERTIES:
@@ -70,7 +21,7 @@ Load system-specific settings from =.emacs.d/per-system-settings.el= and unpack 
 
 #+NAME: get-setting
 #+begin_src emacs-lisp :var name="nil" :session system-settings
-;; (dw/system-settings-get (intern name))
+(nanjigen/system-settings-get (intern name))
 #+end_src
 
 * Fonts and Themes
@@ -81,8 +32,6 @@ Load system-specific settings from =.emacs.d/per-system-settings.el= and unpack 
 
 I use [[https://github.com/derat/xsettingsd][xsettingsd]] as a minimal settings daemon for Xorg applications.  It replaces similar daemons from desktop environments like GNOME and XFCE and enables me to use a simple configuration file like the following:
 
-*~/.config/xsettingsd/xsettingsd.conf:*
-
 #+begin_src conf :tangle ~/.config/xsettingsd/xsettingsd.conf :noweb yes
 
 Net/ThemeName "Matcha-dark-azul"
@@ -90,7 +39,7 @@ Net/IconThemeName "Papirus-Dark"
 Gtk/DecorationLayout "menu:minimize,maximize,close"
 Gtk/FontName "Cantarell 11"
 Gtk/MonospaceFontName "Fira Mono 10"
-Gtk/CursorThemeName "Adwaita"
+Gtk/CursorThemeName "Ananjigenaita"
 Xft/Antialias 1
 Xft/Hinting 0
 Xft/HintStyle "hintnone"
@@ -121,7 +70,7 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 
 #+NAME: dpi
 #+begin_src emacs-lisp :session=system-settings :var settings=system-settings
-;; (* 1024 (alist-get 'desktop/dpi dw/system-settings))
+;; (* 1024 (alist-get 'desktop/dpi nanjigen/system-settings))
 #+end_src
 
 *Guix Packages*
@@ -148,13 +97,17 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 "font-iosevka-aile"
 "font-abattis-cantarell"
 "font-dejavu"
-"font-google-noto"
 "font-gnu-freefont"
 "font-liberation"
 "font-awesome"
 "font-google-material-design-icons"
+"font-google-roboto"
 "gs-fonts"
 
+;;; Japanese Fonts
+"font-google-noto"
+"font-adobe-source-han-sans"
+"font-ipa-mj-mincho"
 #+end_src
 
 * Desktop Notifications via Dunst
@@ -275,7 +228,7 @@ I also have to do an extra step to make sure Emacs can find the font path from t
     max_icon_size = <<get-setting(name="dunst/max-icon-size")>>
 
     # Paths to default icons.
-    icon_path = /home/daviwil/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/status/:/home/daviwil/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/devices/:/home/daviwil/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/emblems/
+    icon_path = /home/nanjigen/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/status/:/home/nanjigen/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/devices/:/home/nanjigen/.guix-extra-profiles/desktop/desktop/share/icons/gnome/256x256/emblems/
 
     ### History ###
 
@@ -380,6 +333,355 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 "libnotify"  ; For notify-send
 
 #+end_src
+
+* Panel via Polybar
+:PROPERTIES:
+:CREATED:  [2021-10-16 Sat 11:04]
+:ID:       f230137b-f85f-4b87-86dc-d3d212106655
+:END:
+
+I use [[https://github.com/polybar/polybar][Polybar]] to display a panel at the top of the primary screen to display my current EXWM workspace, CPU usage and temperature, battery status, time, and system tray.  It uses some custom hooks back into Emacs via =emacsclient=.
+
+#+begin_src conf :tangle ~/.config/polybar/config :noweb yes
+
+; Docs: https://github.com/polybar/polybar
+;==========================================================
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[colors]
+background = #f0232635
+background-alt = #576075
+foreground = #A6Accd
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+underline-1 = #c792ea
+
+[bar/panel]
+width = 100%
+height = <<get-setting(name="polybar/height")>>
+offset-x = 0
+offset-y = 0
+fixed-center = true
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-top = 5
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+font-0 = "Cantarell:size=<<get-setting(name="polybar/font-0-size")>>:weight=bold;2"
+font-1 = "Font Awesome:size=<<get-setting(name="polybar/font-1-size")>>;2"
+font-2 = "Material Icons:size=<<get-setting(name="polybar/font-2-size")>>;5"
+font-3 = "Fira Mono:size=<<get-setting(name="polybar/font-3-size")>>;-3"
+
+modules-left = exwm exwm-path
+modules-center = spotify
+modules-right = telegram mu4e cpu temperature battery date
+
+tray-position = right
+tray-padding = 2
+tray-maxsize = 28
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/exwm]
+type = custom/ipc
+hook-0 = emacsclient -e "(nanjigen/polybar-exwm-workspace)" | sed -e 's/^"//' -e 's/"$//'
+initial = 1
+format-underline = ${colors.underline-1}
+format-background = ${colors.background-alt}
+format-padding = 1
+
+[module/exwm-path]
+type = custom/ipc
+hook-0 = emacsclient -e "(nanjigen/polybar-exwm-workspace-path)" | sed -e 's/^"//' -e 's/"$//'
+format-foreground = #f78c6c
+initial = 1
+
+[module/spotify]
+type = custom/script
+exec = ~/.config/polybar/player-status.sh
+interval = 3
+
+[module/mu4e]
+type = custom/ipc
+hook-0 = emacsclient -e '(nanjigen/polybar-mail-count 500)' | sed -e 's/^"//' -e 's/"$//'
+initial = 1
+format-underline = ${colors.underline-1}
+click-left = emacsclient -e '(nanjigen/go-to-inbox)'
+
+; [module/telegram]
+; type = custom/ipc
+; hook-0 = emacsclient -e '(nanjigen/polybar-telegram-chats)' | sed -e 's/^"//' -e 's/"$//'
+; format-padding = 3
+; initial = 1
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix-font = 1
+format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-underline = ${colors.underline-1}
+
+label-layout = %layout%
+label-layout-underline = ${colors.underline-1}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-underline = ${colors.underline-1}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format = <label> <ramp-coreload>
+format-underline = ${colors.underline-1}
+click-left = emacsclient -e "(proced)"
+label = %percentage:2%%
+ramp-coreload-spacing = 0
+ramp-coreload-0 = ▁
+ramp-coreload-0-foreground = ${colors.foreground-alt}
+ramp-coreload-1 = ▂
+ramp-coreload-2 = ▃
+ramp-coreload-3 = ▄
+ramp-coreload-4 = ▅
+ramp-coreload-5 = ▆
+ramp-coreload-6 = ▇
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "M:"
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.underline-1}
+label = %percentage_used%%
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = "W%U: %a %b %e"
+date-alt = "%A %B %d %Y"
+
+time = %l:%M %p
+time-alt = %H:%M:%S
+
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.underline-1}
+
+label = %date% %time%
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 98
+time-format = %-l:%M
+
+label-charging = %percentage%% / %time%
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = ${colors.underline-1}
+
+label-discharging = %percentage%% / %time%
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-underline = ${self.format-charging-underline}
+
+format-full = <ramp-capacity> <label-full>
+format-full-underline = ${self.format-charging-underline}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <label>
+format-underline = ${colors.underline-1}
+format-warn = <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%!
+label-warn-foreground = ${colors.secondary}
+
+#+end_src
+
+I created a simple script to grab Spotify player information using =playerctl=:
+
+#+begin_src sh :tangle ~/.config/polybar/player-status.sh :shebang #!/bin/sh
+
+status="$(playerctl -p spotify status 2>&1)"
+if [ "$status" != "No players found" ]
+then
+  artist="$(playerctl -p spotify metadata artist)"
+  if [ "$artist" != "" ]
+  then
+    echo " $(playerctl -p spotify metadata artist) - $(playerctl -p spotify metadata title)"
+  else
+    # Clear any string that was previously displayed
+    echo ""
+  fi
+else
+  # Clear any string that was previously displayed
+  echo ""
+fi
+
+#+end_src
+
+*Guix Packages*
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+"polybar"
+
+#+end_src
+
+** Desktop Configuration
+:PROPERTIES:
+:CREATED:  [2021-11-13 Sat 11:38]
+:ID:       e0ffad02-0ae8-4b82-a66b-897c5aeae524
+:END:
+
+#+begin_src emacs-lisp :tangle ~/.doom.d/modules/desktop/exwm/+desktop.el
+
+(defun nanjigen/run-xmodmap ()
+  (interactive)
+  (start-process-shell-command "xmodmap" nil "xmodmap ~/.dotfiles/.config/i3/Xmodmap"))
+
+(defun nanjigen/update-wallpapers ()
+  (interactive)
+  (start-process-shell-command
+   "feh" nil
+   (format "feh --bg-scale ~/.dotfiles/backgrounds/%s" (alist-get 'desktop/background nanjigen/system-settings))))
+
+(setq nanjigen/panel-process nil)
+(defun nanjigen/kill-panel ()
+  (interactive)
+  (when nanjigen/panel-process
+    (ignore-errors
+      (kill-process nanjigen/panel-process)))
+  (setq nanjigen/panel-process nil))
+
+(defun nanjigen/start-panel ()
+  (interactive)
+  (nanjigen/kill-panel)
+  (setq nanjigen/panel-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+(defun nanjigen/update-screen-layout ()
+  (interactive)
+  (let ((layout-script "~/.bin/update-screens"))
+     (message "Running screen layout script: %s" layout-script)
+     (start-process-shell-command "xrandr" nil layout-script)))
+
+(defun nanjigen/configure-desktop ()
+  (interactive)
+    (nanjigen/run-xmodmap)
+    (nanjigen/update-screen-layout)
+    (run-at-time "2 sec" nil (lambda () (nanjigen/update-wallpapers))))
+
+(defun nanjigen/on-exwm-init ()
+  (nanjigen/configure-desktop)
+  (nanjigen/start-panel))
+
+;; (when nanjigen/exwm-enabled
+;;   ;; Configure the desktop for first load
+;;   (add-hook 'exwm-init-hook #'nanjigen/on-exwm-init))
+
+#+end_src
+
+** Panel
+:PROPERTIES:
+:CREATED:  [2021-11-13 Sat 11:38]
+:ID:       47c59749-c9a0-486f-92fa-005afce53ee3
+:END:
+
+#+begin_src emacs-lisp :tangle ~/.doom.d/modules/desktop/exwm/+desktop.el
+;;; desktop/exwm/+desktop.el -*- lexical-binding: t; -*-
+
+(defun nanjigen/send-polybar-hook (name number)
+  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" name number)))
+
+(defun nanjigen/update-polybar-exwm (&optional path)
+  (nanjigen/send-polybar-hook "exwm" 1)
+  (nanjigen/send-polybar-hook "exwm-path" 1))
+
+;; (defun nanjigen/update-polybar-telegram ()
+;;   (nanjigen/send-polybar-hook "telegram" 1))
+
+(defun nanjigen/polybar-exwm-workspace ()
+  (pcase exwm-workspace-current-index
+    (0 "")
+    (1 "")
+    (2 "")
+    (3 "")
+    (4 "")))
+
+(defun nanjigen/polybar-exwm-workspace-path ()
+  (let ((workspace-path (frame-parameter nil 'bufler-workspace-path-formatted)))
+    (if workspace-path
+        (substring-no-properties workspace-path)
+      "")))
+
+(defun nanjigen/polybar-mail-count (max-count)
+  (if (and nanjigen/mail-enabled nanjigen/mu4e-inbox-query)
+    (let* ((mail-count (shell-command-to-string
+                         (format "mu find --nocolor -n %s \"%s\" | wc -l" max-count nanjigen/mu4e-inbox-query))))
+      (format " %s" (string-trim mail-count)))
+    ""))
+
+(defun nanjigen/telega-normalize-name (chat-name)
+  (let* ((trimmed-name (string-trim-left (string-trim-right chat-name "}") "◀{"))
+         (first-name (nth 0 (split-string trimmed-name " "))))
+    first-name))
+
+(defun nanjigen/propertized-to-polybar (buffer-name)
+  (if-let* ((text (substring-no-properties buffer-name))
+            (fg-face (get-text-property 0 'face buffer-name))
+            (fg-color (face-attribute fg-face :foreground)))
+    (format "%%{F%s}%s%%{F-}" fg-color (nanjigen/telega-normalize-name text))
+    text))
+
+;; (defun nanjigen/polybar-telegram-chats ()
+;;   (if (> (length tracking-buffers) 0)
+;;     (format " %s" (string-join (mapcar 'nanjigen/propertized-to-polybar tracking-buffers) ", "))
+;;     ""))
+
+(add-hook 'exwm-workspace-switch-hook #'nanjigen/update-polybar-exwm)
+(add-hook 'bufler-workspace-set-hook #'nanjigen/update-polybar-exwm)
+
+#+end_src
+
 
 * Automatic Disk Mounting with Udiskie
 :PROPERTIES:
@@ -605,6 +907,7 @@ These packages are needed to enable many video formats to be played in browsers 
 "gst-plugins-ugly"
 "gst-libav"
 "libva-utils"
+"ffmpeg"
 
 #+end_src
 
