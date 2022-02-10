@@ -2402,6 +2402,19 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 :ID:       00c013c2-dbb0-4fc6-ab02-694dfc613b1a
 :END:
 
+I'm not actually making use of prefix keys but keep them here as a reference
+#+BEGIN_SRC elisp
+(setq exwm-input-prefix-keys
+      '(?\C-x
+        ?\M-x
+        ?\M-m
+        ?\C-g
+        ?\C-m
+        ?\C-h
+        ?\C-р                         ; cyrillic
+        ))
+#+END_SRC
+
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
   ;; (setq exwm-input-prefix-keys
   ;;       '(
