@@ -23,20 +23,6 @@ Base packages with Doom defaults
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
-  ;; This file controls what Doom modules are enabled and what order they load in.
-  ;; Remember to run 'doom sync' after modifying it!
-
-  ;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
-  ;;      documentation. There you'll find information about all of Doom's modules
-  ;;      and what flags they support.
-
-  ;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
-  ;;      'C-c g k' for non-vim users) to view its documentation. This works on
-  ;;      flags as well (those symbols that start with a plus).
-  ;;
-  ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
-  ;;      directory (for easy access to its source code).
-
   (doom! :input
          ;;chinese
          ;;japanese
@@ -235,8 +221,6 @@ Base packages with Doom defaults
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
 (setq user-full-name "Daniel"
       user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
@@ -268,6 +252,7 @@ Base packages with Doom defaults
 (setq user-home-directory "~/")
 
 (setq ispell-dictionary "en")
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -300,6 +285,7 @@ Base packages with Doom defaults
 (setq tab-bar-mode t)
 
 (setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode))
+
 ;; Bookmarks file location
 (setq bookmark-default-file "~/org/bookmarks")
 (setq bookmark-save-flag 1) ;; save after every change
@@ -308,7 +294,6 @@ Base packages with Doom defaults
 
 (setq +zen-text-scale 0.6)
 
-;;taken from https://tecosaur.github.io/emacs-config/config.html#writeroom
 (after! writeroom-mode
   (add-hook 'writeroom-mode-hook
             (defun +zen-cleaner-org ()
@@ -364,7 +349,23 @@ Begin experimenting with lookup
 ;; (map! "<f8>" #'scrot)
 (setq display-battery-mode nil)
 
+#+end_src
+
+My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely require it here to have it loaded in the main Emacs configuration.
+
+#+begin_src elisp
 (load! "+mail")
+
+  (setq nanjigen/mail-enabled (member system-name '("umbreon" "espeon")))
+  (setq nanjigen/mu4e-inbox-query nil)
+  ;; (when nanjigen/mail-enabled
+    ;; (require 'dw-mail)
+    ;; )
+
+#+end_src
+#+end_src
+
+#+begin_src elisp
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
@@ -387,6 +388,7 @@ Begin experimenting with lookup
                                       '("odt"))
                                      "libreoffice"
                                      '(file)))))
+(openwith-mode)
 
   ;; Calendar
   ;; (use-package! emms-setup
@@ -504,7 +506,7 @@ Begin experimenting with lookup
 :ID:       440d64be-53c3-4a18-a170-690cbfbb8d6f
 :END:
 
-#+BEGIN_SRC elisp :tangle ~/.doom.d/modules/lang/org-private/packages.el
+#+BEGIN_SRC elisp :noweb-ref org-packages :tangle ~/.doom.d/modules/lang/org-private/packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; desktop/lang/org-private/packages.el
 
@@ -629,14 +631,7 @@ Let's start with fontification and other org ricing.
 Next we'll build the organisational aspect of org-mode.
 #+begin_src elisp :noweb-ref org-org
 (after! org
-(setq org-agenda-files '("~/org/personal.org"
-                           "~/org/work.org"
-                           "~/org/next.org"
-                           "~/org/incubation.org"
-                           "~/org/org-brain/article-notes/thesis.org"
-                           ;; "~/org/ir_stack.org"
-                           "~/org/danieru-cal.org"
-                           "~/org/habits.org"))
+(setq org-agenda-files "~/org/agenda.org")
 
 ;;TODO set refile to only projects?
   ;; Set refile targets
@@ -1051,9 +1046,8 @@ This handy package works with my ~Supermemo~ functions so that I can use increme
 ;;; lang/org-private/+org-media-note.el -*- lexical-binding: t; -*-
 
 (use-package! org-media-note
-  :after org
   :hook (org-mode . org-media-note-setup-org-ref)
-  :bind (("H-n" . org-media-note-hydra/body))  ;; Main entrance
+  ;; :bind (("H-n" . org-media-note-hydra/body))  ;; Main entrance
   :config
   (setq bibtex-completion-pdf-field "file") ;; this is needed for local files stored in the bibkey entry, otherwise the path won't be found
   (setq org-media-note-screenshot-save-method 'attach)
@@ -2151,6 +2145,10 @@ Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poo
 ;; (setq org-mode-hook #'display-line-numbers-mode)
 #+end_src
 ** org-babel
+:PROPERTIES:
+:CREATED:  [2021-10-08 Fri 16:46]
+:ID:       3a873af4-512d-4b74-9e05-a220083ed640
+:END:
 
 Helper functions to make literate programming more comfy. The following is adapted from fuxial's conf
 https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/lang/org-private/autoload/org-babel.el
@@ -2280,24 +2278,29 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
   (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h)
   (set-popup-rule! "^\\*EXWM\\*$" :ignore t)
 
-  (load! "+polybar")
+  (load! "+desktop")
+  ;; (load! "+polybar")
   (setq exwm-workspace-number 7)
   ;;    (when exwm-hide-tiling-modeline
                                         ;(add-hook 'exwm-mode-hook #'hidden-mode-line-mode))
   (setq exwm-input-line-mode-passthrough t)
 
- (load! "+settings")
+  (load! "+settings")
 
+  (use-package! ibus
+    :config
+    (add-hook! 'after-init-hook 'ibus-mode-on)
+    (setq ibus-agent-file-name "/home/nanjigen/.emacs.d/.local/straight/repos/ibus/ibus-el-agent"))
 
-<<exwm main>>
+  <<exwm main>>
 
-<<exwm buffer management>>
+  <<exwm buffer management>>
 
-<<exwm keybinds>>
+  <<exwm keybinds>>
 
-<<exwm-edit>>
+  <<exwm-edit>>
 
-(exwm-enable))
+  (exwm-enable))
 #+END_SRC
 
 ** main options
