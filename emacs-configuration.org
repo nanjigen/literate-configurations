@@ -1031,6 +1031,27 @@ These export options are required for embedding ~lua~ code into ~latex~ snippets
 (add-to-list 'org-preview-latex-process-alist luamagick)
 
 (setq org-preview-latex-default-process 'luamagick)
+
+#+end_src
+
+*** Linguistics related setup
+:PROPERTIES:
+:CREATED:  [2021-10-09 Sat 16:24]
+:ID:       016014fd-9ba4-4ded-a2c7-a7929dea833e
+:END:
+
+Automated org-specific glossaries with [[https://gitlab.com/purlupar/org-expex][org-expex]]:
+#+begin_src elisp :noweb-ref org-academic
+;; (use-package! org-expex)
+
+#+end_src
+
+It's not actually built to ~provide~ which ~straight~ expects
+#+begin_src elisp :noweb-ref org-packages :tangle ~/.doom.d/modules/lang/org-private/packages.el
+(package! org-expex :recipe
+  (:host gitlab
+   :repo "purlupar/org-expex"))
+
 #+end_src
 
 *** org-media-note                                                   :ATTACH:
