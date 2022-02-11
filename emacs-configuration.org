@@ -1,7 +1,7 @@
 #+BRAIN_PARENTS: system
 #+TITLE: Doom Emacs Configuration
 #+PROPERTY: header-args :mkdirp yes
-#+auto_tangle: t
+#+auto_tangle: nil
 
 Doom is currently used because of its OOB vim focus and performance. Eventually I'd like to build a EFS config but that would consume a lot of time.
 
@@ -1084,7 +1084,6 @@ This handy package works with my ~Supermemo~ functions so that I can use increme
 
   )
 #+end_src
-
 
 TODO Make sure that the path is     ~
 #+begin_src elisp :noweb-ref org-media-note gif
@@ -2396,104 +2395,128 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (setq exwm-workspace-warp-cursor t)
 #+END_SRC
 
-** Key bindings
+** PROJECT Key bindings
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       00c013c2-dbb0-4fc6-ab02-694dfc613b1a
 :END:
 
-I'm not actually making use of prefix keys but keep them here as a reference
-#+BEGIN_SRC elisp
-(setq exwm-input-prefix-keys
-      '(?\C-x
-        ?\M-x
-        ?\M-m
-        ?\C-g
-        ?\C-m
-        ?\C-h
-        ?\C-р                         ; cyrillic
-        ))
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+;; (use-package! exwm-firefox-evil
+;;   :defer t
+;;   :config
+;;   (add-to-list 'exwm-firefox-evil-firefox-class-name "firefox")
+;;   (add-hook 'exwm-manage-finish-hook 'exwm-firefox-evil-activate-if-firefox))
+
+;; (use-package! +exwm-sm-evil
+;; (add-hook 'exwm-manage-finish-hook 'exwm-sm-evil-activate-if-sm))
+
+;; Define super-space as default leader key.
+(exwm-input-set-key (kbd "s-SPC") doom-leader-map)
+
+#+END_SRC
+
+*** NEXT Cause the =org-media-note= hydra to be in a posframe
+:PROPERTIES:
+:CREATED:  [2022-02-11 Fri 14:38]
+:ID:       ee7fdd4f-a86e-4808-b5c4-cf07eb7a6e9b
+:END:
+
+To avoid redraws of ~Supermemo~ when the mini-buffer pops
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+(defun org-media-note-hydra-based ()
+  "load hydra in minibuffer"
+  (interactive)
+  (hydra-posframe-mode 0)
+  (org-media-note-hydra/body))
+
+#+END_SRC
+
+*** Core keybindings
+:PROPERTIES:
+:CREATED:  [2022-02-11 Fri 14:36]
+:ID:       4d145354-2cf6-488d-a7ca-768b3a91e962
+:END:
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+
+;; TODO clean this up:
+;; EXWM does not bypass exwm-mode-map keybindings in line-mode, so the
+;; default bindings are still mapped to C-c.  We remap that to C-s-c.
+
+(exwm-input-set-key (kbd "s-n") #'org-media-note-hydra-based)
+(exwm-input-set-key (kbd "s-g") #'guix)
+;; (exwm-input-set-key (kbd "s-n") #'org-media-note-hydra/body)
+;; (exwm-input-set-key (kbd "s-N") #'org-journal-new-entry)
+;; (exwm-input-set-key (kbd "s-N") #'elfeed)
+;; (exwm-input-set-key (kbd "s-W") #'nmtui)
+(exwm-input-set-key (kbd "s-v") #'exwm-floating-toggle-floating)
+(exwm-input-set-key (kbd "s-Q") #'kill-buffer-and-window)
+(exwm-input-set-key (kbd "s-q") #'kill-this-buffer)
+;; (exwm-input-set-key (kbd "s-<down-mouse-1>") #'exwm-input-move-event)
+(exwm-input-set-key (kbd "s-e") #'mu4e)
+(exwm-input-set-key (kbd "s-o") #'link-hint-open-link)
+;; TODO possibly have N for journal entries and another n for somekind of popup/dropdown notetaking
+(exwm-input-set-key (kbd "s-<f1>") #'helm-info)
+;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
+;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
+;; (exwm-input-set-key (kbd "s-<f8>") #'scrot)
+;; (exwm-input-set-key (kbd "s-m") #'major-mode-hydra)
+;; (define-key exwm-mode-map (kbd "s-v") #'exwm-floating-toggle-floating)
+;; (exwm-input-set-key (kbd "s-:") 'helm-M-x)
+;; (exwm-input-set-key (kbd "s-;") 'evil-ex)
+;; (exwm-input-set-key (kbd "s-g") 'bookmark-jump)
+(exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
+(exwm-input-set-key (kbd "s-y") #'org-agenda)
+(exwm-input-set-key (kbd "s-a") #'calc)
+;; (exwm-input-set-key (kbd "s-I") #'launch-htop)
+;; TODO pressing =s-r= again doesn't exit ranger-mode
+(exwm-input-set-key (kbd "s-r") #'ranger)
+(exwm-input-set-key (kbd "s-c") #'org-capture)
+;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
+#+END_SRC
+
+*** TODO Desktop specific functions
+:PROPERTIES:
+:CREATED:  [2022-02-11 Fri 14:36]
+:ID:       7c701453-43c5-42fe-8920-9341afef0efa
+:END:
+System and desktop controls, from Emacs/EXWM
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+(use-package! desktop-environment
+    :after exwm
+    :config (desktop-environment-mode)
+    :custom
+    (desktop-environment-brightness-small-increment "2%+")
+    (desktop-environment-brightness-small-decrement "2%-")
+    (desktop-environment-brightness-normal-increment "5%+")
+    (desktop-environment-brightness-normal-decrement "5%-"))
+
+(exwm-input-set-key (kbd "s--") #'desktop-environment-volume-decrement)
+(exwm-input-set-key (kbd "s-=") #'desktop-environment-volume-increment-slowly)
+(exwm-input-set-key (kbd "s-0") #'desktop-environment-toggle-mute)
+(exwm-input-set-key (kbd "<XF86AudioMute>") #'desktop-environment-toggle-mute)
+(exwm-input-set-key (kbd "<XF86AudioLowerVolume>") #'desktop-environment-volume-decrement)
+(exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") #'desktop-environment-volume-increment-slowly)
+(exwm-input-set-key (kbd "<XF86AudioPrev>") #'desktop-environment-music-previous)
+(exwm-input-set-key (kbd "<XF86AudioNext>") #'desktop-environment-music-next)
+(exwm-input-set-key (kbd "<XF86AudioStop>") #'desktop-environment-music-stop)
+(exwm-input-set-key (kbd "<XF86AudioPlay>") #'desktop-environment-toggle-music)
+(exwm-input-set-key (kbd "<XF86MonBrightnessDown>") #'desktop-environment-brightness-decrement)
+(exwm-input-set-key (kbd "<XF86MonBrightnessUp>") #'desktop-environment-brightness-increment)
+;;   (use-package xbacklight
+;; :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
+;;        ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
+
 #+END_SRC
 
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
-  ;; (setq exwm-input-prefix-keys
-  ;;       '(
-  ;;         ;; ?\C-x
-  ;;         ?\M-x
-  ;;         ;; ?\M-m
-  ;;         ;; ?\C-g
-  ;;         ;; ?\C-m
-  ;;         ;; ?\C-h
-  ;;         ;; ?\C-р                         ; cyrillic
-  ;;         ))
-
-  ;; (use-package! exwm-firefox-evil
-  ;;   :defer t
-  ;;   :config
-  ;;   (add-to-list 'exwm-firefox-evil-firefox-class-name "firefox")
-  ;;   (add-hook 'exwm-manage-finish-hook 'exwm-firefox-evil-activate-if-firefox))
-
-  ;; (use-package! +exwm-sm-evil
-  ;; (add-hook 'exwm-manage-finish-hook 'exwm-sm-evil-activate-if-sm))
-
-  ;; Define super-space as default leader key.
-  (exwm-input-set-key (kbd "s-SPC") doom-leader-map)
-
-  ;; EXWM does not bypass exwm-mode-map keybindings in line-mode, so the
-  ;; default bindings are still mapped to C-c.  We remap that to C-s-c.
-
-  (exwm-input-set-key (kbd "s-n") #'org-media-note-hydra/body)
-  ;; (exwm-input-set-key (kbd "s-N") #'org-journal-new-entry)
-  ;; (exwm-input-set-key (kbd "s-N") #'elfeed)
-  ;; (exwm-input-set-key (kbd "s-W") #'nmtui)
-  (exwm-input-set-key (kbd "s-v") #'exwm-floating-toggle-floating)
-  (exwm-input-set-key (kbd "s-Q") #'kill-buffer-and-window)
-  (exwm-input-set-key (kbd "s-q") #'kill-this-buffer)
-  ;; (exwm-input-set-key (kbd "s-<down-mouse-1>") #'exwm-input-move-event)
-  (exwm-input-set-key (kbd "s-e") #'mu4e)
-  (exwm-input-set-key (kbd "s-o") #'link-hint-open-link)
-  ;; TODO possibly have N for journal entries and another n for somekind of popup/dropdown notetaking
-  (exwm-input-set-key (kbd "s-<f1>") #'helm-info)
-  ;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
-  ;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
-  ;; (exwm-input-set-key (kbd "s-<f8>") #'scrot)
-  ;; (exwm-input-set-key (kbd "s-m") #'major-mode-hydra)
-  ;; (define-key exwm-mode-map (kbd "s-v") #'exwm-floating-toggle-floating)
-  ;; (exwm-input-set-key (kbd "s-:") 'helm-M-x)
-  ;; (exwm-input-set-key (kbd "s-;") 'evil-ex)
-  ;; (exwm-input-set-key (kbd "s-g") 'bookmark-jump)
-  ;; Shell (not a real one for the moment)
-
-  (exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
-  ;; possible use helm because custom actions
-  ;; (exwm-input-set-key (kbd "s-D") #'helm-run-external-command)
-  (exwm-input-set-key (kbd "s-y") #'org-agenda)
-  (exwm-input-set-key (kbd "s-a") #'calc)
-  ;; (exwm-input-set-key (kbd "s-x") #'xflock4)
-  ;; (exwm-input-set-key (kbd "s-X") #'logout-menu)
-  ;; (exwm-input-set-key (kbd "s-I") #'launch-htop)
-  ;; (exwm-input-set-key (kbd "s-r") #'launch-ranger)
-  ;; (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-  (exwm-input-set-key (kbd "s-c") #'org-capture)
-  ;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
-#+END_SRC
-
-Desktop specific functions
-#+BEGIN_SRC elisp :noweb-ref exwm keybinds
-;; (use-package! desktop-environment
-;;     :after exwm
-;;     :config (desktop-environment-mode)
-;;     :custom
-;;     (desktop-environment-brightness-small-increment "2%+")
-;;     (desktop-environment-brightness-small-decrement "2%-")
-;;     (desktop-environment-brightness-normal-increment "5%+")
-;;     (desktop-environment-brightness-normal-decrement "5%-"))
-
 (defun nanjigen/lockscreen ()
   (interactive)
   "simple shell call for locking screen"
+  ;; TODO This needs to be changed to use i3lock
   (shell-command "betterlockscreen -l --display 1"))
 
+;; TODO pretty-hydra icons
 ;; (defvar logoff-menu--title (with-faicon ))
 
 (pretty-hydra-define logoff-menu (:foreign-keys warn :title "logoff" :color blue :quit-key "q")
@@ -2504,31 +2527,31 @@ Desktop specific functions
     ("Q" save-buffers-kill-terminal "exit Emacs and logout"))))
 
   (exwm-input-set-key (kbd "s-x") #'logoff-menu/body)
+
+#+END_SRC
+
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
+  ;; Pop ups
   (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
   (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
   (exwm-input-set-key (kbd "s-|") #'helm-bibtex)
-  ;; Window management
-  ;; (use-package! ace-window
-  ;;   :init
-  ;;   (setq ace-window-display-mode t))
-  ;; Undo window configurations
-  ;; (exwm-input-set-key (kbd "s-U") #'winner-undo)
   (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
-  ;; (exwm-input-set-key (kbd "s-R") #'winner-redo)
   (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
   (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
   ;; Change buffers
-  ;; (exwm-input-set-key (kbd "s-<space>") #'helm-M-x)
   (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; try excluding EXWM buffers
   (exwm-input-set-key (kbd "s-B") #'helm-exwm)
 #+END_SRC
 
-Window and buffer manipulation
+*** Window and buffer manipulation
+:PROPERTIES:
+:CREATED:  [2022-02-11 Fri 14:36]
+:ID:       e5335d6f-5423-4694-8847-a363d2daa9c2
+:END:
+
+(should this subtree be promoted? Window management is sort of the main point of ~EXWM~)
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
   ;; Focusing windows
-  ;; (exwm-input-set-key (kbd "<s-f9>") #'exwm-sm-core-down)
-  (exwm-input-set-key (kbd "<f8>") #'exwm-sm-core-test)
-  ;; (exwm-input-set-key (kbd "<f7>") #'evil-window-left)
   (exwm-input-set-key (kbd "s-h") #'evil-window-left)
   (exwm-input-set-key (kbd "s-j") #'evil-window-down)
   (exwm-input-set-key (kbd "s-k") #'evil-window-up)
@@ -2566,27 +2589,37 @@ Window and buffer manipulation
 (exwm-input-set-key (kbd "s-f") #'nanjigen/min-max)
 
 
-  ;; Workspaces
-  (exwm-input-set-key (kbd "s-]") #'next-buffer)
-  (exwm-input-set-key (kbd "s-[") #'previous-buffer)
+;; Workspaces
+(exwm-input-set-key (kbd "s-]") #'next-buffer)
+(exwm-input-set-key (kbd "s-[") #'previous-buffer)
 
-  (exwm-input-set-key (kbd "s-'") #'helm-bookmarks)
-  ;; (exwm-input-set-key (kbd "s-i") #'exwm-edit--compose)
-  (exwm-input-set-key (kbd "s--") #'desktop-environment-volume-decrement)
-  (exwm-input-set-key (kbd "s-=") #'desktop-environment-volume-increment-slowly)
-  (exwm-input-set-key (kbd "s-0") #'desktop-environment-toggle-mute)
-  (exwm-input-set-key (kbd "<XF86AudioMute>") #'desktop-environment-toggle-mute)
-  (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") #'desktop-environment-volume-decrement)
-  (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") #'desktop-environment-volume-increment-slowly)
-  (exwm-input-set-key (kbd "<XF86AudioPrev>") #'desktop-environment-music-previous)
-  (exwm-input-set-key (kbd "<XF86AudioNext>") #'desktop-environment-music-next)
-  (exwm-input-set-key (kbd "<XF86AudioStop>") #'desktop-environment-music-stop)
-  (exwm-input-set-key (kbd "<XF86AudioPlay>") #'desktop-environment-toggle-music)
-
-  ;;   (use-package xbacklight
-  ;; :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
-  ;;        ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
+(exwm-input-set-key (kbd "s-'") #'helm-bookmarks)
+;; (exwm-input-set-key (kbd "s-i") #'exwm-edit--compose)
 #+END_SRC
+
+*** TODO Window tree-style jumping
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 10:10]
+:ID:       1a98a340-850c-4feb-a0f5-2e8aeb04c832
+:END:
+https://github.com/abo-abo/hydra/wiki/Window-Management#deluxe-window-moving
+https://github.com/dimitri/switch-window#switch-window-seem-to-conflict-with-exwm-how-to-do
+
+At first a function that calls something like ~ace-window~ or ~switch-window~ when opening a file from certain selection buffers:
+
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds :noweb no :results none
+;; Window management
+  (use-package! ace-window
+    :init
+    (setq ace-window-display-mode t))
+
+#+END_SRC
+
+*** TODO Review and delete/archive
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 10:22]
+:ID:       f1d923d9-bad4-4c86-aaaf-527cad1cc2b9
+:END:
 
 Extra helm stuff
 #+begin_src elisp :noweb no
@@ -2601,6 +2634,18 @@ Extra helm stuff
   ;;                               "~/org/someday.org")))
 #+end_src
 
+I'm not actually making use of prefix keys but keep them here as a reference
+#+BEGIN_SRC elisp
+(setq exwm-input-prefix-keys
+      '(?\C-x
+        ?\M-x
+        ?\M-m
+        ?\C-g
+        ?\C-m
+        ?\C-h
+        ?\C-р                         ; cyrillic
+        ))
+#+END_SRC
 ** buffer and window rules
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:03]
