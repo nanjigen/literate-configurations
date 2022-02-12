@@ -1,7 +1,7 @@
 #+TITLE: Mail and Emacs
 #+PROPERTY: header-args :mkdirp yes
 
-* mu4e
+* PROJECT Setup mu4e in emacs
 :PROPERTIES:
 :CREATED:  [2020-05-16 Sat 12:08]
 :ID:       d8343324-2695-42e4-882d-2d147e7627b5
@@ -12,6 +12,11 @@ https://github.com/org-mime/org-mime
 
 A large portion of my mu4e config is taken from [[https://github.com/lepisma/rogue/tree/master/local/r-mu4e][lepisma's r-mu4e]] and Ambrevar's [[https://gitlab.com/ambrevar/dotfiles/-/blob/master/.emacs.d/lisp/init-mu4e.el][config]].
 
+** NEXT Rework blocks into sections/TODO
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 14:57]
+:ID:       cb4fb1b0-be96-42fb-b004-9610c85d0351
+:END:
 #+begin_src elisp
 ;;; $DOOMDIR/+mail.el -*- lexical-binding: t; -*-
 
@@ -207,6 +212,50 @@ I'm not sure that the =(symbol-value 'x)= syntax is the best way to go about get
                   (smtpmail-smtp-service . 465)))))
   (mu4e t))
 #+end_src
+
+** NEXT Set default download locations for mu4e                    :@computer:
+:PROPERTIES:
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
+:CREATED:  [2022-02-12 Sat 14:53]
+:ID:       ac237473-04e6-447e-ad24-1c9c42892540
+:END:
+
+https://www.djcbsoftware.nl/code/mu/mu4e/Attachments.html
+
+** TODO Go over mu4e tips                                          :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 14:53]
+:ID:       153be129-cee6-4046-9bc9-247501c023fc
+:END:
+
+https://www.reddit.com/r/emacs/comments/9ozezm/regale_me_with_your_mu4e_tips_tricks/
+
+** TODO Modify mu4e with extra goodies                             :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 14:53]
+:ID:       17485cc2-4ef2-4f49-944d-df29dd266224
+:END:
+
+https://www.reddit.com/r/emacs/comments/8q84dl/tip_how_to_easily_manage_your_emails_with_mu4e/
+http://pragmaticemacs.com/mu4e-tutorials/
+https://develop.spacemacs.org/layers/+email/mu4e/README.html
+
+** TODO Get mu4e-conversation working                              :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 14:53]
+:ID:       0044deff-bedb-48e0-b916-edfdaadec5e9
+:END:
+
+https://gitlab.com/ambrevar/mu4e-conversation
+
+** TODO Implement clickable mailto: links for mu4e/firefox         :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 14:53]
+:ID:       862a87ae-ad3a-4532-a46a-29c932f634b8
+:END:
+
+https://groups.google.com/forum/#!topic/mu-discuss/Uce5fTro9gU
+
 
 * mbsync                                                                :crypt:
 :PROPERTIES:
