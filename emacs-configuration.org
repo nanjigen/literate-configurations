@@ -2239,6 +2239,21 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
 
 #+end_src
+** PROJECT Incremental literate programming
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:00]
+:ID:       f0cdfd96-d9e7-450e-8b36-9ac3c37c7513
+:END:
+*** WAITING Setup incremental programming with ~org-incremental~
+:PROPERTIES:
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
+:CREATED:  [2022-02-12 Sat 11:00]
+:ID:       5bc47138-536f-4860-920d-1ed08274dd52
+:END:
+:LOGBOOK:
+- State "WAITING"    from              [2022-02-12 Sat 10:59] \\
+  Complete org-incremental package
+:END:
 
 * EXWM
 :PROPERTIES:
