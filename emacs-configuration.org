@@ -924,11 +924,125 @@ no longer needed
           ;;  "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x ** Extra \n\n** Link\n %(insert-property)%")
 
 #+end_src
-** org-gtd
+
+** PROJECT Setup org for effective GTD use (org-gtd)
 :PROPERTIES:
-:CREATED:  [2020-12-14 Mon 17:54]
-:ID:       6c1724b7-06be-4b91-bead-451b74695204
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       676b0687-9e67-457f-9692-a762543cc475
 :END:
+*** PROJECT Rework org-capture templates
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       1403291d-7ad9-4371-b4c3-ea67c7e2ac0c
+:END:
+**** NEXT Consider transferring captures to DOCT                 :@computer:
+:PROPERTIES:
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       c716b6f8-d4b7-4250-b17e-dbb3436e4a44
+:END:
+
+https://github.com/progfolio/doct
+
+**** TODO create capture template for books, movies etc.         :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       66744e54-1abe-44af-932a-3eedf749dd3a
+:END:
+
+('to watch' and 'to read')
+
+**** TODO SM import capture template                             :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       c0e0c5e5-0790-4166-805d-14694f6b760a
+:END:
+**** TODO setup Org-capture for phone calls (enter into table?)  :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       b110a4b9-b971-4fa3-a354-cd5e17fcc665
+:END:
+**** TODO Prettify org-capture buffer                            :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       f1ef2aca-b552-4528-9508-03753c6fcc22
+:END:
+
+https://github.com/tecosaur/emacs-config/compare/6bcdbaa..49c790e
+
+**** TODO Experiment with posframe capture                       :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       85a97d0d-6999-4730-b44f-6be1bcfbc007
+:END:
+*** TODO Setup org-super-agenda to split habits in seq order      :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       e4264554-7c6b-49e8-a38b-f27054fb861b
+:END:
+*** TODO Look into tecosaur config                   :@computer:#incremental:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       cba6e4a3-8b50-44fa-af78-697c51f47562
+:END:
+
+https://tecosaur.github.io/emacs-config/config.html
+
+*** TODO Brainstorm: add completed tasks to journal entry for that day? :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       ec406bff-f6c0-43e4-8c73-902aaac16a4f
+:END:
+
+Maybe I should think about using transclusion
+Wait org-ql blocks would be even better (have them render on open)
+
+*** TODO Add sounds back for org-pomodoro                         :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       45e748e0-a2f5-4cc4-965a-44fd9f4f4deb
+:END:
+*** TODO Encrypt journal                                          :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       a6bfc0c4-ce50-479c-a1a4-526991b8f757
+:END:
+*** TODO setup elfeed                                             :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       8d90dd3b-cbfc-40cf-83f5-e1a4c657e84a
+:END:
+
+https://nullprogram.com/blog/2013/09/04/
+
+*** TODO Add attach runsheet to cal for work checklist            :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       d54adc36-13c8-44cb-b1be-b6c1783e36d2
+:END:
+*** TODO Document GTD workflow in orgbrain                        :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       b9847fd3-e6b2-4352-891a-a4b4b9ccc784
+:END:
+
+Use images and codeblocks
+[[file:org/wiki/gtd.org][GTD and orgmode]]
+
+*** TODO Link horizon 2 interests/areas to orgbrain               :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       af21e781-9b70-46d9-b5d4-12b0d1d82af7
+:END:
+*** TODO Make <enter> function for org-brain to helm-link :@computer:#lowenergy:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       af0cf7aa-ddfa-4379-a3cc-707bd1b2ea3d
+:END:
+
+Entering on a word brings up helm completion list based on word for other org-brain entities.
+
+
 
 ** Academic org
 :PROPERTIES:
