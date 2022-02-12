@@ -1722,7 +1722,212 @@ With a prefix ARG, remove start location."
 ;;   (setq org-gcal-file-alist '(("otoo.danieru@gmail.com" . "~/org/danieru-cal.org"))))
 #+end_src
 
-** hydra
+** Module files
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:38]
+:ID:       708a4f2f-e37a-4f55-b792-cac22f651714
+:END:
+
+Finally putting everything together:
+#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/config.el
+<<org-ricing>>
+
+<<org-org>>
+
+<<org-literate>>
+
+<<org-academic>>
+
+<<org-brain config>>
+
+<<org-noter config>>
+
+(load! "+org-media-note.el")
+(load! "+org-protocol.el")
+#+end_src
+
+** TODO autohide drawers
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:31]
+:ID:       3ea4999c-d4f4-487c-a22e-eadddbc3cafa
+:END:
+A failed attempt at getting :PROPERTIES: drawers to autohide.
+#+begin_src elisp :tangle no
+;; (use-package! org
+;;   :config
+;;   (defun org-cycle-hide-drawers (state)
+;;     "Re-hide all drawers after a visibility state change."
+;;     (when (and (derived-mode-p 'org-mode)
+;;               (not (memq state '(overview folded contents))))
+;;       (save-excursion
+;;         (let* ((globalp (memq state '(contents all)))
+;;               (beg (if globalp
+;;                       (point-min)
+;;                       (point)))
+;;               (end (if globalp
+;;                       (point-max)
+;;                       (if (eq state 'children)
+;;                         (save-excursion
+;;                           (outline-next-heading)
+;;                           (point))
+;;                         (org-end-of-subtree t)))))
+;;           (goto-char beg)
+;;           (while (re-search-forward org-drawer-regexp end t)
+;;             (save-excursion
+;;               (beginning-of-line 1)
+;;               (when (looking-at org-drawer-regexp)
+;;                 (let* ((start (1- (match-beginning 0)))
+;;                       (limit
+;;                         (save-excursion
+;;                           (outline-next-heading)
+;;                             (point)))
+;;                       (msg (format
+;;                               (concat
+;;                                 "org-cycle-hide-drawers:  "
+;;                                 "`:END:`"
+;;                                 " line missing at position %s")
+;;                               (1+ start))))
+;;                   (if (re-search-forward "^[ \t]*:END:" limit t)
+;;                     (outline-flag-region start (point-at-eol) t)
+;;                     (user-error msg))))))))))
+
+;;   (defun org-toggle-properties ()
+;;     ;; toggle visibility of properties in current header if it exists
+;;     (save-excursion
+;;       (when (not (org-at-heading-p))
+;;         (org-previous-visible-heading 1))
+;;       (when (org-header-property-p)
+;;         (let* ((a (re-search-forward "\n\\:" nil t)))
+;;           (if (outline-invisible-p (point))
+;;               (outline-show-entry)
+;;             (org-cycle-hide-drawers 'all))))))
+
+;; )
+#+end_src
+
+* Org literate programming
+:PROPERTIES:
+:CREATED:  [2020-11-17 Tue 10:35]
+:ID:       aa8703d1-3b49-4407-b106-346f385a2f24
+:header-args: :noweb-ref org-literate
+:END:
+
+We'll enable ~babel~ here and some languages.
+
+- This isn't actually needed by ~Doom~ and would prevent some of the startup optimisations.
+#+begin_src elisp :tangle no
+;; "setup org-babel."
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t)
+  ;; org-src-tab-acts-natively t)
+
+(after! ob
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((c          . t)
+     (calc       . t)
+     ;; (comint     . t)
+     ;; (ditaa      . t)
+     (dot        . t)
+     (emacs-lisp . t)
+     (gnuplot    . t)
+     ;; (haskell    . t)
+     ;; (js         . t)
+     (latex      . t)
+     (lisp       . t)
+     (makefile   . t)
+     ;; (python     . t)
+     ;; (ipython     . t)
+     ;; (r          . t)
+     ;; (restclient . t)
+     ;; (sagemath   . t)
+     (scheme     . t)
+     (shell      . t)
+     (sql        . t)
+     (sqlite     . t))))
+#+end_src
+
+Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
+Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
+#+begin_src elisp :tangle no
+;; (setq org-mode-hook #'display-line-numbers-mode)
+#+end_src
+** org-babel
+:PROPERTIES:
+:CREATED:  [2021-10-08 Fri 16:46]
+:ID:       3a873af4-512d-4b74-9e05-a220083ed640
+:END:
+
+Helper functions to make literate programming more comfy. The following is adapted from fuxial's conf
+https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/lang/org-private/autoload/org-babel.el
+#+begin_src elisp
+;;;###autoload
+(defun +org-private/get-name-src-block ()
+  (interactive)
+  (let ((completion-ignore-case t)
+        (case-fold-search t)
+        (all-block-names (org-babel-src-block-names)))
+    (ivy-read "Named Source Blocks: " all-block-names
+              :require-match t
+              :history 'get-name-src-block-history
+              :preselect (let (select (thing-at-point 'symbol))
+                           (if select (substring-no-properties select)))
+              :caller '+org-private/get-name-src-block
+              :action #'+org-private/get-name-src-block-action-insert)))
+
+;;;###autoload
+(defun +org-private/get-name-src-block-action-insert (x)
+  (insert (concat org-babel-noweb-wrap-start x org-babel-noweb-wrap-end)))
+
+#+end_src
+** org-sticky-header
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:53]
+:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
+:END:
+Another alphapapa package, this is extremely useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
+#+begin_src elisp
+(use-package! org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq org-sticky-header-full-path 'full
+        org-sticky-header-outline-path-separator " › "))
+
+#+end_src
+
+** org-auto-tangle
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:53]
+:ID:       11000a20-ca17-4261-ae22-989b26b38c9b
+:END:
+Auto-tangle on save is comfy and having it in a package gives a clean config.
+#+begin_src elisp
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode))
+
+#+end_src
+
+** org-crypt with VC'd files
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:54]
+:ID:       c48a3b97-1082-4b9c-9441-6e08fee05223
+:END:
+I have some personal information in some of my configuration files. ~org-crypt~ takes care of this at the header level, useful for public files. Some of this information, however, is embedded in code, and I want to be able to tangle those files still. [[https://ag91.github.io/blog/2020/10/30/org-crypt-and-tangling-source-blocks/][Some code from Andrea]] helps us:
+#+begin_src elisp
+(defun ag/reveal-and-move-back ()
+  (org-reveal)
+  (goto-char ag/old-point))
+(defun ag/org-reveal-after-save-on ()
+  (setq ag/old-point (point))
+  (add-hook 'after-save-hook 'ag/reveal-and-move-back))
+(defun ag/org-reveal-after-save-off ()
+  (remove-hook 'after-save-hook 'ag/reveal-and-move-back))
+(add-hook 'org-babel-pre-tangle-hook 'ag/org-reveal-after-save-on)
+(add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
+
+#+end_src
+** PROJECT Literate programming hydra
 :PROPERTIES:
 :CREATED:  [2020-10-24 Sat 00:16]
 :ID:       10d9b8ea-2886-4c67-a7ef-5d66994dab6b
@@ -2148,211 +2353,6 @@ prepended to the element after the #+HEADER: tag."
 
 #+end_src
 
-** Module files
-:PROPERTIES:
-:CREATED:  [2020-11-17 Tue 10:38]
-:ID:       708a4f2f-e37a-4f55-b792-cac22f651714
-:END:
-
-Finally putting everything together:
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/config.el
-<<org-ricing>>
-
-<<org-org>>
-
-<<org-literate>>
-
-<<org-academic>>
-
-<<org-brain config>>
-
-<<org-noter config>>
-
-(load! "+org-media-note.el")
-(load! "+org-protocol.el")
-#+end_src
-
-** TODO autohide drawers
-:PROPERTIES:
-:CREATED:  [2020-11-17 Tue 10:31]
-:ID:       3ea4999c-d4f4-487c-a22e-eadddbc3cafa
-:END:
-A failed attempt at getting :PROPERTIES: drawers to autohide.
-#+begin_src elisp :tangle no
-;; (use-package! org
-;;   :config
-;;   (defun org-cycle-hide-drawers (state)
-;;     "Re-hide all drawers after a visibility state change."
-;;     (when (and (derived-mode-p 'org-mode)
-;;               (not (memq state '(overview folded contents))))
-;;       (save-excursion
-;;         (let* ((globalp (memq state '(contents all)))
-;;               (beg (if globalp
-;;                       (point-min)
-;;                       (point)))
-;;               (end (if globalp
-;;                       (point-max)
-;;                       (if (eq state 'children)
-;;                         (save-excursion
-;;                           (outline-next-heading)
-;;                           (point))
-;;                         (org-end-of-subtree t)))))
-;;           (goto-char beg)
-;;           (while (re-search-forward org-drawer-regexp end t)
-;;             (save-excursion
-;;               (beginning-of-line 1)
-;;               (when (looking-at org-drawer-regexp)
-;;                 (let* ((start (1- (match-beginning 0)))
-;;                       (limit
-;;                         (save-excursion
-;;                           (outline-next-heading)
-;;                             (point)))
-;;                       (msg (format
-;;                               (concat
-;;                                 "org-cycle-hide-drawers:  "
-;;                                 "`:END:`"
-;;                                 " line missing at position %s")
-;;                               (1+ start))))
-;;                   (if (re-search-forward "^[ \t]*:END:" limit t)
-;;                     (outline-flag-region start (point-at-eol) t)
-;;                     (user-error msg))))))))))
-
-;;   (defun org-toggle-properties ()
-;;     ;; toggle visibility of properties in current header if it exists
-;;     (save-excursion
-;;       (when (not (org-at-heading-p))
-;;         (org-previous-visible-heading 1))
-;;       (when (org-header-property-p)
-;;         (let* ((a (re-search-forward "\n\\:" nil t)))
-;;           (if (outline-invisible-p (point))
-;;               (outline-show-entry)
-;;             (org-cycle-hide-drawers 'all))))))
-
-;; )
-#+end_src
-
-* Org literate programming
-:PROPERTIES:
-:CREATED:  [2020-11-17 Tue 10:35]
-:ID:       aa8703d1-3b49-4407-b106-346f385a2f24
-:header-args: :noweb-ref org-literate
-:END:
-
-We'll enable ~babel~ here and some languages.
-
-- This isn't actually needed by ~Doom~ and would prevent some of the startup optimisations.
-#+begin_src elisp :tangle no
-;; "setup org-babel."
-(setq org-confirm-babel-evaluate nil
-      org-src-fontify-natively t)
-  ;; org-src-tab-acts-natively t)
-
-(after! ob
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((c          . t)
-     (calc       . t)
-     ;; (comint     . t)
-     ;; (ditaa      . t)
-     (dot        . t)
-     (emacs-lisp . t)
-     (gnuplot    . t)
-     ;; (haskell    . t)
-     ;; (js         . t)
-     (latex      . t)
-     (lisp       . t)
-     (makefile   . t)
-     ;; (python     . t)
-     ;; (ipython     . t)
-     ;; (r          . t)
-     ;; (restclient . t)
-     ;; (sagemath   . t)
-     (scheme     . t)
-     (shell      . t)
-     (sql        . t)
-     (sqlite     . t))))
-#+end_src
-
-Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
-Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
-#+begin_src elisp :tangle no
-;; (setq org-mode-hook #'display-line-numbers-mode)
-#+end_src
-** org-babel
-:PROPERTIES:
-:CREATED:  [2021-10-08 Fri 16:46]
-:ID:       3a873af4-512d-4b74-9e05-a220083ed640
-:END:
-
-Helper functions to make literate programming more comfy. The following is adapted from fuxial's conf
-https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/lang/org-private/autoload/org-babel.el
-#+begin_src elisp
-;;;###autoload
-(defun +org-private/get-name-src-block ()
-  (interactive)
-  (let ((completion-ignore-case t)
-        (case-fold-search t)
-        (all-block-names (org-babel-src-block-names)))
-    (ivy-read "Named Source Blocks: " all-block-names
-              :require-match t
-              :history 'get-name-src-block-history
-              :preselect (let (select (thing-at-point 'symbol))
-                           (if select (substring-no-properties select)))
-              :caller '+org-private/get-name-src-block
-              :action #'+org-private/get-name-src-block-action-insert)))
-
-;;;###autoload
-(defun +org-private/get-name-src-block-action-insert (x)
-  (insert (concat org-babel-noweb-wrap-start x org-babel-noweb-wrap-end)))
-
-#+end_src
-** org-sticky-header
-:PROPERTIES:
-:CREATED:  [2021-09-23 Thu 10:53]
-:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
-:END:
-Another alphapapa package, this is extremely useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
-#+begin_src elisp
-(use-package! org-sticky-header
-  :hook (org-mode . org-sticky-header-mode)
-  :config
-  (setq org-sticky-header-full-path 'full
-        org-sticky-header-outline-path-separator " › "))
-
-#+end_src
-
-** org-auto-tangle
-:PROPERTIES:
-:CREATED:  [2021-09-23 Thu 10:53]
-:ID:       11000a20-ca17-4261-ae22-989b26b38c9b
-:END:
-Auto-tangle on save is comfy and having it in a package gives a clean config.
-#+begin_src elisp
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode))
-
-#+end_src
-
-** org-crypt with VC'd files
-:PROPERTIES:
-:CREATED:  [2021-09-23 Thu 10:54]
-:ID:       c48a3b97-1082-4b9c-9441-6e08fee05223
-:END:
-I have some personal information in some of my configuration files. ~org-crypt~ takes care of this at the header level, useful for public files. Some of this information, however, is embedded in code, and I want to be able to tangle those files still. [[https://ag91.github.io/blog/2020/10/30/org-crypt-and-tangling-source-blocks/][Some code from Andrea]] helps us:
-#+begin_src elisp
-(defun ag/reveal-and-move-back ()
-  (org-reveal)
-  (goto-char ag/old-point))
-(defun ag/org-reveal-after-save-on ()
-  (setq ag/old-point (point))
-  (add-hook 'after-save-hook 'ag/reveal-and-move-back))
-(defun ag/org-reveal-after-save-off ()
-  (remove-hook 'after-save-hook 'ag/reveal-and-move-back))
-(add-hook 'org-babel-pre-tangle-hook 'ag/org-reveal-after-save-on)
-(add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
-
-#+end_src
 ** PROJECT Incremental literate programming
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:00]
