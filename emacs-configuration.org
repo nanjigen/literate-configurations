@@ -647,8 +647,9 @@ Next we'll build the organisational aspect of org-mode.
                              ("~/org/work.org" :maxlevel . 2)
                              ("~/org/personal.org" :maxlevel . 3)
                              ("~/org/wiki/thesis.org" :maxlevel . 3)
-                             ("~/org/someday.org" :maxlevel . 2)
+                             ("~/org/import.org" :maxlevel . 2)
                              ("~/org/incubation.org" :maxlevel . 1)
+                             ("~/org/someday.org" :maxlevel . 2)
                              ("~/org/read.org" :maxlevel . 2)
                              ("~/org/watch.org" :maxlevel . 2)))
 
@@ -684,7 +685,8 @@ Next we'll build the organisational aspect of org-mode.
                             ;;; Contexts
                         ("@home" . ?h)
                         ;; ("@nathans" . ?n)
-                        ("@uni" . ?u)
+                        ;; ("@uni" . ?u)
+                        ("@work" . ?u)
                         ("@errand" . ?e)
                         ("@shops" . ?s)
                         ("@onlineshop" . ?o)
@@ -700,10 +702,11 @@ Next we'll build the organisational aspect of org-mode.
                         ("#email" . ?m)
                         ("#lowenergy" . ?l)
                         ("#translation" . ?t)
-                        ("#incremental" . ?t)
+                        ("incremental" . ?t)
                         ;; ("web" . ?t)
                         ;; ("reading" . ?t)
                         (:newline)
+??
                         ("WAITING" . ?W)
                         ("HOLD" . ?H)
                         ("CANCELLED" . ?C)
