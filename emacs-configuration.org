@@ -552,11 +552,12 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! abridge-diff)
 #+END_SRC
 
-** Org ricing
+** PROJECT org ricing
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:30]
 :ID:       0af5adb9-5c1c-4899-bc92-22dd9c70b1f2
 :END:
+
 Let's start with fontification and other org ricing.
 #+begin_src elisp :noweb-ref org-ricing
 ;;; lang/org-private/config.el -*- lexical-binding: t; -*-
@@ -568,6 +569,7 @@ Let's start with fontification and other org ricing.
 
   :config
   (setq org-superstar-headline-bullets-list '("› "))
+  (setq org-fancy-priorities-mode nil) ;; needed for understanding fine-grained priority
   (setq org-startup-indented t
         org-clock-idle-time 5
         ;; org-bullets-bullet-list '("› ")
