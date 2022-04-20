@@ -888,9 +888,27 @@ Use ~org-ql~ to generate custom agenda commands.
 #+end_src
 
 *** org-capture
+*** calfw
 :PROPERTIES:
-:CREATED:  [2021-09-22 Wed 17:44]
-:ID:       df7c5e56-3318-43c7-9723-0bb46c50119b
+:CREATED:  [2022-03-04 Fri 14:24]
+:ID:       1ba88fe2-ea52-4676-b031-53e0049abaa8
+:END:
+
+#+BEGIN_SRC elisp :noweb-ref org-org
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")  ; org-agenda source
+    ;; (cfw:org-create-file-source "cal" "/path/to/cal.org" "Cyan")  ; other org source
+    ;; (cfw:cal-create-source "Orange") ; diary source
+    ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
+   )))
+
+#+END_SRC
+
 ** PROJECT Move from ~org-depend~ to ~org-edna~
 :PROPERTIES:
 :CREATED:  [2022-04-16 Sat 10:26]
