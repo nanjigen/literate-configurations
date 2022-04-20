@@ -732,28 +732,29 @@ Next we'll build the organisational aspect of org-mode.
                         ;; ("web" . ?t)
                         ;; ("reading" . ?t)
                         (:newline)
-??
                         ("WAITING" . ?W)
                         ("HOLD" . ?H)
                         ("CANCELLED" . ?C)
                         )))
 #+end_src
 
+??
 #+begin_src elisp :noweb-ref org-org
 #+end_src
 
-Presentation setup
-#+begin_src elisp :noweb-ref org-org
-(use-package! ox-reveal
-  :config
-  (setq org-reveal-root "file:///home/volk/Templates/reveal.js"))
-#+end_src
-
-*** agenda and org-ql views
+** agenda and org-ql views
 :PROPERTIES:
 :CREATED:  [2021-09-22 Wed 17:44]
 :ID:       b35385d8-04fb-4b8a-a209-17050b650e3a
 :END:
+
+*** org-super-agenda
+:PROPERTIES:
+:CREATED:  [2022-02-26 Sat 11:34]
+:ID:       d48e62f8-64e2-4d82-997b-09b474c0369c
+:END:
+Used for grouping recurrent areas of accountability/focus
+
 #+begin_src elisp :noweb-ref org-org
 (use-package! org-super-agenda
   ;; :commands (org-super-agenda-mode)
@@ -761,20 +762,20 @@ Presentation setup
   :after org-agenda
   :init
   (setq org-super-agenda-groups
-        '((:name "Schedule\n"
+        `((:name "Schedule"
            :time-grid t)
-          (:name "Habits"
-           :habit t)
-          (:name "Today\n"
-           :scheduled today
-           :discard (:habit))
+          <<habits group>>
+          (:name "Today"
+           :time-grid t
+           ;; :habit nil
+           :discard (:header-regex "~/org/incubation.org"))
           (:name "Translation"
            :tag "#translation")
           (:name "Due today\n"
            :deadline today)
-          (:name "Overdue\n"
+          (:name "Overdue"
            :deadline past)
-          (:name "Due soon\n"
+          (:name "Due soon"
            :deadline future)
           (:name "Waiting\n"
            :todo "WAIT"
@@ -784,9 +785,40 @@ Presentation setup
   :config
   (org-super-agenda-mode))
 
-;; (use-package! org-rich-yank
-;;   :after org)
+          #+end_src
 
+Separate out incubated tasks into their own group:
+          #+begin_src elisp :noweb-ref org-org
+          (:name "Incubated - Hatched"
+           ;; :scheduled today
+           :discard (:not (:file-path "~/org/incubation.org")))
+           ;; :file-path (,(concat org-directory "incubation.org")))
+          #+end_src
+
+          #+begin_src elisp :noweb-ref org-org
+#+end_src
+
+**** NEXT Setup org-super-agenda to split habits in seq order    :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       e4264554-7c6b-49e8-a38b-f27054fb861b
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
+:END:
+If I miss habits that occur later in the day, I don't want to have to reschedule them the next day so that they appear in order of when to do them.
+
+#+begin_src elisp :noweb-ref habits group
+(:name "Habits"
+ :habit t)
+#+end_src
+
+*** org-ql
+:PROPERTIES:
+:CREATED:  [2022-02-26 Sat 11:34]
+:ID:       9bf6baac-e7a9-4f67-a093-0bb73456d641
+:END:
+
+Use ~org-ql~ to generate custom agenda commands.
+#+begin_src elisp :noweb-ref org-org
 (use-package! org-ql
   :after org)
 
@@ -852,8 +884,7 @@ Presentation setup
                                       "wiki/thesis.org")
                                 (not (todo "PROJECT"))
                                 (not (ancestors (todo "PROJECT")))))
-            ((org-ql-block-header "Orphaned Tasks"))))
-          )))
+            ((org-ql-block-header "Orphaned Tasks")))))))
 #+end_src
 
 *** org-capture
