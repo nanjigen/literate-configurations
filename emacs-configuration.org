@@ -891,7 +891,14 @@ Use ~org-ql~ to generate custom agenda commands.
 :PROPERTIES:
 :CREATED:  [2021-09-22 Wed 17:44]
 :ID:       df7c5e56-3318-43c7-9723-0bb46c50119b
+** PROJECT Move from ~org-depend~ to ~org-edna~
+:PROPERTIES:
+:CREATED:  [2022-04-16 Sat 10:26]
+:ID:       822b6fc8-fe99-4dbf-9f9b-2bc7161e0b6e
 :END:
+[[https://github.com/toshism/org-linker-edn][org-linker-edna]]
+Current ~org-depend~ setup. Would like to move to ~org-edna~ in the future.
+
 #+begin_src elisp :noweb-ref org-org
 (use-package! org-depend
   :after org
@@ -912,6 +919,36 @@ Use ~org-ql~ to generate custom agenda commands.
 
 (add-hook 'org-after-todo-state-change-hook 'r-org/org-insert-trigger)
 
+*** NEXT Rewrite current ~org-depend~ setup with org-edna
+:PROPERTIES:
+:CREATED:  [2022-04-16 Sat 10:28]
+:ID:       b041b553-14c3-4739-b763-4ee574b60109
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
+:END:
+
+#+begin_src elisp
+(use-package! org-edna
+  :after org
+  :config)
+#+end_src
+
+*** TODO Implement smart WAITING dependencies with ~org-edna~
+:PROPERTIES:
+:CREATED:  [2022-04-16 Sat 10:37]
+:ID:       b579c074-a5d9-4b49-98e9-2a674c345dec
+:END:
+I essentially want an =org-id= based dependency system for WAITING tasks. Much how like changing a TODO to WAITING triggers a buffer to enter the details of why/what you are waiting on, we could trigger a narrowing selection of ~org-brain~ nodes and link to an existing node or create a new one?
+
+Upon completion of the blocking task, we should be able to set the WAITING todo to NEXT.
+
+** PROJECT Rework org-capture templates
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       1403291d-7ad9-4371-b4c3-ea67c7e2ac0c
+:END:
+;** org-capture
+
+#+begin_src elisp :noweb-ref org-org
 ;; Capture
 ;; TODO Transfer captures to DOCT
 (after! org-capture
@@ -989,70 +1026,45 @@ no longer needed
 
 #+end_src
 
-** PROJECT Setup org for effective GTD use (org-gtd)
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       676b0687-9e67-457f-9692-a762543cc475
-:END:
-*** PROJECT Rework org-capture templates
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       1403291d-7ad9-4371-b4c3-ea67c7e2ac0c
-:END:
-**** NEXT Consider transferring captures to DOCT                 :@computer:
+*** NEXT Consider transferring captures to DOCT                   :@computer:
 :PROPERTIES:
 :TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       c716b6f8-d4b7-4250-b17e-dbb3436e4a44
 :END:
-
 https://github.com/progfolio/doct
 
-**** TODO create capture template for books, movies etc.         :@computer:
+*** TODO create capture template for books, movies etc.           :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       66744e54-1abe-44af-932a-3eedf749dd3a
 :END:
-
 ('to watch' and 'to read')
 
-**** TODO SM import capture template                             :@computer:
+*** TODO SM import capture template                               :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       c0e0c5e5-0790-4166-805d-14694f6b760a
 :END:
-**** TODO setup Org-capture for phone calls (enter into table?)  :@computer:
+*** TODO setup Org-capture for phone calls (enter into table?)    :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       b110a4b9-b971-4fa3-a354-cd5e17fcc665
 :END:
-**** TODO Prettify org-capture buffer                            :@computer:
+This is to do with *IWTYTBR* methodology. Essentially whenever you get a call from the bank (or anyone) you should be capturing the person's name, time and duration of call etc.
+*** TODO Prettify org-capture buffer                              :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       f1ef2aca-b552-4528-9508-03753c6fcc22
 :END:
-
 https://github.com/tecosaur/emacs-config/compare/6bcdbaa..49c790e
 
-**** TODO Experiment with posframe capture                       :@computer:
+*** TODO Experiment with posframe capture                         :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       85a97d0d-6999-4730-b44f-6be1bcfbc007
 :END:
-*** TODO Setup org-super-agenda to split habits in seq order      :@computer:
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       e4264554-7c6b-49e8-a38b-f27054fb861b
-:END:
-*** TODO Look into tecosaur config                   :@computer:#incremental:
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       cba6e4a3-8b50-44fa-af78-697c51f47562
-:END:
 
-https://tecosaur.github.io/emacs-config/config.html
-
-*** TODO Brainstorm: add completed tasks to journal entry for that day? :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       ec406bff-f6c0-43e4-8c73-902aaac16a4f
