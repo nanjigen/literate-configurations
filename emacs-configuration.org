@@ -937,6 +937,9 @@ Current ~org-depend~ setup. Would like to move to ~org-edna~ in the future.
 
 (add-hook 'org-after-todo-state-change-hook 'r-org/org-insert-trigger)
 
+#+end_src
+
+
 *** NEXT Rewrite current ~org-depend~ setup with org-edna
 :PROPERTIES:
 :CREATED:  [2022-04-16 Sat 10:28]
@@ -1019,28 +1022,6 @@ Upon completion of the blocking task, we should be able to set the WAITING todo 
            my/org-ledger-cash-template
            :empty-lines 1
            :immediate-finish t))))
-#+end_src
-
-no longer needed
-#+begin_src elisp :noweb no :tangle no
-          ;; Anki
-          ("a" "Anki")
-          ("ab" "Anki basic"
-           entry
-           (file+headline org-my-anki-file "Dispatch Shelf")
-           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: MegaDeck\n:END:\n** Front\n%?\n** Back\n%x\n")
-          ("ac" "Anki cloze"
-           entry
-           (file+headline org-my-anki-file "Dispatch Shelf")
-           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra\n")
-          ("ai" "Anki IR"
-           entry
-           (file+function "~/org/anki.org" key-to-header)
-           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra \n\n** Cited \n** Link\n %(insert-property)  \n** Key\n %(insert-key)")
-          ;; ("at" "Anki test"
-          ;;  entry
-          ;;  (file+function "~/org/anki.org" insert-key)
-          ;;  "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x ** Extra \n\n** Link\n %(insert-property)%")
 
 #+end_src
 
@@ -1083,13 +1064,33 @@ https://github.com/tecosaur/emacs-config/compare/6bcdbaa..49c790e
 :ID:       85a97d0d-6999-4730-b44f-6be1bcfbc007
 :END:
 
+*** Anki captures
 :PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       ec406bff-f6c0-43e4-8c73-902aaac16a4f
+:CREATED:  [2022-04-17 Sun 09:46]
+:ID:       afd5119c-1fb7-4635-aa75-a3e35384e490
 :END:
+no longer needed
+#+begin_src elisp :noweb no :tangle no
+          ;; Anki
+          ("a" "Anki")
+          ("ab" "Anki basic"
+           entry
+           (file+headline org-my-anki-file "Dispatch Shelf")
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: MegaDeck\n:END:\n** Front\n%?\n** Back\n%x\n")
+          ("ac" "Anki cloze"
+           entry
+           (file+headline org-my-anki-file "Dispatch Shelf")
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra\n")
+          ("ai" "Anki IR"
+           entry
+           (file+function "~/org/anki.org" key-to-header)
+           "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x\n** Extra \n\n** Cited \n** Link\n %(insert-property)  \n** Key\n %(insert-key)")
+          ;; ("at" "Anki test"
+          ;;  entry
+          ;;  (file+function "~/org/anki.org" insert-key)
+          ;;  "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: IR_Cloze\n:ANKI_DECK: MegaDeck\n:END:\n** Text\n%x ** Extra \n\n** Link\n %(insert-property)%")
 
-Maybe I should think about using transclusion
-Wait org-ql blocks would be even better (have them render on open)
+#+end_src
 
 *** TODO Add sounds back for org-pomodoro                         :@computer:
 :PROPERTIES:
