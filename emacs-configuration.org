@@ -1141,6 +1141,13 @@ https://tecosaur.github.io/emacs-config/config.html
 Entering on a word brings up helm completion list based on word for other org-brain entities.
 
 
+*** TODO Brainstorm: add completed tasks to journal entry for that day? :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       ec406bff-f6c0-43e4-8c73-902aaac16a4f
+:END:
+Maybe I should think about using transclusion
+Wait org-ql blocks would be even better (have them render on open)
 
 ** Academic org
 :PROPERTIES:
