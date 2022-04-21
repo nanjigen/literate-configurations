@@ -3907,7 +3907,9 @@ xdg-mime default emacsclient.desktop application/pdf
 :RESOURCES:
 - [[https://andreyorst.gitlab.io/posts/2020-05-10-making-emacs-tabs-look-like-in-atom/][Making Emacs tabs look like in Atom – Andrey Orst]]
 :END:
+** TODO set theme
 
+** Frame transparency
 Then set frame transparency:
 #+begin_src elisp :noweb yes :noweb-ref frame transparency
 (defconst doom-frame-transparency 94)
