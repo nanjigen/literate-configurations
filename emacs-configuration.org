@@ -1217,6 +1217,11 @@ Here are academic/pdf related configs:
 ;; bib-library "~/Documents/LaTeX/uni.bib"
 #+end_src
 
+**** Export rules for papers
+:PROPERTIES:
+:CREATED:  [2022-02-25 Fri 18:23]
+:ID:       4921de30-a25d-4978-87b8-c451d87b3fa1
+:END:
 Automating export rules for org-files to LaTeX pdfs:
 #+begin_src elisp :noweb-ref org-academic
 (after! 'ox-latex
