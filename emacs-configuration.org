@@ -3312,12 +3312,15 @@ Tool for managing shepherd from Emacs
 
 #+end_src
 
-TODO Use [[https://github.com/DamienCassou/auth-password-store][auth-source-pass]]?* Newsfeed
+TODO Use [[https://github.com/DamienCassou/auth-password-store][auth-source-pass]]?
+
+* PROJECT setup elfeed                                              :@computer:
 :PROPERTIES:
 :CREATED:  [2021-05-16 Sun 16:33]
 :ID:       80c51341-56a9-4821-ba1e-fd7c1272880c
 :header-args: :tangle ~/.doom.d/modules/lang/org-private/+elfeed.el
 :END:
+https://nullprogram.com/blog/2013/09/04/
 ** Keybinds
 :PROPERTIES:
 :CREATED:  [2021-05-16 Sun 16:33]
