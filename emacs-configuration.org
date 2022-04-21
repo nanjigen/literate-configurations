@@ -1944,11 +1944,10 @@ A failed attempt at getting :PROPERTIES: drawers to autohide.
 ;; )
 #+end_src
 
-* Org literate programming
+* ~org~ literate programming
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:35]
 :ID:       aa8703d1-3b49-4407-b106-346f385a2f24
-:header-args: :noweb-ref org-literate
 :END:
 
 We'll enable ~babel~ here and some languages.
