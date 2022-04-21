@@ -16,7 +16,7 @@ Core files for a doom config. The installation script will identify these and in
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:16]
 :ID:       c155e8b5-b80f-4dc2-864a-1c9a57c03608
-:header-args: :noweb yes :tangle ~/.doom.d/init.el
+:header-args: :noweb yes :tangle .doom.d/init.el
 :END:
 
 Base packages with Doom defaults
@@ -215,7 +215,7 @@ Base packages with Doom defaults
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:16]
 :ID:       35d3976a-3ece-4843-bc62-40a6e21cf2d1
-:header-args: :tangle ~/.doom.d/config.el :noweb yes
+:header-args: :tangle .doom.d/config.el :noweb yes
 :END:
 
 #+begin_src elisp
@@ -450,7 +450,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:16]
 :ID:       784ab14a-2e81-4994-8427-992af538de14
-:header-args: :tangle ~/.doom.d/packages.el
+:header-args: :tangle .doom.d/packages.el
 :END:
 
 #+begin_src elisp
@@ -507,7 +507,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 :ID:       440d64be-53c3-4a18-a170-690cbfbb8d6f
 :END:
 
-#+BEGIN_SRC elisp :noweb-ref org-packages :tangle ~/.doom.d/modules/lang/org-private/packages.el
+#+BEGIN_SRC elisp :noweb-ref org-packages :tangle .doom.d/modules/lang/org-private/packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; desktop/lang/org-private/packages.el
 
@@ -1300,7 +1300,7 @@ Automated org-specific glossaries with [[https://gitlab.com/purlupar/org-expex][
 #+end_src
 
 It's not actually built to ~provide~ which ~straight~ expects
-#+begin_src elisp :noweb-ref org-packages :tangle ~/.doom.d/modules/lang/org-private/packages.el
+#+begin_src elisp :noweb-ref org-packages :tangle .doom.d/modules/lang/org-private/packages.el
 (package! org-expex :recipe
   (:host gitlab
    :repo "purlupar/org-expex"))
@@ -1316,7 +1316,7 @@ It's not actually built to ~provide~ which ~straight~ expects
 
 This handy package works with my ~Supermemo~ functions so that I can use incremental video note taking with org-mode from SM articles.
 
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+org-media-note.el
+#+begin_src elisp :tangle .doom.d/modules/lang/org-private/+org-media-note.el
 ;;; lang/org-private/+org-media-note.el -*- lexical-binding: t; -*-
 
 (use-package! org-media-note
@@ -1660,7 +1660,7 @@ Mainly, a Helm action that allows opening the current entry (or marked entries) 
 
   #+end_src
 
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+helm-org-brain.el :noweb-ref no
+#+begin_src elisp :tangle .doom.d/modules/lang/org-private/+helm-org-brain.el :noweb-ref no
 ;;; lang/org-private/+helm-org-brain.el -*- lexical-binding: t; -*-
 
 (defmacro helm-exit-and-run! (&rest body)
@@ -1868,7 +1868,7 @@ With a prefix ARG, remove start location."
 :END:
 
 Finally putting everything together:
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/config.el
+#+begin_src elisp :tangle .doom.d/modules/lang/org-private/config.el
 <<org-ricing>>
 
 <<org-org>>
@@ -2402,7 +2402,7 @@ Another option would be to writing a function binding it to something like <ente
 2. Open in indirect buffer
 3. Open in =org-edit-special= buffer
 
-#+begin_src elisp :tangle ~/.doom.d/modules/lang/org-private/+hydra.el
+#+begin_src elisp :tangle .doom.d/modules/lang/org-private/+hydra.el
 <<header-args options>>
 <<header-args hydra>>
 <<hydra push/pop>>
@@ -2508,7 +2508,7 @@ Exwm provides
 :CREATED:  [2021-08-28 Sat 17:12]
 :ID:       70d8041b-2689-4d8d-b127-c1fae8285eaf
 :END:
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/packages.el
+#+begin_src elisp :tangle .doom.d/modules/desktop/exwm/packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; desktop/exwm/packages.el
 
@@ -2545,7 +2545,7 @@ Exwm provides
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       35c06fd8-f238-4af1-aa4c-75351aab9065
 :END:
-#+BEGIN_SRC elisp :noweb yes :tangle ~/.doom.d/modules/desktop/exwm/config.el
+#+BEGIN_SRC elisp :noweb yes :tangle .doom.d/modules/desktop/exwm/config.el
 ;;; desktop/exwm/config.el -*- lexical-binding: t; -*-
 (load! "+funcs")
 (use-package! xelb)
@@ -3008,7 +3008,7 @@ Posframes for hydra:
 :ID:       55321c26-b9e9-4d26-bd45-a9d7695c01c1
 :END:
 
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+funcs.el
+#+begin_src elisp :tangle .doom.d/modules/desktop/exwm/+funcs.el
 ;;; desktop/exwm/+funcs.el -*- lexical-binding: t; -*-
 
 (use-package! cl-lib)
@@ -3203,7 +3203,7 @@ Can show completions at point for COMMAND using helm or ivy"
 :ID:       5107683b-2b3d-423b-b791-8f60a6acec2d
 :END:
 
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+settings
+#+begin_src elisp :tangle .doom.d/modules/desktop/exwm/+settings.el
 ;;; desktop/exwm/+settings.el -*- lexical-binding: t; -*-
 
 ;; variables
@@ -3240,7 +3240,7 @@ Can show completions at point for COMMAND using helm or ivy"
 :ID:       a3502af2-236a-4be4-aa9d-7a2bc419c25b
 :END:
 
-#+begin_src elisp :tangle ~/.doom.d/modules/desktop/exwm/+polybar.el
+#+begin_src elisp :tangle .doom.d/modules/desktop/exwm/+polybar.el
 (defvar sarg/polybar-process nil)
 
 (define-minor-mode sarg/polybar-mode
@@ -3318,7 +3318,7 @@ TODO Use [[https://github.com/DamienCassou/auth-password-store][auth-source-pass
 :PROPERTIES:
 :CREATED:  [2021-05-16 Sun 16:33]
 :ID:       80c51341-56a9-4821-ba1e-fd7c1272880c
-:header-args: :tangle ~/.doom.d/modules/lang/org-private/+elfeed.el
+:header-args: :tangle .doom.d/modules/lang/org-private/+elfeed.el
 :END:
 https://nullprogram.com/blog/2013/09/04/
 ** Keybinds
@@ -4125,7 +4125,7 @@ Here lets setup pdf-tools to work more efficiently with academic articles
 
 We also want ~pdf-tools~ as the pdf reader system-wide, so we need to set a mimefile:
 
-#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop
+#+begin_src conf :tangle .local/share/applications/emacsclient.desktop
 [Desktop Entry]
 Name=Emacs Client
 Exec=emacsclient %u
