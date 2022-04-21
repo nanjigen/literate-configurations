@@ -1104,32 +1104,29 @@ no longer needed
   (setq org-reveal-root (concat "file://" abbreviated-home-dir "/Templates/reveal.js")))
 #+end_src
 
+** PROJECT Setup org for effective GTD use (org-gtd)
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       676b0687-9e67-457f-9692-a762543cc475
+:END:
+*** TODO Look into tecosaur config                   :@computer:#incremental:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       cba6e4a3-8b50-44fa-af78-697c51f47562
+:END:
+
+https://tecosaur.github.io/emacs-config/config.html
+
+*** TODO Add sounds back for org-pomodoro                         :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       45e748e0-a2f5-4cc4-965a-44fd9f4f4deb
+:END:
+*** TODO Encrypt org-journal                                      :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
 :ID:       a6bfc0c4-ce50-479c-a1a4-526991b8f757
 :END:
-*** TODO setup elfeed                                             :@computer:
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       8d90dd3b-cbfc-40cf-83f5-e1a4c657e84a
-:END:
-
-https://nullprogram.com/blog/2013/09/04/
-
-*** TODO Add attach runsheet to cal for work checklist            :@computer:
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       d54adc36-13c8-44cb-b1be-b6c1783e36d2
-:END:
-*** TODO Document GTD workflow in orgbrain                        :@computer:
-:PROPERTIES:
-:CREATED:  [2022-02-12 Sat 11:08]
-:ID:       b9847fd3-e6b2-4352-891a-a4b4b9ccc784
-:END:
-
-Use images and codeblocks
-[[file:org/wiki/gtd.org][GTD and orgmode]]
-
 *** TODO Link horizon 2 interests/areas to orgbrain               :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
