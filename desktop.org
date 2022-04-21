@@ -778,6 +778,14 @@ I use [[https://www.gnu.org/software/mcron/][GNU mcron]] for scheduling tasks to
 
 #+end_src
 
+** TODO setup Guix battery notification
+:PROPERTIES:
+:CREATED:  [2022-02-25 Fri 18:13]
+:ID:       30df41e6-c098-4e8f-ba5c-164b3cd7ac5e
+:END:
+https://guix.gnu.org/zh-CN/manual/en/html_node/Scheduled-Job-Execution.html
+Using mcron
+
 * Applications
 :PROPERTIES:
 :CREATED:  [2021-09-22 Wed 13:54]
