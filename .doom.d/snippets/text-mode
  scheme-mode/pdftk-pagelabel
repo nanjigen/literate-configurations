@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: pdftk-pagelabel
+# key: /page
+# --
+PageLabelBegin
+PageLabelNewIndex: 1
+PageLabelStart: ${1:meta starting pagenumber}
+PageLabelPrefix:
+PageLabelNumStyle: DecimalArabicNumerals

@@ -1,0 +1,39 @@
+"e0f6d941d33c6a2c884f5ca16170deda5fb9bd51"
+#s(undo-tree [nil ([nil ([nil ([nil (#1=[nil nil ((399 . 638) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 1 (fontified t face (rainbow-delimiters-depth-1-face)) 1 17 (fontified t face font-lock-function-name-face) 17 19 (fontified t) 19 22 (fontified t face font-lock-comment-delimiter-face) 22 60 (fontified t face font-lock-comment-face) 60 61 (fontified t) 61 64 (fontified t face font-lock-comment-delimiter-face) 64 116 (fontified t face font-lock-comment-face) 116 125 (fontified nil face font-lock-comment-face) 125 239 (fontified nil)) . -399) (396 . 398) (#("
+" 0 1 (fontified nil)) . -396) (274 . 397) (#(" " 0 1 (fontified nil)) . 274) (1 . 275) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(yasnippet desktop-environment with-emacs focus darkroom symbol-navigation-hydra org-sidebar link-hint)))" 0 1 (fontified t face (rainbow-delimiters-depth-1-face)) 1 21 (fontified t face font-lock-function-name-face) 21 23 (fontified t) 23 26 (fontified t face font-lock-comment-delimiter-face) 26 68 (fontified t face font-lock-comment-face) 68 69 (fontified t) 69 72 (fontified t face font-lock-comment-delimiter-face) 72 133 (fontified t face font-lock-comment-face) 133 134 (fontified t) 134 137 (fontified t face font-lock-comment-delimiter-face) 137 191 (fontified t face font-lock-comment-face) 191 192 (fontified t) 192 195 (fontified t face font-lock-comment-delimiter-face) 195 245 (fontified t face font-lock-comment-face) 245 246 (fontified t) 246 247 (fontified t face highlight-quoted-quote) 247 248 (fontified t face (rainbow-delimiters-depth-2-face)) 248 273 (fontified t face font-lock-variable-name-face) 273 277 (fontified t) 277 278 (fontified t face highlight-quoted-quote) 278 279 (fontified t face (rainbow-delimiters-depth-3-face)) 279 380 (fontified t) 380 381 (fontified t face (rainbow-delimiters-depth-3-face)) 381 382 (fontified t face (rainbow-delimiters-depth-2-face)) 382 383 (fontified t face (rainbow-delimiters-depth-1-face))) . -1) (undo-tree-id0 . -22) (undo-tree-id1 . -22) (t 24902 60595 359112 880000)) nil (24905 7519 736351 357000) 0 nil]) ((385 . 624) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 1 (fontified t) 1 17 (face font-lock-function-name-face fontified t) 17 19 (fontified t) 19 22 (face font-lock-comment-delimiter-face fontified t) 22 60 (face font-lock-comment-face fontified t) 60 61 (fontified t) 61 64 (face font-lock-comment-delimiter-face fontified t) 64 125 (face font-lock-comment-face fontified t) 125 126 (fontified t) 126 129 (face font-lock-comment-delimiter-face fontified nil) 129 183 (face font-lock-comment-face fontified nil) 183 239 (fontified nil)) . -385) (382 . 384) (#("
+" 0 1 (fontified nil)) . -382) (274 . 383) (#(" " 0 1 (fontified nil)) . 274) (1 . 275) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(desktop-environment with-emacs focus darkroom symbol-navigation-hydra org-sidebar link-hint)))" 0 1 (fontified t) 1 21 (face font-lock-function-name-face fontified t) 21 23 (fontified t) 23 26 (face font-lock-comment-delimiter-face fontified t) 26 68 (face font-lock-comment-face fontified t) 68 69 (fontified t) 69 72 (face font-lock-comment-delimiter-face fontified t) 72 133 (face font-lock-comment-face fontified t) 133 134 (fontified t) 134 137 (face font-lock-comment-delimiter-face fontified t) 137 191 (face font-lock-comment-face fontified t) 191 192 (fontified t) 192 195 (face font-lock-comment-delimiter-face fontified t) 195 245 (face font-lock-comment-face fontified t) 245 248 (fontified t) 248 273 (face font-lock-variable-name-face fontified t) 273 373 (fontified t)) . -1) (undo-tree-id0 . -22) (undo-tree-id1 . -22) (t 24896 37983 704419 760000)) nil (24902 60595 319943 345000) 0 nil]) ((375 . 614) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 1 (fontified t face (rainbow-delimiters-depth-1-face)) 1 17 (fontified t face font-lock-function-name-face) 17 19 (fontified t) 19 22 (fontified t face font-lock-comment-delimiter-face) 22 60 (fontified t face font-lock-comment-face) 60 61 (fontified t) 61 64 (fontified t face font-lock-comment-delimiter-face) 64 125 (fontified t face font-lock-comment-face) 125 126 (fontified t) 126 129 (fontified t face font-lock-comment-delimiter-face) 129 146 (fontified t face font-lock-comment-face) 146 183 (fontified t face font-lock-comment-face) 183 239 (fontified nil)) . -375) (372 . 374) (#("
+" 0 1 (fontified nil)) . -372) (274 . 373) (#(" " 0 1 (fontified nil)) . 274) (1 . 275) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(with-emacs focus darkroom symbol-navigation-hydra org-sidebar link-hint)))" 0 1 (fontified t face (rainbow-delimiters-depth-1-face)) 1 21 (fontified t face font-lock-function-name-face) 21 23 (fontified t) 23 26 (fontified t face font-lock-comment-delimiter-face) 26 68 (fontified t face font-lock-comment-face) 68 69 (fontified t) 69 72 (fontified t face font-lock-comment-delimiter-face) 72 133 (fontified t face font-lock-comment-face) 133 134 (fontified t) 134 137 (fontified t face font-lock-comment-delimiter-face) 137 191 (fontified t face font-lock-comment-face) 191 192 (fontified t) 192 195 (fontified t face font-lock-comment-delimiter-face) 195 245 (fontified t face font-lock-comment-face) 245 246 (fontified t) 246 247 (fontified t face highlight-quoted-quote) 247 248 (fontified t face (rainbow-delimiters-depth-2-face)) 248 273 (fontified t face font-lock-variable-name-face) 273 277 (fontified t) 277 278 (fontified t face highlight-quoted-quote) 278 279 (fontified t face (rainbow-delimiters-depth-3-face)) 279 350 (fontified t) 350 351 (fontified t face (rainbow-delimiters-depth-3-face)) 351 352 (fontified t face (rainbow-delimiters-depth-2-face)) 352 353 (fontified t face (rainbow-delimiters-depth-1-face))) . -1) (undo-tree-id0 . -22) (t 24892 7659 126288 521000)) nil (24896 37983 661841 327000) 0 nil]) ((352 . 595) (#("
+" 0 1 (fontified nil)) . -352) (274 . 353) (#(" " 0 1 (fontified nil)) . 274) (1 . 275) (t . -1)) nil (24892 7659 95001 823000) 0 nil]) nil nil (24892 7659 95008 216000) 0 nil] #1# 2138 4 nil)

@@ -1,0 +1,8 @@
+"2aa2dc8a4a25d298a5db247a82b08dc8bd9f011b"
+#s(undo-tree [nil ([nil ([nil (#1=[nil nil ((1 . 852) 69 (#("#!/bin/sh
+
+. ~/.profile
+
+exec dbus-launch --exit-with-session emacs
+" 0 1 (fontified t face font-lock-comment-delimiter-face) 1 7 (fontified t face font-lock-comment-face) 7 9 (fontified t face font-lock-keyword-face) 9 10 (fontified t face font-lock-comment-face) 10 25 (fontified t) 25 29 (fontified t face font-lock-keyword-face) 29 68 (fontified t)) . 1) (undo-tree-id0 . -68) (undo-tree-id1 . -66) (undo-tree-id2 . -68) (undo-tree-id3 . -68) (undo-tree-id4 . -8) (undo-tree-id5 . -68) (undo-tree-id6 . -8) (undo-tree-id7 . -68) (undo-tree-id8 . -8) (undo-tree-id9 . -8) 69 (t 24885 42132 715157 830000)) nil (24885 53157 232093 954000) 0 nil]) ((68 . 69)) nil (24885 42132 324082 858000) 0 nil]) ((#(" " 0 1 (fontified t ws-butler-chg chg)) . -68) (undo-tree-id0 . -1) (undo-tree-id1 . -1) 69 (66 . 69) (45 . 66) (26 . 45) (24 . 26) (17 . 24) (12 . 17) (11 . 12) (#("#" 0 1 (face font-lock-comment-delimiter-face fontified t ws-butler-chg chg)) . -11) (undo-tree-id2 . -1) (undo-tree-id3 . -1) 12 (#("
+" 0 1 (face font-lock-keyword-face ws-butler-chg chg fontified nil)) . 12) (11 . 12) (10 . 12) (1 . 10) (t 24885 41949 375102 392000)) nil (24885 42132 324123 79000) 0 nil]) nil nil (24885 42132 324128 96000) 0 nil] #1# 359 3 nil)

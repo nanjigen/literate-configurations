@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: guix-inputs
+# key: inputs...
+# type: command
+# --
+(let ((count (read-number "Number of inputs: ")))
+  (yas-expand-snippet
+   (concat "(" (yas-choose-value '("native-inputs" "inputs" "propagated-inputs")) "\n"
+            " `("
+           (mapconcat
+            #'identity
+            (mapcar (lambda (num)
+                      (format "(\"$%d\" ,$%d)" (1+ num) (1+ num)))
+                    (number-sequence 1 count nil))
+            "\n")
+           "))")))

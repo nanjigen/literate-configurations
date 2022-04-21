@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: guix-input
+# key: input...
+# --
+("$1" ,$1)

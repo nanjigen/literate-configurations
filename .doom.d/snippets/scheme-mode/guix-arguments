@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: guix-arguments
+# key: args...
+# --
+(arguments
+ `(#:phases
+   (modify-phases %standard-phases
+   $0)))

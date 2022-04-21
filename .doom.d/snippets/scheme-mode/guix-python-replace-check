@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: guix-python-replace-check
+# key: replace-check...
+# --
+(replace 'check
+  (lambda* (#:key inputs outputs tests? #:allow-other-keys)
+    (when tests?
+      (add-installed-pythonpath inputs outputs)
+      (invoke "python" "-m" "pytest"))))$0

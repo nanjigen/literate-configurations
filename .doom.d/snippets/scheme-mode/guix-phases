@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: guix-phases
+# key: phase...
+# --
+(${1:$$(yas-choose-value "add-after"
+                         "add-before"
+                         "replace")} '$2 '$3
+  (${4:$$(yas-choose-value "lambda _"
+                           "lambda* (#:key inputs #:allow-other-keys)"
+                           "lambda* (#:key inputs outputs #:allow-other-keys)"
+                           "lambda* (#:key outputs #:allow-other-keys)")}
+                             $0
+                           #t))

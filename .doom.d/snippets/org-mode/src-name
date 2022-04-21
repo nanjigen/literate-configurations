@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: src-name
+# key: <n
+# --
++#NAME: $1

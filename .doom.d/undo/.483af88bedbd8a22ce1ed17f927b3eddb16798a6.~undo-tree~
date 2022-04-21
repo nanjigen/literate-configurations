@@ -1,0 +1,4 @@
+"fbf824d689f32cdd5e2d5173c18698bf84042232"
+#s(undo-tree [nil ([nil ([nil ([nil ([nil (#1=[nil nil ((nil rear-nonsticky nil 2977 . 2978) (nil fontified nil 1 . 2978) (1 . 2978)) nil (24897 52111 659528 735000) 0 nil]) ((1 . 2) (1 . 2) (t 24897 51581 948311 68000)) nil (24897 52111 659535 425000) 0 nil]) ((5977 . 5978)) nil (24897 51581 920151 158000) 0 nil]) ((#("
+" 0 1 (fontified t ws-butler-chg chg rear-nonsticky t)) . 1) (undo-tree-id0 . -1) (undo-tree-id1 . -1)) nil (24897 51581 920185 30000) 0 nil]) ((nil rear-nonsticky nil 1 . 2) (#("
+" 0 1 (rear-nonsticky t font-lock-fontified t src-block t font-lock-multiline t face (org-block) fontified nil ws-butler-chg chg)) . -5978) (1 . 5979) (t 24897 51572 744334 521000)) nil (24897 51581 920188 952000) 0 nil]) nil nil (24897 51581 920191 202000) 0 nil] #1# 114 5 nil)

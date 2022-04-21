@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: noweb-hydra-expand
+# key: <w
+# --
+`(helm-lib-babel-insert)`

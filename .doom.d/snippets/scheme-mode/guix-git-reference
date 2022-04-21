@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: guix-git-reference
+# key: git-reference...
+# --
+(git-reference
+  (url "$1")
+  (commit ${2:$$(yas-choose-value "version"
+                                  "(string-append \\"v\\" version)")}))

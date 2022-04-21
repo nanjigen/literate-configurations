@@ -1,0 +1,7 @@
+# key: toc
+# name: pdftk-toc
+# --
+BookmarkBegin
+BookmarkTitle: ${1:Heading title}
+BookmarkLevel: ${2:Indentation level}
+BookmarkPageNumber: ${3:Page number}
