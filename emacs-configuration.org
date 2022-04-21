@@ -1188,6 +1188,12 @@ Here are academic/pdf related configs:
 <<pdftools modeline hack>>
 #+end_src
 
+**** org-ref
+:PROPERTIES:
+:CREATED:  [2022-02-25 Fri 18:18]
+:ID:       5a6962c5-35e5-4526-b95e-9fc8c5ca9acd
+:END:
+#+begin_src elisp :noweb-ref org-academic
 ;; org-ref
 (use-package! org-ref
   :config
