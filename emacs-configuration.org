@@ -1150,6 +1150,15 @@ Maybe I should think about using transclusion
 Wait org-ql blocks would be even better (have them render on open)
 
 ** Academic org
+*** TODO Document GTD workflow in org-brain                       :@computer:
+:PROPERTIES:
+:CREATED:  [2022-02-12 Sat 11:08]
+:ID:       b9847fd3-e6b2-4352-891a-a4b4b9ccc784
+:END:
+
+Use images and codeblocks
+[[file:org/wiki/gtd.org][GTD and orgmode]]
+
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:30]
 :ID:       57af6f09-ffc5-4227-86e2-a8f48b689e15
