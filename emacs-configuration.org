@@ -1253,6 +1253,12 @@ This is imported into the file (I should create more)
 ,#+LATEX_HEADER: \addbibresource{/home/nanjigen/Documents/LaTeX/uni.bib}
 #+end_src
 
+**** Using luacode in latex-snippets
+:PROPERTIES:
+:CREATED:  [2022-02-25 Fri 18:26]
+:ID:       3bf92ed4-2502-4c81-932c-86060df0b3b4
+:END:
+
 These export options are required for embedding ~lua~ code into ~latex~ snippets in org-mode blocks.
 #+begin_src elisp :noweb-ref org-academic
 (setq org-latex-pdf-process
@@ -1274,6 +1280,12 @@ These export options are required for embedding ~lua~ code into ~latex~ snippets
 (setq org-preview-latex-default-process 'luamagick)
 
 #+end_src
+
+**** TODO Use ~fennel~ in place of lua for org-mode
+:PROPERTIES:
+:CREATED:  [2022-02-25 Fri 18:28]
+:ID:       85142612-0cf7-411f-8ba6-26ff0c36ce33
+:END:
 
 *** Linguistics related setup
 :PROPERTIES:
