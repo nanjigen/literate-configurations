@@ -1149,7 +1149,6 @@ Entering on a word brings up helm completion list based on word for other org-br
 Maybe I should think about using transclusion
 Wait org-ql blocks would be even better (have them render on open)
 
-** Academic org
 *** TODO Document GTD workflow in org-brain                       :@computer:
 :PROPERTIES:
 :CREATED:  [2022-02-12 Sat 11:08]
@@ -1159,6 +1158,7 @@ Wait org-ql blocks would be even better (have them render on open)
 Use images and codeblocks
 [[file:org/wiki/gtd.org][GTD and orgmode]]
 
+** PROJECT Academic org
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:30]
 :ID:       57af6f09-ffc5-4227-86e2-a8f48b689e15
@@ -1170,6 +1170,7 @@ Here are academic/pdf related configs:
 :CREATED:  [2020-12-10 Thu 10:35]
 :ID:       7bf4ad4d-fc04-4783-9e93-cd423933babc
 :END:
+
 #+begin_src elisp :noweb-ref org-academic
 ;; PDF + synctex
 (after! pdf-tools
@@ -1185,6 +1186,7 @@ Here are academic/pdf related configs:
             #'TeX-revert-document-buffer))
 
 <<pdftools modeline hack>>
+#+end_src
 
 ;; org-ref
 (use-package! org-ref
