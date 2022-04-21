@@ -2019,53 +2019,6 @@ We'll enable ~babel~ here and some languages.
      (sqlite     . t))))
 #+end_src
 
-Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
-Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
-#+begin_src elisp :tangle no
-;; (setq org-mode-hook #'display-line-numbers-mode)
-#+end_src
-** org-babel
-:PROPERTIES:
-:CREATED:  [2021-10-08 Fri 16:46]
-:ID:       3a873af4-512d-4b74-9e05-a220083ed640
-:END:
-
-Helper functions to make literate programming more comfy. The following is adapted from fuxial's conf
-https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/lang/org-private/autoload/org-babel.el
-#+begin_src elisp
-;;;###autoload
-(defun +org-private/get-name-src-block ()
-  (interactive)
-  (let ((completion-ignore-case t)
-        (case-fold-search t)
-        (all-block-names (org-babel-src-block-names)))
-    (ivy-read "Named Source Blocks: " all-block-names
-              :require-match t
-              :history 'get-name-src-block-history
-              :preselect (let (select (thing-at-point 'symbol))
-                           (if select (substring-no-properties select)))
-              :caller '+org-private/get-name-src-block
-              :action #'+org-private/get-name-src-block-action-insert)))
-
-;;;###autoload
-(defun +org-private/get-name-src-block-action-insert (x)
-  (insert (concat org-babel-noweb-wrap-start x org-babel-noweb-wrap-end)))
-
-#+end_src
-** org-sticky-header
-:PROPERTIES:
-:CREATED:  [2021-09-23 Thu 10:53]
-:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
-:END:
-Another alphapapa package, this is extremely useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
-#+begin_src elisp
-(use-package! org-sticky-header
-  :hook (org-mode . org-sticky-header-mode)
-  :config
-  (setq org-sticky-header-full-path 'full
-        org-sticky-header-outline-path-separator " › "))
-
-#+end_src
 
 ** org-auto-tangle
 :PROPERTIES:
