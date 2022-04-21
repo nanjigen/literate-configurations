@@ -2052,6 +2052,7 @@ I have some personal information in some of my configuration files. ~org-crypt~ 
 (add-hook 'org-babel-post-tangle-hook 'ag/org-reveal-after-save-off)
 
 #+end_src
+
 ** PROJECT Literate programming hydra
 :PROPERTIES:
 :CREATED:  [2020-10-24 Sat 00:16]
@@ -2500,6 +2501,7 @@ prepended to the element after the #+HEADER: tag."
 :ID:       d263ee0b-c782-4e59-9d52-2cf70d96cfba
 :header-args:elisp: :mkdirp yes :noweb yes
 :END:
+Exwm provides
 
 ** packages
 :PROPERTIES:
