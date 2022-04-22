@@ -194,15 +194,15 @@ EndSection
 
 #+end_src
 
+*** Base operating system
 Define the =base-operating-system= which will be inherited by all machine configurations.
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
-
 (define-public base-operating-system
   (operating-system
    (host-name "umbreon")
-   (timezone "Australia/Sydney")
-   (locale "en_AU.utf8")
+   (timezone "Japan/Tokyo")
+   (locale "en_AU.utf8") ;; TODO how to include more than one locale?
 
    ;; Use non-free Linux and firmware
    (kernel linux)
