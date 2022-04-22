@@ -191,6 +191,27 @@ Section \"InputClass\"
   MatchIsKeyboard \"on\"
 EndSection
 ")
+*** fcitx5-mozc via nix
+Until =fcitx5-mozc= module is completed, use ~nix~ for Japanese input
+#+begin_src scheme :tangle .config/guix/systems/base-system.scm
+
+(define %nix-input-methods
+"{
+  imports = [];
+
+  ###############################
+  ## Input Method Editor (IME) ##
+  ###############################
+
+  # This enables \"fcitx\" as your IME.  This is an easy-to-use IME.  It supports many different input methods.
+  i18n.inputMethod.enabled = \"fcitx\";
+
+  # This enables \"mozc\" as an input method in \"fcitx\".  This has a relatively
+  # complete dictionary.  I recommend it for Japanese input.
+  i18n.inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+}
+"
+)
 
 #+end_src
 
@@ -284,6 +305,11 @@ Define the =base-operating-system= which will be inherited by all machine config
                                (xorg-configuration
                                 (keyboard-layout keyboard-layout)
                                 (extra-config (list %xorg-libinput-config))))))
+                    (service nix-service-type
+                             (nix-configuration
+                             (package nix)
+                             (sandbox #t)
+                             (extra-config '(%nix-input-methods))))
                     (service tlp-service-type
                              (tlp-configuration
                               (cpu-boost-on-ac? #t)
@@ -303,7 +329,6 @@ Define the =base-operating-system= which will be inherited by all machine config
                               (web-interface? #t)
                               (extensions
                                (list cups-filters))))
-                    (service nix-service-type)
                     (bluetooth-service #:auto-enable? #t)
                     (remove (lambda (service)
                               (eq? (service-kind service) gdm-service-type))
