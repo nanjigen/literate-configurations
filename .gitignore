@@ -1,0 +1,17 @@
+# Ignore all
+
+/.config/*
+!/.config/borg
+!/.config/borgmatic
+!/.config/cron
+!/.config/dconf
+!/.config/dunst
+!/.config/fcitx5
+!/.config/fontconfig
+!/.config/goldendict
+!/.config/guix
+!/.config/mpv
+!/.config/polybar
+!/.config/shepherd
+!/.config/xsettingsd
+!/.config/mimeapps.list

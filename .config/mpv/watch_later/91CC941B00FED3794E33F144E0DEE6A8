@@ -1,0 +1,4 @@
+start=0.960000
+mute=yes
+vf=@easycrop:crop=%2%@0=572:%2%@1=605:%2%@2=761:%2%@3=252
+sub-visibility=no

@@ -1,0 +1,6 @@
+start=99.799700
+speed=0.941528
+volume=102.000000
+mute=yes
+vf=@easycrop:crop=%2%@0=269:%2%@1=222:%2%@2=34:%2%@3=10
+sid=no
