@@ -1,6 +1,0 @@
-"c70787a98dcbbf63f73c663f680512d6d6b74cdc"
-#s(undo-tree [nil (#1=[nil nil ((1 . 65) 57 (#("#
-# ~/.bash_profile
-#
-[[ -f ~/.bashrc ]] && . ~/.bashrc
-" 0 1 (fontified t face font-lock-comment-delimiter-face) 1 2 (fontified t face font-lock-comment-face) 2 4 (fontified t face font-lock-comment-delimiter-face) 4 20 (fontified t face font-lock-comment-face) 20 21 (fontified t face font-lock-comment-delimiter-face) 21 22 (fontified t face font-lock-comment-face) 22 23 (fontified t face (rainbow-delimiters-depth-1-face)) 23 24 (fontified t face (rainbow-delimiters-depth-2-face)) 24 38 (fontified t) 38 39 (fontified t face (rainbow-delimiters-depth-2-face)) 39 40 (fontified t face (rainbow-delimiters-depth-1-face)) 40 44 (fontified t) 44 45 (fontified t face font-lock-builtin-face) 45 56 (fontified t)) . 1) (undo-tree-id0 . -56) (undo-tree-id1 . -22) (undo-tree-id2 . -56) (undo-tree-id3 . -22) (undo-tree-id4 . -22) (undo-tree-id5 . 34) (undo-tree-id6 . -23) (undo-tree-id7 . 17) (undo-tree-id8 . -40) 57 (t 24885 45494 752691 809000)) nil (24885 53283 558666 819000) 0 nil]) nil nil (24885 45496 199548 709000) 0 nil] #1# 168 1 nil)
