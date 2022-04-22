@@ -56,7 +56,8 @@
          :emacs
          (dired +icons)    ; making dired pretty [functional]
          electric          ; smarter, keyword-based electric-indent
-         undo              ; persistent, smarter undo for your inevitable mistakes
+         (undo             ; persistent, smarter undo for your inevitable mistakes
+          +tree)           ; use undo-tree instead of undo-fu
          ibuffer           ; interactive buffer management
          vc                ; version-control and Emacs, sitting in a tree
 
