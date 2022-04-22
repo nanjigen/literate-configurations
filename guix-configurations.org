@@ -415,8 +415,9 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
   #:use-module (gnu))
 
 (operating-system
- (inherit base-operating-system)
- (host-name "umbreon")
+  (inherit base-operating-system)
+  (host-name "umbreon")
+
 
   (mapped-devices
    (list (mapped-device
