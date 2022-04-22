@@ -418,6 +418,10 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
   (inherit base-operating-system)
   (host-name "umbreon")
 
+  (append (list (service xorg-configuration
+                         (xorg-configuration
+                          (extra-config (list %xorg-libinput-config)))))
+          %desktop-services)
 
   (mapped-devices
    (list (mapped-device
@@ -445,6 +449,19 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 #+end_src
 
+**** TODO Have tearfree conf used in secondary config
+Often a problem on older Intel-based laptops, I get screen tearing on my T530. To remedy this we need to use an Xorg configuration located in etc/X11/xorg.conf.d/20-intel.conf~. The [[https://wiki.archlinux.org/title/Intel_graphics#Xorg_configuration][classic entry]] in the Arch Wiki for reference.
+
+#+begin_src scheme :tangle .config/guix/systems/umbreon.scm
+(define %xorg-tearfree-config
+   "Section \"Device\""
+   "  Identifier \"Intel Graphics\""
+   "  Driver \"Intel\""
+   "  Option \"TearFree\" \"true\""
+   "EndSection"
+   "\n")
+
+#+end_src
 *System Settings*
 
 #+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep ""
