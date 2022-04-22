@@ -12,9 +12,7 @@ Literate configurations for a fully declarative Guix system.
 
 Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels.html#Channels][channels]] which basically amount to Git repositories which contain Guix package definitions that can be installed on your machine.  Aside from the =%default-channels= list, I also use the [[https://gitlab.com/nonguix/nonguix][Nonguix]] channel to install packages that aren't included with Guix by default like the non-free Linux kernel.
 
-*~/.config/guix/channels.scm:*
-
-#+begin_src scheme :tangle ~/.config/guix/channels.scm
+#+begin_src scheme :tangle .config/guix/channels.scm
   (list
    ;; (channel
    ;;        (name 'channel-x)
@@ -47,7 +45,7 @@ Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels
 
 #+end_src
 
-#+begin_src scheme :tangle ~/.config/guix/channels.scm
+#+begin_src scheme :tangle .config/guix/channels.scm
 
 ;; (list (channel
 ;;         (name 'nonguix)
@@ -82,18 +80,12 @@ This base configuration is shared between all of the machines I manage with Guix
 Any configuration that derives from =base-operating-system= must invoke =guix system= in a specific way to ensure it gets loaded correctly:
 
 #+begin_src sh
-
-sudo -E guix system -L ~/.config/guix/systems reconfigure ~/.config/guix/systems/vrika.scm
-
+sudo -E guix system -L .config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
 #+end_src
 
-#+RESULTS:
+#+begin_src scheme :tangle .config/guix/systems/base-system.scm
 
-*~/.config/guix/systems/base-system.scm:*
-
-#+begin_src scheme :tangle ~/.config/guix/systems/base-system.scm
-
-;; NOTE: This file is generated from ~/.dotfiles/System.org.  Please see commentary there.
+;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
 (define-module (base-system)
   #:use-module (gnu)
@@ -107,9 +99,9 @@ sudo -E guix system -L ~/.config/guix/systems reconfigure ~/.config/guix/systems
   #:use-module (gnu services virtualization)
   #:use-module (gnu packages wm)
   #:use-module (gnu packages cups)
-  #:use-module (gnu packages vim)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages xorg)
+  #:use-module (gnu packages vim)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages file-systems)
   #:use-module (gnu packages gnome)
@@ -247,8 +239,7 @@ Define the =base-operating-system= which will be inherited by all machine config
                  (comment "Daniel Otto")
                  (group "users")
                  (home-directory "/home/nanjigen")
-                 (supplementary-groups '(
-                                         "wheel"     ;; sudo
+                 (supplementary-groups '("wheel"     ;; sudo
                                          "netdev"    ;; network devices
                                          "kvm"
                                          "tty"
@@ -327,7 +318,7 @@ Define the =base-operating-system= which will be inherited by all machine config
 :ID:       693c8a94-716a-459f-aae3-1f00cd5faa30
 :END:
 
-Because I'm lame, all of my machines are named from characters, things, and places from the movie Hackers.
+Eveelotuions
 
 *** Per-System Settings
 :PROPERTIES:
@@ -468,27 +459,23 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 #+end_src
 
-*** phantom
+*** flareon
 :PROPERTIES:
 :CREATED:  [2020-12-21 Mon 12:10]
 :ID:       b36266ce-8625-4bd9-826e-1f1d5abddf97
 :END:
+=flareon= is my home server. It runs borgmatic and some torrent services.
+Eventually this will also run ~cuirass~ and build local substitutions.
+#+begin_src scheme :tangle .config/guix/systems/flareon.scm
+;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
-=phantom= is a ThinkPad X1 Extreme that I use for music production and video editing.  For whatever reason, loading the =nouveau= driver crashes the machine upon booting so I've blacklisted it for now until I figure out how to get it working correctly.
-
-*~/.config/guix/systems/phantom.scm:*
-
-#+begin_src scheme :tangle ~/.config/guix/systems/phantom.scm
-
-;; NOTE: This file is generated from ~/.dotfiles/System.org.  Please see commentary there.
-
-(define-module (phantom)
+(define-module (flareon)
   #:use-module (base-system)
   #:use-module (gnu))
 
 (operating-system
  (inherit base-operating-system)
- (host-name "phantom")
+ (host-name "flareon")
 
  (mapped-devices
   (list (mapped-device
@@ -602,7 +589,7 @@ To make the management of multiple profiles easier, I've created a couple of she
 :ID:       bc466730-8507-48a9-9a1d-a3de1a9261b1
 :END:
 
-This script accepts a space-separated list of manifest file names (without extension) under the =~/~/.config/guix/manifests= folder and then installs those profiles for the first time.  For example:
+This script accepts a space-separated list of manifest file names (without extension) under the =~/.config/guix/manifests= folder and then installs those profiles for the first time.  For example:
 
 #+begin_src sh
 
@@ -661,7 +648,7 @@ done
 :ID:       b09d99fc-1f5d-4c75-b073-82119f103c2e
 :END:
 
-This script accepts a space-separated list of manifest file names (without extension) under the =~/.config/guix/manifests= folder and then installs any updates to the packages contained within them.  If no profile names are provided, it walks the list of profile directories under =~/.guix-extra-profiles= and updates each one of them.
+This script accepts a space-separated list of manifest file names (without extension) under the =.config/guix/manifests= folder and then installs any updates to the packages contained within them.  If no profile names are provided, it walks the list of profile directories under =~/.guix-extra-profiles= and updates each one of them.
 
 #+begin_src sh
 
