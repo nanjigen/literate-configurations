@@ -167,6 +167,7 @@ Override the default =%desktop-services= to add the =udev= backlight configurati
 
 #+end_src
 
+*** libinput driver
 Use the =libinput= driver for all input devices since it's a bit more modern than the default.
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
 
