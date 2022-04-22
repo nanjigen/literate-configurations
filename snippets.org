@@ -1,0 +1,372 @@
+#+TITLE: Literate Yasnippets collection
+#+PROPERTY: :mkdirp yes
+
+* Guix
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 08:51]
+:ID:       9aa89128-27ac-4e7a-8fa4-03a0a1b2f0c3
+:END:
+** guix-arguments
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 08:51]
+:ID:       14a6e53d-6111-4f34-ab40-9cb6bc3cbb8a
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-arguments
+# -*- mode: snippet -*-
+# name: guix-arguments
+# key: args...
+# --
+(arguments
+ `(#:phases
+   (modify-phases %standard-phases
+   $0)))
+#+end_src
+
+** guix-git-reference
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 09:20]
+:ID:       faaa67a0-07eb-416b-90ed-c30993288a6a
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-git-reference
+# -*- mode: snippet -*-
+# name: guix-git-reference
+# key: git-reference...
+# --
+(git-reference
+  (url "$1")
+  (commit ${2:$$(yas-choose-value "version"
+                                  "(string-append \\"v\\" version)")}))
+#+end_src
+
+** guix-bzr-reference
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 09:23]
+:ID:       f06c741e-3b2c-46be-a483-fb568471ffef
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-bzr-reference
+# -*- mode: snippet -*-
+# name: guix-bzr-reference
+# key: bzr-reference...
+# --
+(bzr-reference
+  (url "$1")
+  (revision ${2:ref}))
+ #+end_src
+
+** guix-cvs-reference
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:15]
+:ID:       d1faa871-dde4-4da8-b4bd-a6d18d8affdf
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-cvs-reference
+# -*- mode: snippet -*-
+# name: guix-cvs-reference
+# key: cvs-reference...
+# --
+(cvs-reference
+  (root-directory "${1:root-directory}")
+  (module "${2:module}")
+  (revision "${3:revision}"))
+#+end_src
+
+** guix-hg-reference
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:17]
+:ID:       bf8bdd7e-2cdd-4836-a910-903451175eba
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-hg-reference
+# -*- mode: snippet -*-
+# name: guix-hg-reference
+# key: hg-reference...
+# --
+(hg-reference
+  (url "$1")
+  (changeset ${2:changeset}))
+#+end_src
+
+** guix-svn-reference
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:26]
+:ID:       b164d1b0-6996-44b2-8da5-f595d3d05d94
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-svn-reference
+# -*- mode: snippet -*-
+# name: guix-svn-reference
+# key: svn-reference...
+# --
+(svn-reference
+  (url "$1")
+  (revision ${2:svn-revision}))
+#+end_src
+
+** guix-input
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:19]
+:ID:       2d6b60ec-1fc0-4219-bd05-cba261c639a5
+:END:
+
+#+begin_src scheme :tangle ~/.doom.d/snippets/scheme-mode/guix-input
+# -*- mode: snippet -*-
+# name: guix-input
+# key: input...
+# --
+("$1" ,$1)
+#+end_src
+
+** guix-inputs
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:22]
+:ID:       63344c57-16c7-4f58-bdb9-e7d3d6218269
+:END:
+
+#+begin_src scheme :tangle ~/.doom.d/snippets/scheme-mode/guix-inputs
+# -*- mode: snippet -*-
+# name: guix-inputs
+# key: inputs...
+# type: command
+# --
+(let ((count (read-number "Number of inputs: ")))
+  (yas-expand-snippet
+   (concat "(" (yas-choose-value '("native-inputs" "inputs" "propagated-inputs")) "\n"
+            " `("
+           (mapconcat
+            #'identity
+            (mapcar (lambda (num)
+                      (format "(\"$%d\" ,$%d)" (1+ num) (1+ num)))
+                    (number-sequence 1 count nil))
+            "\n")
+           "))")))
+#+end_src
+
+** guix-origin
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 09:05]
+:ID:       019964cd-281e-4bae-bb66-1ce39be93ec8
+:END:
+#+begin_src scheme :tangle ~/.doom.d/snippets/scheme-mode/guix-origin
+# -*- mode: snippet -*-
+# name: guix-origin
+# key: origin...
+# --
+(origin
+ (method ${1:$$(yas-choose-value "url-fetch"
+                                 "url-fetch/tarbomb"
+                                 "url-fetch/zipbomb"
+                                 "cvs-fetch"
+                                 "git-fetch"
+                                 "hg-fetch"
+                                 "svn-fetch"
+                                 "bzr-fetch")})
+ (uri ${1:$(cond ((equal yas-text "git-fetch") "git-reference...")
+                 ((equal yas-text "svn-fetch") "svn-reference...")
+                 ((equal yas-text "hg-fetch")  "hg-reference...")
+                 ((equal yas-text "cvs-fetch") "cvs-reference...")
+                 ((equal yas-text "bzr-fetch") "bzr-reference...")
+                 (t "(string-append \\"https://\\" version \\".tar.gz\\")"))}$0)
+ ${1:$(cond ((equal yas-text "git-fetch")
+             "(file-name (git-file-name name version))")
+            ((member yas-text '("svn-fetch" "hg-fetch" "cvs-fetch" "bzr-fetch"))
+             "(file-name (string-append name \\"-\\" version \\"-checkout\\"))")
+            (t ""))}
+ (sha256
+  (base32 "$2")))
+#+end_src
+** guix-package
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 09:05]
+:ID:       e9de0b2d-ea50-4690-a1a9-5079740ccbd9
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-package
+# -*- mode: snippet -*-
+# name: guix-package
+# key: package...
+# --
+(define-public $1
+  (package
+    (name "$1")
+    (version "$2")
+    (source
+     origin...$0)
+    (build-system ${3:$$(yas-choose-value "android-ndk-build-system"
+                                          "ant-build-system"
+                                          "asdf-build-system"
+                                          "cargo-build-system"
+                                          "cmake-build-system"
+                                          "dub-build-system"
+                                          "emacs-build-system"
+                                          "font-build-system"
+                                          "glib-or-gtk-build-system"
+                                          "gnu-build-system"
+                                          "go-build-system"
+                                          "haskell-build-system"
+                                          "julia-build-system"
+                                          "meson-build-system"
+                                          "minify-build-system"
+                                          "node-build-system"
+                                          "ocaml-build-system"
+                                          "perl-build-system"
+                                          "python-build-system"
+                                          "r-build-system"
+                                          "ruby-build-system"
+                                          "scons-build-system"
+                                          "texlive-build-system"
+                                          "trivial-build-system"
+                                          "waf-build-system")})
+    (home-page "$4")
+    (synopsis "$5")
+    (description
+     "$6")
+    (license license:${7:$$(yas-choose-value "agpl1"
+                                             "agpl3"
+                                             "agpl3+"
+                                             "artistic2.0"
+                                             "asl1.1"
+                                             "asl2.0"
+                                             "boost1.0"
+                                             "bsd-2"
+                                             "bsd-3"
+                                             "bsd-4"
+                                             "cc-by-sa2.0"
+                                             "cc-by-sa3.0"
+                                             "cc-by-sa4.0"
+                                             "cc-by2.0"
+                                             "cc-by3.0"
+                                             "cc-by4.0"
+                                             "cc-sampling-plus-1.0"
+                                             "cc0"
+                                             "cddl1.0"
+                                             "cddl1.1"
+                                             "cecill"
+                                             "cecill-b"
+                                             "cecill-c"
+                                             "clarified-artistic"
+                                             "copyleft-next"
+                                             "cpl1.0"
+                                             "edl1.0"
+                                             "epl1.0"
+                                             "epl2.0"
+                                             "expat"
+                                             "fdl1.1+"
+                                             "fdl1.2+"
+                                             "fdl1.3+"
+                                             "freebsd-doc"
+                                             "freetype"
+                                             "fsdg-compatible"
+                                             "fsf-free"
+                                             "gfl1.0"
+                                             "giftware"
+                                             "gpl1"
+                                             "gpl1+"
+                                             "gpl2"
+                                             "gpl2+"
+                                             "gpl3"
+                                             "gpl3+"
+                                             "hpnd"
+                                             "ibmpl1.0"
+                                             "ijg"
+                                             "imlib2"
+                                             "ipa"
+                                             "isc"
+                                             "knuth"
+                                             "lgpl2.0"
+                                             "lgpl2.0+"
+                                             "lgpl2.1"
+                                             "lgpl2.1+"
+                                             "lgpl3"
+                                             "lgpl3+"
+                                             "llgpl"
+                                             "lppl"
+                                             "lppl1.0+"
+                                             "lppl1.1+"
+                                             "lppl1.2"
+                                             "lppl1.2+"
+                                             "lppl1.3"
+                                             "lppl1.3+"
+                                             "lppl1.3a"
+                                             "lppl1.3a+"
+                                             "lppl1.3b"
+                                             "lppl1.3b+"
+                                             "lppl1.3c"
+                                             "lppl1.3c+"
+                                             "miros"
+                                             "mpl1.0"
+                                             "mpl1.1"
+                                             "mpl2.0"
+                                             "ms-pl"
+                                             "ncsa"
+                                             "nmap"
+                                             "non-copyleft"
+                                             "ogl-psi1.0"
+                                             "openldap2.8"
+                                             "openssl"
+                                             "opl1.0+"
+                                             "perl-license"
+                                             "psfl"
+                                             "public-domain"
+                                             "qpl"
+                                             "qwt1.0"
+                                             "repoze"
+                                             "ruby"
+                                             "sgifreeb2.0"
+                                             "silof1.1"
+                                             "sleepycat"
+                                             "tcl/tk"
+                                             "unicode"
+                                             "unlicense"
+                                             "vim"
+                                             "w3c"
+                                             "wtfpl2"
+                                             "wxwindows3.1+"
+                                             "x11"
+                                             "x11-style"
+                                             "zlib"
+                                             "zpl2.1"
+                                             )})))
+#+end_src
+
+** guix-phases
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:23]
+:ID:       6af6bfb6-c6ae-42ba-933b-da0b3e37c95d
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-phases
+# -*- mode: snippet -*-
+# name: guix-phases
+# key: phase...
+# --
+(${1:$$(yas-choose-value "add-after"
+                         "add-before"
+                         "replace")} '$2 '$3
+  (${4:$$(yas-choose-value "lambda _"
+                           "lambda* (#:key inputs #:allow-other-keys)"
+                           "lambda* (#:key inputs outputs #:allow-other-keys)"
+                           "lambda* (#:key outputs #:allow-other-keys)")}
+                             $0
+                           #t))
+#+end_src
+
+** guix-python-replace-check
+:PROPERTIES:
+:CREATED:  [2021-12-30 Thu 10:23]
+:ID:       b4ce49a0-798a-42bb-9eda-1d10d0c7c4e5
+:END:
+
+#+begin_src yasnippet :tangle ~/.doom.d/snippets/scheme-mode/guix-python-replace-check
+# -*- mode: snippet -*-
+# name: guix-python-replace-check
+# key: replace-check...
+# --
+(replace 'check
+  (lambda* (#:key inputs outputs tests? #:allow-other-keys)
+    (when tests?
+      (add-installed-pythonpath inputs outputs)
+      (invoke "python" "-m" "pytest"))))$0
+#+end_src
