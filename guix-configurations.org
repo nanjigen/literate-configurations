@@ -123,6 +123,7 @@ sudo -E guix system -L .config/guix/systems reconfigure ~/.config/guix/systems/u
 
 #+end_src
 
+*** Screen brightness
 Add a =udev= rule to enable members of the =video= group to control screen brightness.
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
