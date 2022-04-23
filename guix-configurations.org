@@ -191,6 +191,8 @@ Section \"InputClass\"
   MatchIsKeyboard \"on\"
 EndSection
 ")
+#+end_src
+
 *** fcitx5-mozc via nix
 Until =fcitx5-mozc= module is completed, use ~nix~ for Japanese input
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
@@ -276,7 +278,9 @@ Define the =base-operating-system= which will be inherited by all machine config
                 %base-user-accounts))
 
    ;; Add the 'realtime' group
-   (groups (cons (user-group (system? #t) (name "realtime"))
+   (groups (cons* (user-group (system? #t)
+                             (name "realtime"))
+                             ;; (name "nixbld"))
                  %base-groups))
 
    ;; Install bare-minimum system packages
@@ -293,6 +297,7 @@ Define the =base-operating-system= which will be inherited by all machine config
                       pulseaudio
                       tlp
                       xf86-input-libinput
+                      nix
                       nss-certs     ;; for HTTPS access
                       gvfs)         ;; for user mounts
                      %base-packages))
@@ -361,11 +366,11 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 (require 'map) ;; Needed for map-merge
 
-(setq dw/system-settings
+(setq nanjigen/system-settings
   (map-merge
     'list
     '((desktop/dpi . 180)
-      (desktop/background . "~/Pictures/Backgrounds/deskwall.jpg")
+      (desktop/background . "Pictures/Backgrounds/deskwall.jpg")
       (polybar/height . 35)
 ;; (setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
       (polybar/font-0-size . 18)
@@ -624,7 +629,7 @@ To install Guix on another machine, you first need to build need a USB image.  S
 :ID:       409730ba-a11d-4d8b-ba1b-74d7c5457afe
 :END:
 
-I like to separate my packages into separate manifests that get installed as profiles which can be updated independently.  These profiles get installed under the =~/.guix-extra-profiles= path and sourced by my =~/.profile= when I log in.
+I like to separate my packages into separate manifests that get installed as profiles which can be updated independently.  These profiles get installed under the =.guix-extra-profiles= path and sourced by my =~/.profile= when I log in.
 
 To make the management of multiple profiles easier, I've created a couple of shell scripts:
 
