@@ -1,18 +1,18 @@
 location:
     # List of source directories to backup (required). Globs and tildes are expanded.
     source_directories:
-        - ~/Documents
-        - ~/Code
-        - ~/org
-        - ~/Music
-        - ~/Pictures
-        - ~/Videos
-        - ~/.dicts
-        - ~/.gnupg
-        - ~/.mail
-        - ~/.password-store
-        - ~/.scripts
-        - ~/.ssh
+        - /home/nanjigen/Documents
+        - /home/nanjigen/Code
+        - /home/nanjigen/org
+        - /home/nanjigen/Music
+        - /home/nanjigen/Pictures
+        - /home/nanjigen/Videos
+        - /home/nanjigen/.dicts
+        - /home/nanjigen/.gnupg
+        - /home/nanjigen/.mail
+        - /home/nanjigen/.password-store
+        - /home/nanjigen/.scripts
+        - /home/nanjigen/.ssh
         # - /etc
         # - /var/log/syslog*
 
@@ -21,7 +21,9 @@ location:
     # identity file or port.
     repositories:
         # - user@backupserver:sourcehostname.borg
+        # - ssh://flareon/home/okami/Storage/borgrepo
         - flareon:mnt/backup/borgrepo
+        - /mnt/borg-mount/borgrepo
         # - volk@volklappy:/mnt/backup/Backups/laptop
 
     # Stay in same file system (do not cross mount points). Defaults to false.
