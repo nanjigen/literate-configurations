@@ -548,7 +548,10 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! toc-mode)
 (package! persistent-scratch)
 (package! org-ref)
-(package! helm-bibtex)
+(package! consult-bibtex :recipe
+  (:host github
+   :repo "mohkale/consult-bibtex"))
+;; (package! helm-bibtex)
 (package! helm-lib-babel)
 (package! powerthesaurus)
 (package! ox-reveal)
@@ -556,6 +559,9 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! org-cliplink)
 (package! ascii-art-to-unicode)
 (package! link-hint)
+(package! link-hint-preview :recipe
+  (:host github
+   :repo "localauthor/link-hint-preview"))
 (package! major-mode-hydra)
 (package! abridge-diff)
 #+END_SRC
@@ -2642,11 +2648,6 @@ Exwm provides
 
   (load! "+settings")
 
-  (use-package! ibus
-    :config
-    (add-hook! 'after-init-hook 'ibus-mode-on)
-    (setq ibus-agent-file-name "/home/nanjigen/.emacs.d/.local/straight/repos/ibus/ibus-el-agent"))
-
   <<exwm main>>
 
   <<exwm buffer management>>
@@ -2791,6 +2792,7 @@ To avoid redraws of ~Supermemo~ when the mini-buffer pops
 (exwm-input-set-key (kbd "s-e") #'mu4e)
 (exwm-input-set-key (kbd "s-o") #'link-hint-open-link)
 ;; TODO possibly have N for journal entries and another n for somekind of popup/dropdown notetaking
+;; TODO replace with ``consult-info'
 (exwm-input-set-key (kbd "s-<f1>") #'helm-info)
 ;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
 ;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
@@ -2845,6 +2847,18 @@ System and desktop controls, from Emacs/EXWM
 #+END_SRC
 
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
+  ;; Pop ups
+  ;; (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
+  (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
+  (exwm-input-set-key (kbd "s-|") #'consult-bibtex)
+  (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
+  (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
+  (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
+  ;; Change buffers
+  (exwm-input-set-key (kbd "s-b") #'consult-buffer) ;; try excluding EXWM buffers
+  ;; (exwm-input-set-key (kbd "s-B") #'helm-exwm)
+#+END_SRC
+#+BEGIN_SRC elisp :noweb-ref exwm keybinds
 (defun nanjigen/lockscreen ()
   (interactive)
   "simple shell call for locking screen"
@@ -2863,19 +2877,6 @@ System and desktop controls, from Emacs/EXWM
 
   (exwm-input-set-key (kbd "s-x") #'logoff-menu/body)
 
-#+END_SRC
-
-#+BEGIN_SRC elisp :noweb-ref exwm keybinds
-  ;; Pop ups
-  (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
-  (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
-  (exwm-input-set-key (kbd "s-|") #'helm-bibtex)
-  (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
-  (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
-  (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
-  ;; Change buffers
-  (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; try excluding EXWM buffers
-  (exwm-input-set-key (kbd "s-B") #'helm-exwm)
 #+END_SRC
 
 *** Window and buffer manipulation
@@ -3066,19 +3067,25 @@ Posframes for hydra:
       frame))
   #+END_SRC
 
-  #+BEGIN_SRC elisp :noweb-ref exwm-edit
-  (use-package! exwm-edit
-    :after exwm
-    :custom
-    (exwm-edit-bind-default-keys nil)
+*** exwm edit
+:PROPERTIES:
+:CREATED:  [2022-07-08 Fri 09:12]
+:ID:       c1fd94c6-8418-4a20-b9df-b5b5b43668ed
+:END:
 
-    :config
-    (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
-    (defun exwm/on-exwm-edit-compose ()
-      ;; (spacemacs/toggle-visual-line-navigation-on)
-      (funcall 'org-mode))
-    ;; include frame height restrictions here?
-    (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
+#+BEGIN_SRC elisp :noweb-ref exwm-edit
+ (use-package! exwm-edit
+   :after exwm
+   :custom
+   (exwm-edit-bind-default-keys nil)
+
+   :config
+   (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
+   (defun exwm/on-exwm-edit-compose ()
+     ;; (spacemacs/toggle-visual-line-navigation-on)
+     (funcall 'org-mode))
+   ;; include frame height restrictions here?
+   (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
 #+END_SRC
 
 ** +funcs
