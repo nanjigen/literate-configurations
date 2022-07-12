@@ -2586,6 +2586,7 @@ https://www.reddit.com/r/emacs/comments/v3z654/linkhintpreviewel_preview_link_co
 :ID:       d263ee0b-c782-4e59-9d52-2cf70d96cfba
 :header-args:elisp: :mkdirp yes :noweb yes
 :END:
+
 Exwm provides
 
 ** packages
@@ -2593,6 +2594,7 @@ Exwm provides
 :CREATED:  [2021-08-28 Sat 17:12]
 :ID:       70d8041b-2689-4d8d-b127-c1fae8285eaf
 :END:
+
 #+begin_src elisp :tangle .doom.d/modules/desktop/exwm/packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; desktop/exwm/packages.el
@@ -2630,6 +2632,7 @@ Exwm provides
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       35c06fd8-f238-4af1-aa4c-75351aab9065
 :END:
+
 #+BEGIN_SRC elisp :noweb yes :tangle .doom.d/modules/desktop/exwm/config.el
 ;;; desktop/exwm/config.el -*- lexical-binding: t; -*-
 (load! "+funcs")
@@ -2656,6 +2659,8 @@ Exwm provides
 
   <<exwm-edit>>
 
+  (nanjigen/start-panel)
+
   (exwm-enable))
 #+END_SRC
 
@@ -2664,15 +2669,19 @@ Exwm provides
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       42725160-56b9-4b3b-b38a-dd81891c7427
 :END:
-#+BEGIN_SRC elisp :noweb-ref exwm main
-  :config
+
+This is from prior configs
+#+BEGIN_SRC elisp :noweb no
+;; (add-hook 'exwm-update-class-hook 'exwm/rename-buffer)
+;; (add-hook 'exwm-update-title-hook 'exwm/rename-buffer)
 
 ;; <<exwm-class-hook>>
 
 ;; <<exwm-title-hook>>
+#+END_SRC
 
-                                          ;    (add-hook 'exwm-update-class-hook 'exwm/rename-buffer)
-                                          ;    (add-hook 'exwm-update-title-hook 'exwm/rename-buffer)
+#+BEGIN_SRC elisp :noweb-ref exwm main
+  :config
 
   ;; kick all exwm buffers into insert mode per default
   (add-hook 'exwm-manage-finish-hook 'exwm/enter-insert-state)
@@ -2773,6 +2782,7 @@ To avoid redraws of ~Supermemo~ when the mini-buffer pops
 :CREATED:  [2022-02-11 Fri 14:36]
 :ID:       4d145354-2cf6-488d-a7ca-768b3a91e962
 :END:
+
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
 
 ;; TODO clean this up:
@@ -2939,6 +2949,7 @@ System and desktop controls, from Emacs/EXWM
 :CREATED:  [2022-02-12 Sat 10:10]
 :ID:       1a98a340-850c-4feb-a0f5-2e8aeb04c832
 :END:
+
 https://github.com/abo-abo/hydra/wiki/Window-Management#deluxe-window-moving
 https://github.com/dimitri/switch-window#switch-window-seem-to-conflict-with-exwm-how-to-do
 
@@ -2946,10 +2957,9 @@ At first a function that calls something like ~ace-window~ or ~switch-window~ wh
 
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds :noweb no :results none
 ;; Window management
-  (use-package! ace-window
-    :init
-    (setq ace-window-display-mode t))
-
+(use-package! ace-window
+  :init
+  (setq ace-window-display-mode t))
 #+END_SRC
 
 *** TODO Review and delete/archive
@@ -2988,71 +2998,91 @@ I'm not actually making use of prefix keys but keep them here as a reference
 :CREATED:  [2020-12-03 Thu 11:03]
 :ID:       1eea19ee-9c31-4eba-8327-4bbb5b81d40a
 :END:
+
 #+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
-  ;;; Some programs escape EXWM control and need be tamed.  See
-  ;; https://github.com/ch11ng/exwm/issues/287
-  ;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
-  (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "TotalWarhammer2")
-                                             managed t floating nil fullscreen t char-mode t))
+;;; Some programs escape EXWM control and need be tamed.  See
+;; https://github.com/ch11ng/exwm/issues/287
+;; (add-to-list 'exwm-manage-configurations '((string= exwm-class-name "sm18.exe") managed t floating nil))
+(add-to-list 'exwm-manage-configurations '((string= exwm-class-name "TotalWarhammer2")
+                                           managed t floating nil fullscreen t char-mode t))
 
-  (load! "+sm-window-rules")
-  (load! "+sm-emacs-protocol")
-  (load! "+exwm-sm-core")
-  (load! "+exwm-sm-evil")
-  (load! "+sm-hydra")
+(load! "+sm-window-rules")
+(load! "+sm-emacs-protocol")
+(load! "+exwm-sm-core")
+(load! "+exwm-sm-evil")
+(load! "+sm-hydra")
 
-  ;; FIXME See if I can get this randr code working without affecting the above.
-  (use-package! exwm-randr
-    :config
-    (setq exwm-randr-workspace-output-plist '(0 "HDMI-A-0" 1 "DisplayPort-0"))
-    ;; (setq exwm-monitor-list '("HDMI1" "DP2"))
-    ;; https://github.com/ch11ng/exwm/issues/202#issuecomment-559222831
-    ;; (setq exwm-workspace-name-alist '((0 . "Dashboard")
-    ;;                                   (1 . "Code")
-    ;;                                   (2 . "Comms")
-    ;;                                   (3 . "Translation")
-    ;;                                   (4 . "Study")
-    ;;                                   (5 . "Reading")
-    ;;                                   (6 . "Extra")))
+#+END_SRC
 
-    ;; (setq exwm-workspace-monitor-alist '(("Dashboard" . "HDMI1")
-    ;;                                      ("Code" . "HDMI1")
-    ;;                                      ("Comms" . "HDMI1")
-    ;;                                      ("Translation" . "HDMI1")
-    ;;                                      ("Study" . "HDMI1")
-    ;;                                      ("Reading" . "DP2")
-    ;;                                      ("Extra" . "DP2")))
+*** TODO use bufler to group exwm buffers
+:PROPERTIES:
+:CREATED:  [2022-07-08 Fri 09:13]
+:ID:       b2ac37f2-c75e-4fc4-bb30-f5d7f8a1b2b0
+:END:
 
-    ;; assign programs to workspaces
-    ;; https://emacs.stackexchange.com/questions/33107/in-exwm-emacs-x-window-manager-how-can-i-assign-apps-to-particular-workspaces
-    ;; (setq exwm-manage-configurations
-    ;;       '(((equal exwm-class-name "Anki")
-    ;;          workspace (car (rassoc "Study" exwm-workspace-name-alist)))))
+Instead of seperate EXWM buffer keybind, use grouping
 
-    ;; (setq exwm-manage-configurations
-    ;;       '(((equal exwm-class-name "Anki")
-    ;;          workspace 4)))
+*** exwm-randr
+:PROPERTIES:
+:CREATED:  [2022-07-08 Fri 09:12]
+:ID:       d124754f-f910-421e-813d-17c2a70dfd14
+:END:
 
-    ;; (defun update-exwm-randr-workspace-monitor-plist ()
-    ;;       "Update exwm-randr-workspace-monitor-plist based on the current
-    ;;        value of exwm-workspace-monitor-alist"
-    ;;       (setq exwm-randr-workspace-monitor-plist (mapcan (lambda (workspace->monitor)
-    ;;                                                          (let ((workspace-number (car (rassoc (car workspace->monitor)
-    ;;                                                                                                exwm-workspace-name-alist)))
-    ;;                                                                 (monitor (cdr workspace->monitor)))
-    ;;                                                            (list workspace-number monitor)))
-    ;;                                                        exwm-workspace-monitor-alist)))
-    ;; (update-exwm-randr-workspace-monitor-plist)
+Create named workspaces, and then assign buffers/windows
+#+BEGIN_SRC elisp :noweb yes :noweb-ref exwm buffer management
+;; FIXME See if I can get this randr code working without affecting the above.
+(use-package! exwm-randr
+  :config
+  (setq exwm-randr-workspace-output-plist '(0 "HDMI-A-0" 1 "DisplayPort-0"))
+  ;; (setq exwm-monitor-list '("HDMI1" "DP2"))
+  ;; https://github.com/ch11ng/exwm/issues/202#issuecomment-559222831
+  ;; (setq exwm-workspace-name-alist '((0 . "Dashboard")
+  ;;                                   (1 . "Code")
+  ;;                                   (2 . "Comms")
+  ;;                                   (3 . "Translation")
+  ;;                                   (4 . "Study")
+  ;;                                   (5 . "Reading")
+  ;;                                   (6 . "Extra")))
 
-    (add-hook 'exwm-randr-screen-change-hook
-              (lambda ()
-                (start-process-shell-command
-                 ;; "xrandr" nil "xrandr --output HDMI1 --primary --mode 1920x1080_60.00 --pos 900x0 --rotate normal")))
-                 "xrandr" nil "xrandr --output HDMI-A-0 --primary --mode 1920x1080 --rotate normal --output DisplayPort-0 --left-of HDMI-A-0 --mode 1440x900 --rotate left"))))
+  ;; (setq exwm-workspace-monitor-alist '(("Dashboard" . "HDMI1")
+  ;;                                      ("Code" . "HDMI1")
+  ;;                                      ("Comms" . "HDMI1")
+  ;;                                      ("Translation" . "HDMI1")
+  ;;                                      ("Study" . "HDMI1")
+  ;;                                      ("Reading" . "DP2")
+  ;;                                      ("Extra" . "DP2")))
 
-  ;; (setq exwm-randr-workspace-monitor-plist '())
+  ;; assign programs to workspaces
+  ;; https://emacs.stackexchange.com/questions/33107/in-exwm-emacs-x-window-manager-how-can-i-assign-apps-to-particular-workspaces
+  ;; (setq exwm-manage-configurations
+  ;;       '(((equal exwm-class-name "Anki")
+  ;;          workspace (car (rassoc "Study" exwm-workspace-name-alist)))))
 
-  (exwm-randr-enable)
+  ;; (setq exwm-manage-configurations
+  ;;       '(((equal exwm-class-name "Anki")
+  ;;          workspace 4)))
+
+  ;; (defun update-exwm-randr-workspace-monitor-plist ()
+  ;;       "Update exwm-randr-workspace-monitor-plist based on the current
+  ;;        value of exwm-workspace-monitor-alist"
+  ;;       (setq exwm-randr-workspace-monitor-plist (mapcan (lambda (workspace->monitor)
+  ;;                                                          (let ((workspace-number (car (rassoc (car workspace->monitor)
+  ;;                                                                                                exwm-workspace-name-alist)))
+  ;;                                                                 (monitor (cdr workspace->monitor)))
+  ;;                                                            (list workspace-number monitor)))
+  ;;                                                        exwm-workspace-monitor-alist)))
+  ;; (update-exwm-randr-workspace-monitor-plist)
+
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               ;; "xrandr" nil "xrandr --output HDMI1 --primary --mode 1920x1080_60.00 --pos 900x0 --rotate normal")))
+               "xrandr" nil "xrandr --output HDMI-A-0 --primary --mode 1920x1080 --rotate normal --output DisplayPort-0 --left-of HDMI-A-0 --mode 1440x900 --rotate left"))))
+
+;; (setq exwm-randr-workspace-monitor-plist '())
+
+(exwm-randr-enable)
+
 #+END_SRC
 
 Posframes for hydra:
@@ -3075,18 +3105,18 @@ Posframes for hydra:
 :END:
 
 #+BEGIN_SRC elisp :noweb-ref exwm-edit
- (use-package! exwm-edit
-   :after exwm
-   :custom
-   (exwm-edit-bind-default-keys nil)
+(use-package! exwm-edit
+  :after exwm
+  :custom
+  (exwm-edit-bind-default-keys nil)
 
-   :config
-   (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
-   (defun exwm/on-exwm-edit-compose ()
-     ;; (spacemacs/toggle-visual-line-navigation-on)
-     (funcall 'org-mode))
-   ;; include frame height restrictions here?
-   (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
+  :config
+  (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
+  (defun exwm/on-exwm-edit-compose ()
+    ;; (spacemacs/toggle-visual-line-navigation-on)
+    (funcall 'org-mode))
+  ;; include frame height restrictions here?
+  (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
 #+END_SRC
 
 ** +funcs
@@ -3284,6 +3314,7 @@ Can show completions at point for COMMAND using helm or ivy"
         when ecname
         collect (list :buffer-name name :exwm-class-name ecname)))
 #+end_src
+
 ** +settings
 :PROPERTIES:
 :CREATED:  [2021-08-28 Sat 17:08]
