@@ -13,11 +13,13 @@
 !/.config/fontconfig
 !/.config/goldendict
 !/.config/guix
+/.config/guix/current
 /.config/guix/systems/mirror.brielmaier.net.pub
 /.config/guix/systems/signing-key.pub
 /.config/guix/signing-key.pub
 !/.config/mpv
-/.config/mpv/watch_later
+/.config/mpv/watch_later/
+/.config/mpv/watch_later/*
 !/.config/polybar
 !/.config/shepherd
 !/.config/xsettingsd

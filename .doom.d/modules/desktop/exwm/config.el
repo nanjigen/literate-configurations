@@ -15,11 +15,6 @@
 
   (load! "+settings")
 
-  (use-package! ibus
-    :config
-    (add-hook! 'after-init-hook 'ibus-mode-on)
-    (setq ibus-agent-file-name "/home/nanjigen/.emacs.d/.local/straight/repos/ibus/ibus-el-agent"))
-
     :config
   
   ;; 
@@ -96,7 +91,6 @@
     (load! "+exwm-sm-core")
     (load! "+exwm-sm-evil")
     (load! "+sm-hydra")
-  
     ;; FIXME See if I can get this randr code working without affecting the above.
     (use-package! exwm-randr
       :config
@@ -195,6 +189,7 @@
   (exwm-input-set-key (kbd "s-e") #'mu4e)
   (exwm-input-set-key (kbd "s-o") #'link-hint-open-link)
   ;; TODO possibly have N for journal entries and another n for somekind of popup/dropdown notetaking
+  ;; TODO replace with ``consult-info'
   (exwm-input-set-key (kbd "s-<f1>") #'helm-info)
   ;; (exwm-input-set-key (kbd "s-<f4>") #'wttrin)
   ;; (exwm-input-set-key (kbd "s-<f6>") #'transmission)
@@ -237,6 +232,16 @@
   ;; :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
   ;;        ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
   
+    ;; Pop ups
+    ;; (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
+    (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
+    (exwm-input-set-key (kbd "s-|") #'consult-bibtex)
+    (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
+    (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
+    (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
+    ;; Change buffers
+    (exwm-input-set-key (kbd "s-b") #'consult-buffer) ;; try excluding EXWM buffers
+    ;; (exwm-input-set-key (kbd "s-B") #'helm-exwm)
   (defun nanjigen/lockscreen ()
     (interactive)
     "simple shell call for locking screen"
@@ -255,16 +260,6 @@
   
     (exwm-input-set-key (kbd "s-x") #'logoff-menu/body)
   
-    ;; Pop ups
-    (exwm-input-set-key (kbd "s-\\") #'helm-org-brain)
-    (exwm-input-set-key (kbd "s-?") #'helm-org-rifle)
-    (exwm-input-set-key (kbd "s-|") #'helm-bibtex)
-    (exwm-input-set-key (kbd "s-u") #'+eshell/toggle)
-    (exwm-input-set-key (kbd "s-`") #'+popup/toggle)
-    (exwm-input-set-key (kbd "s-;") #'+popup-toggle-brain)
-    ;; Change buffers
-    (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; try excluding EXWM buffers
-    (exwm-input-set-key (kbd "s-B") #'helm-exwm)
     ;; Focusing windows
     (exwm-input-set-key (kbd "s-h") #'evil-window-left)
     (exwm-input-set-key (kbd "s-j") #'evil-window-down)
@@ -309,17 +304,19 @@
       (setq ace-window-display-mode t))
   
 
-    (use-package! exwm-edit
-      :after exwm
-      :custom
-      (exwm-edit-bind-default-keys nil)
+   (use-package! exwm-edit
+     :after exwm
+     :custom
+     (exwm-edit-bind-default-keys nil)
   
-      :config
-      (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
-      (defun exwm/on-exwm-edit-compose ()
-        ;; (spacemacs/toggle-visual-line-navigation-on)
-        (funcall 'org-mode))
-      ;; include frame height restrictions here?
-      (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
+     :config
+     (defalias 'exwm-edit--display-buffer 'pop-to-buffer)
+     (defun exwm/on-exwm-edit-compose ()
+       ;; (spacemacs/toggle-visual-line-navigation-on)
+       (funcall 'org-mode))
+     ;; include frame height restrictions here?
+     (add-hook 'exwm-edit-compose-hook 'exwm/on-exwm-edit-compose))
+
+  (nanjigen/start-panel)
 
   (exwm-enable))
