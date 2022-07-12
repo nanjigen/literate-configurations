@@ -10,6 +10,7 @@ Doom is currently used because of its OOB vim focus and performance. Eventually 
 :CREATED:  [2020-12-03 Thu 10:59]
 :ID:       7f0433a1-486a-4042-976b-64ebc3a2abe4
 :END:
+
 Core files for a doom config. The installation script will identify these and install modules based on the init file.
 
 ** init
@@ -29,9 +30,11 @@ Base packages with Doom defaults
 
          :completion
          company           ; the ultimate code completion backend
-         helm              ; the *other* search engine for love and life
+         ;; helm              ; the *other* search engine for love and life
+         (vertico
+          +icons)
          ;;ido               ; the other *other* search engine...
-         ivy               ; a search engine for love and life
+         ;; ivy               ; a search engine for love and life
 
          :desktop
          exwm
@@ -2499,6 +2502,77 @@ prepended to the element after the #+HEADER: tag."
 - State "WAITING"    from              [2022-02-12 Sat 10:59] \\
   Complete org-incremental package
 :END:
+
+* PROJECT Move from helm/ivy to vertico + consult + embark + avy
+:PROPERTIES:
+:CREATED:  [2022-07-06 Wed 08:59]
+:ID:       e879e860-e495-4b29-bb17-e9a3d6e24423
+:END:
+
+** PROJECT [#A] Implement embark                                   :@computer:
+:PROPERTIES:
+:CREATED:  [2022-07-07 Thu 09:09]
+:ID:       1e54a7d9-6a2f-465f-b9f0-4c5c56b8286f
+:END:
+
+https://karthinks.com/software/fifteen-ways-to-use-embark/
+
+** TODO Can org-refile reveal a buffer preview?                    :@computer:
+:PROPERTIES:
+:CREATED:  [2022-07-06 Wed 09:00]
+:ID:       56a35fe0-e79d-464d-b975-7d397049ec88
+:END:
+
+#+begin_src elisp
+(use-package! embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+** PROJECT Configure link-hint
+:PROPERTIES:
+:CREATED:  [2022-07-07 Thu 09:09]
+:ID:       9befdfd2-5ce9-4864-b422-ed82704a82b9
+:END:
+
+If we have the below setting all windows are targeted by avy functions, including =link-hint-open=
+#+begin_src elisp
+(setq avy-all-windows 't)
+#+end_src
+
+(And to consider org-sidebar-tree headers in the sidebar as jumpable links, and then jump to header location in buffer)
+
+This can actually be set via [[https://github.com/noctuid/link-hint.el#defining-new-link-types-and-actions][custom links]]
+#+begin_src elisp
+(link-hint-define-type 'shr-url
+  :next #'link-hint--next-shr-url
+  :at-point-p #'link-hint--shr-url-at-point-p
+  :open #'browse-url
+  :copy #'kill-new)
+
+(push 'link-hint-shr-url link-hint-types)
+#+end_src
+
+*** TODO link-hint and embark
+:PROPERTIES:
+:CREATED:  [2022-07-07 Thu 09:12]
+:ID:       25b5184a-8640-4349-ad24-780e0941d434
+:END:
+
+https://www.reddit.com/r/emacs/comments/uek8mt/integrating_embark_linkhint/
+
+*** TODO look into link-hint-preview
+:PROPERTIES:
+:CREATED:  [2022-07-07 Thu 09:17]
+:ID:       ec3e3300-6580-4a58-88d2-f01aba2ef91d
+:END:
+
+https://github.com/localauthor/link-hint-preview
+https://www.reddit.com/r/emacs/comments/v3z654/linkhintpreviewel_preview_link_contents_in_a/
 
 * EXWM
 :PROPERTIES:

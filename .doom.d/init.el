@@ -6,9 +6,11 @@
 
          :completion
          company           ; the ultimate code completion backend
-         helm              ; the *other* search engine for love and life
+         ;; helm              ; the *other* search engine for love and life
+         (vertico
+          +icons)
          ;;ido               ; the other *other* search engine...
-         ivy               ; a search engine for love and life
+         ;; ivy               ; a search engine for love and life
 
          :desktop
          exwm
