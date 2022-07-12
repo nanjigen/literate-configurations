@@ -207,9 +207,9 @@
   (exwm-input-set-key (kbd "s-r") #'ranger)
   (exwm-input-set-key (kbd "s-c") #'org-capture)
   ;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
+  
   (use-package! desktop-environment
       :after exwm
-      :config (desktop-environment-mode)
       :custom
       (desktop-environment-brightness-small-increment "2%+")
       (desktop-environment-brightness-small-decrement "2%-")

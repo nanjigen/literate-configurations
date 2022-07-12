@@ -2810,6 +2810,7 @@ To avoid redraws of ~Supermemo~ when the mini-buffer pops
 (exwm-input-set-key (kbd "s-r") #'ranger)
 (exwm-input-set-key (kbd "s-c") #'org-capture)
 ;; (global-set-key (kbd "s-w") #'exwm/app-launcher ('firefox))
+
 #+END_SRC
 
 *** TODO Desktop specific functions
@@ -2817,11 +2818,11 @@ To avoid redraws of ~Supermemo~ when the mini-buffer pops
 :CREATED:  [2022-02-11 Fri 14:36]
 :ID:       7c701453-43c5-42fe-8920-9341afef0efa
 :END:
+
 System and desktop controls, from Emacs/EXWM
 #+BEGIN_SRC elisp :noweb-ref exwm keybinds
 (use-package! desktop-environment
     :after exwm
-    :config (desktop-environment-mode)
     :custom
     (desktop-environment-brightness-small-increment "2%+")
     (desktop-environment-brightness-small-decrement "2%-")
