@@ -330,6 +330,17 @@ Undo related settings
   (add-to-list 'focus-mode-to-thing '(writeroom-mode . paragraph)))
 ;; (add-hook 'write-room-mode-hook #'line-number-mode-hook)
 
+#+end_src
+
+*** TODO Translate to vertico and move
+:PROPERTIES:
+:CREATED:  [2022-07-13 Wed 08:27]
+:ID:       10549b3f-c454-4399-b54c-16e6a3b77ba5
+:END:
+https://github.com/tumashu/vertico-posframe
+
+posframe for ivy and helm
+#+begin_src elisp
 ;; (use-package! helm-posframe
 ;;   :after helm
 ;;   :custom-face (internal-border ((t (:background "#c678dd"))))
