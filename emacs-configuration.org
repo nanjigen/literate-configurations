@@ -222,11 +222,20 @@ Base packages with Doom defaults
 :header-args: :tangle .doom.d/config.el :noweb yes
 :END:
 
+*** base
+:PROPERTIES:
+:CREATED:  [2022-07-05 Tue 13:47]
+:ID:       cb493b22-c135-42c9-a45f-e1ebe137f34f
+:END:
+
+Generic settings and themeing
+
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-(setq user-full-name "Daniel"
-      user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
+;; TODO having issues with pass and 'no secrect key'
+;; (setq user-full-name "Daniel"
+;;       user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:

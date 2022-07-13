@@ -1,7 +1,8 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-(setq user-full-name "Daniel"
-      user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
+;; TODO having issues with pass and 'no secrect key'
+;; (setq user-full-name "Daniel"
+;;       user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
