@@ -4126,11 +4126,17 @@ CLOSED: [2022-07-12 Tue 18:52]
 #+end_src
 
 ** Frame transparency
+:PROPERTIES:
+:CREATED:  [2022-06-22 Wed 16:48]
+:ID:       d5640b93-3951-4cff-a944-b698f122fbda
+:END:
+
 Then set frame transparency:
 #+begin_src elisp :noweb yes :noweb-ref frame transparency
 (defconst doom-frame-transparency 94)
 (set-frame-parameter (selected-frame) 'alpha doom-frame-transparency)
 (add-to-list 'default-frame-alist `(alpha . ,doom-frame-transparency))
+#+end_src
 
 ** Pokemon modeline!
 :PROPERTIES:
@@ -4152,6 +4158,7 @@ https://github.com/RyanMillerC/poke-line
 :ID:       98d97a6b-9b42-4f02-92ee-b638e100d250
 :BRAIN_PARENTS: 98d0173d-34d2-4fda-916f-d19e8e5ef257
 :END:
+
 A unified setup for academic writing and reading/notarisation.
 
 ** Features
@@ -4217,6 +4224,7 @@ Then go to ~My Library~ and select all the items, ~right click->Better Bibtex->R
 :ID:       710ab76f-f0e2-473d-b479-7dc0e28d3f59
 :header-args: :noweb yes
 :END:
+
 To correct pdfs that lack a TOC and correct page labelling, we'll use the package [[https://github.com/dalanicolai/toc-mode/tree][toc-mode]]:
 
 Requirements:
@@ -4249,11 +4257,13 @@ Clean up the =outline-buffer= so that it doesn't have line numbers:
 #+begin_src elisp :noweb-ref pdf outline numbering
 (add-hook! 'pdf-outline-buffer-mode-hook #'doom-disable-line-numbers-h)
 #+end_src
-****  pdftk and pagelabels
+
+**** pdftk and pagelabels
 :PROPERTIES:
 :CREATED:  [2020-10-01 Thu 10:20]
 :ID:       93db66a3-9e75-4fc7-b0f9-03734fc9e3a8
 :END:
+
 To correct pdfs that lack a TOC configurable via ~toc-mode~ and correct page numbering, we'll use [[https://www.pdflabs.com/docs/pdftk-cli-examples/][pdftk]]:
 The guide used was found on [[https://www.youtube.com/watch?v=5dv_02v0zzc][youtube]].
 
@@ -4328,11 +4338,13 @@ pdftk source.pdf update_info_utf8 metadata.txt output output.pdf
 #+end_src
 
 An alternative is the graphical [[http://jpdftweak.sourceforge.net/manual/index.html][jPDF Tweak]].
+
 **** pagelabels (page numbering)
 :PROPERTIES:
 :CREATED:  [2021-01-28 Thu 18:28]
 :ID:       5930a09e-846c-4950-8eee-492f30851469
 :END:
+
 Editing the custom naming schemes for pages is useful for academic research, as it allows us to add another page layer to a PDF document that matches its page range in a journal or some other source. It is often the case that a section of a journal is all that is needed, but for correct automated referencing to work the pagelabels need to match.
 To achieve this, we can use the python script, (conveniently named) [[https://github.com/lovasoa/pagelabels-py][pagelabels]]:
 
@@ -4341,14 +4353,12 @@ Installation:
 python3 -m pip install --user --upgrade pagelabels
 #+end_src
 
-#+begin_src sh
-
-#+end_src
 ** pdf-tools
 :PROPERTIES:
 :CREATED:  [2020-09-29 Tue 14:47]
 :ID:       d1b337fe-664e-49e8-a199-2e8b42cdca11
 :END:
+
 Here lets setup pdf-tools to work more efficiently with academic articles
 
 We also want ~pdf-tools~ as the pdf reader system-wide, so we need to set a mimefile:
@@ -4365,20 +4375,20 @@ MimeType=application/pdf;
 
 #+NAME: pdf
 #+begin_src elisp
-    (setq org-latex-compiler "xelatex")
-    (setq +latex-viewers '(pdf-tools))
-    ;; (setq org-latex-pdf-process '("latexmk -xelatex -bibtex -quiet -shell-escape -f %f"))
-    (setq-default TeX-engine 'xetex)
+(setq org-latex-compiler "xelatex")
+(setq +latex-viewers '(pdf-tools))
+;; (setq org-latex-pdf-process '("latexmk -xelatex -bibtex -quiet -shell-escape -f %f"))
+(setq-default TeX-engine 'xetex)
 
-    (use-package! pdf-view
-      :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
-      ;; :hook (pdf-tools-enabled . hide-mode-line-mode)
-      :config
-      (setq pdf-view-midnight-colors '("#ABB2BF" . "#282C35"))
-      (setq pdf-annot-default-annotation-properties '((color . "#ff0000"))))
+(use-package! pdf-view
+  :hook (pdf-tools-enabled . pdf-view-midnight-minor-mode)
+  ;; :hook (pdf-tools-enabled . hide-mode-line-mode)
+  :config
+  (setq pdf-view-midnight-colors '("#ABB2BF" . "#282C35"))
+  (setq pdf-annot-default-annotation-properties '((color . "#ff0000"))))
 
-    ;; (map!
-    ;;  :map pdf-view-mode-map
-    ;;  :n )
+;; (map!
+;;  :map pdf-view-mode-map
+;;  :n )
 
 #+end_src
