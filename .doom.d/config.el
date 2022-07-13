@@ -15,7 +15,7 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 
-(setq doom-font (font-spec :family "Fira Mono" :size 14))
+(setq doom-font (font-spec :family "JetBrainsMono" :size 14))
 ;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
 ;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
 ;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
@@ -25,22 +25,31 @@
 ;; (custom-set-faces
 ;;  '((font-lock-comment-face :)))
 
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-dracula)
 
-(setq org-directory "~/org/")
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
 
-(setq user-home-directory "~/")
+;; (map! "<f8>" #'scrot)
+(setq display-battery-mode nil)
 
 (setq ispell-dictionary "en")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+(setq tab-bar-mode t)
+(setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode org-mode))
 
 (defconst doom-frame-transparency 94)
 (set-frame-parameter (selected-frame) 'alpha doom-frame-transparency)
 (add-to-list 'default-frame-alist `(alpha . ,doom-frame-transparency))
 
+(use-package! poke-line
+  :config
+  (poke-line-global-mode 1)
+  (setq-default poke-line-pokemon "gengar"))
 
 ;; If this isn't set EXWM quadruples its memory usage
 (setq gc-cons-threshold 100000000)
@@ -65,16 +74,6 @@
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
       ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
-
-(setq tab-bar-mode t)
-
-(setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode))
-
-;; Bookmarks file location
-(setq bookmark-default-file "~/org/bookmarks")
-(setq bookmark-save-flag 1) ;; save after every change
-
-(setq evil-escape-mode nil)
 
 (setq +zen-text-scale 0.6)
 

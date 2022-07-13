@@ -237,16 +237,7 @@ Generic settings and themeing
 ;; (setq user-full-name "Daniel"
 ;;       user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
-;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-;; are the three important ones:
-;;
-;; + `doom-font'
-;; + `doom-variable-pitch-font'
-;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;;
-;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two:
+<<doom-rice>>
 
 (setq doom-font (font-spec :family "Fira Mono" :size 14))
 ;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
@@ -266,11 +257,12 @@ Generic settings and themeing
 
 (setq ispell-dictionary "en")
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq tab-bar-mode t)
+(setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode org-mode))
 
 <<frame transparency>>
+
+<<poke-line>>
 
 ;; If this isn't set EXWM quadruples its memory usage
 (setq gc-cons-threshold 100000000)
@@ -4034,7 +4026,64 @@ xdg-mime default emacsclient.desktop application/pdf
 :RESOURCES:
 - [[https://andreyorst.gitlab.io/posts/2020-05-10-making-emacs-tabs-look-like-in-atom/][Making Emacs tabs look like in Atom – Andrey Orst]]
 :END:
-** TODO set theme
+
+https://www.urbandictionary.com/ricing
+#+begin_quote
+Rice
+
+a car (configuration [sic]) with mods with no performance reason for them
+
+"yo, BRO!.....rice is meant to eat, not to drive"
+
+                        - by Anonymous, October 19, 2003
+#+end_quote
+
+I acknowledge that the term /ricing/ has a checkered etymology [fn:1], though I haven't ever come across complaints about its modern usage and enjoy the idea that it has been reclaimed by the Asian community - if anyone takes umbrage with my use of it please contact me and it will be changed.
+
+[fn:1] :: [[https://en.wikipedia.org/wiki/Rice_burner][rice burner]]
+
+** Set theme and font settings
+CLOSED: [2022-07-12 Tue 18:52]
+:PROPERTIES:
+:CREATED:  [2022-06-22 Wed 16:48]
+:ID:       35e2114e-2021-487d-8858-5a857249bcc0
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2022-07-12 Tue 18:52]
+:END:
+
+#+begin_src elisp :noweb-ref doom-rice
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+
+(setq doom-font (font-spec :family "JetBrainsMono" :size 14))
+;; (setq doom-font (font-spec :family "Ubunto Mono" :size 13))
+;; doom-variable-pitch-font (font-spec :family "Ubuntu Mono" :size 13)
+;; doom-big-font (font-spec :family "Ubunto Mono" :size 15))
+;; (after! doom-themes
+;;   (setq doom-themes-enable-bold t
+;;         doom-themes-enable-italic t))
+;; (custom-set-faces
+;;  '((font-lock-comment-face :)))
+
+(setq doom-theme 'doom-dracula)
+
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+
+;; (map! "<f8>" #'scrot)
+(setq display-battery-mode nil)
+
+#+end_src
 
 ** Frame transparency
 Then set frame transparency:
@@ -4043,6 +4092,18 @@ Then set frame transparency:
 (set-frame-parameter (selected-frame) 'alpha doom-frame-transparency)
 (add-to-list 'default-frame-alist `(alpha . ,doom-frame-transparency))
 
+** Pokemon modeline!
+:PROPERTIES:
+:CREATED:  [2022-07-05 Tue 13:47]
+:ID:       4d5d5b68-2bbe-4f15-a3fe-4bed04f6ec1a
+:END:
+
+https://github.com/RyanMillerC/poke-line
+#+begin_src elisp :noweb-ref poke-line
+(use-package! poke-line
+  :config
+  (poke-line-global-mode 1)
+  (setq-default poke-line-pokemon "gengar"))
 #+end_src
 
 * Academic workflow
