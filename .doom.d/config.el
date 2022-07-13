@@ -34,11 +34,23 @@
 ;; (map! "<f8>" #'scrot)
 (setq display-battery-mode nil)
 
+
+(setq org-directory "~/org/")
+(setq user-home-directory "~/")
 (setq ispell-dictionary "en")
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+;; Bookmarks file location
+(setq bookmark-default-file "~/org/bookmarks")
+(setq bookmark-save-flag 1) ;; save after every change
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
+
+(setq scrot-local-path "~/Pictures/screenshots")
+(setq eww-download-directory "~/Downloads/eww")
+
+(setq evil-escape-mode nil)
+
 (setq tab-bar-mode t)
 (setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode org-mode))
 
@@ -59,6 +71,9 @@
 ;; TODO lsp enhancements:
 ;; (setq lsp-idle-delay 0.500
 ;;       lsp-log-io nil) ; if set to true can cause a performance hit
+
+;; (after! persp-mode
+;; (add-hook 'exwm-mode #'doom-mark-buffer-as-real-h))
 
 (use-package! undo-tree
   :config
@@ -120,50 +135,41 @@
 ;; (ivy-posframe-mode 1)
 ;; )
 
-(setq scrot-local-path "~/Pictures/screenshots")
-(setq eww-download-directory "~/Downloads/eww")
 
-
-
-;; (map! "<f8>" #'scrot)
-(setq display-battery-mode nil)
 
 (load! "+mail")
 
-  (setq nanjigen/mail-enabled (member system-name '("umbreon" "espeon")))
-  (setq nanjigen/mu4e-inbox-query nil)
+(setq nanjigen/mail-enabled (member system-name '("umbreon" "espeon")))
+(setq nanjigen/mu4e-inbox-query nil)
   ;; (when nanjigen/mail-enabled
     ;; (require 'dw-mail)
     ;; )
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
-
-;; (after! persp-mode
-;; (add-hook 'exwm-mode #'doom-mark-buffer-as-real-h))
 
 ;; File handling
 (use-package! openwith
   :config
   (setq openwith-associations (list
                                (list (openwith-make-extension-regexp
-                                 '("mpg" "mpeg" "mp3" "mp4"
+                                 '("mpg" "mpeg" "mp3" "mp4" "m4v"
                                    "avi" "wmv" "wav" "mov" "flv"
-                                   "ogm" "ogg" "mkv"))
+                                   "ogm" "ogg" "mkv" "webm"))
                                 "mpv"
                                 '(file))
 
                                (list (openwith-make-extension-regexp
                                       '("odt"))
                                      "libreoffice"
-                                     '(file)))))
-(openwith-mode)
+                                     '(file))))
+  (openwith-mode 1))
 
-  ;; Calendar
-  ;; (use-package! emms-setup
-  ;;   :config
-  ;;   (emms-all)
-  ;;   (setq emms-player-list '(emms-player-mpv)))
+;; Advise to not warn when opening `openwith-associations' videos
+;; https://emacs.stackexchange.com/a/62234
+(define-advice abort-if-file-too-large
+    (:around (orig-fn size op-type filename &optional offer-raw) unless-openwith-handles-it)
+  "Do not abort if FILENAME is handled by Openwith."
+  (let ((my-ok-large-file-types (mapconcat 'car openwith-associations "\\|")))
+    (unless (string-match-p my-ok-large-file-types filename)
+      (funcall orig-fn size op-type filename offer-raw))))
 
   (use-package! subed
     :config
@@ -198,6 +204,14 @@
   ;;     :nick "vrika"
   ;;     :sasl-password my-nickserver-password
   ;;     :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese")))
+
+(after! tramp
+    ;; Make sure we work on remote guixsd machines :)
+    ;; probably only helps if you start on a guixsd machine..!
+    (setq tramp-remote-path
+          (append tramp-remote-path
+                  '(tramp-own-remote-path
+                    "~/.guix-profile/bin" "~/.guix-profile/sbin"))))
 
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
