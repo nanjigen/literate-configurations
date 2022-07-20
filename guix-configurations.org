@@ -67,12 +67,12 @@ Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels
 :ID:       24b9ccce-9b3d-4456-99e9-dee1828cd27f
 :END:
 
-This base configuration is shared between all of the machines I manage with Guix.  Since all of my machines are Lenovo ThinkPad laptops, the same basic configuration applies pretty cleanly across all of them.  This may change in the future.
+Base configuration shared by my main working guix machines. Not included here are server configuration files - those are found instead at [[brain-friend:homelab][homelab.org]]
 
-Any configuration that derives from =base-operating-system= must invoke =guix system= in a specific way to ensure it gets loaded correctly:
+Any configuration that derives from =base-operating-system= must invoke =guix system= in a specific way to ensure it gets loaded correctly (notice the lack of ~sudo~ with the ~-E~ option, justification [[https://github.com/daviwil/dotfiles/issues/11#issue-1065516777][here]]):
 
 #+begin_src sh
-sudo -E guix system -L .config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
+sudo guix system -L .config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
 #+end_src
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
