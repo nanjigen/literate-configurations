@@ -1,12 +1,11 @@
 #+BRAIN_PARENTS: system
 #+TITLE: Supermemo configuration
-#+auto_tangle: t
+#+auto_tangle: nil
 
-This is my literate config detailing the installation and management of Supermemo under Wine - interfaced via Emacs.
+A package for the management of Supermemo under Wine - interfaced via Emacs.
 
 Features:
 
-- Automated installation of SM18 under Wine (mostly via ~supermemo-wine~)
 - Emacs integration by the following means:
   + Emacs and EXWM X-window/buffer management
     - Reliable named buffers navigate-able through EXWM
@@ -16,68 +15,28 @@ Features:
     - vIM-style modal bindings with NORMAL and Insert modes (EXWM).
     - Access to SM interface options as hydra-menus.
     - Item element editing in org buffers, with all markup converted back to HTML.
+  + *Incremental video via mpv*, *org-media-protocol* and *org-protocol* links, allowing for:
+    - ~lua~ and ~elisp~ based generation of gifs, extractions of subs, etc.
+    - Link based extraction of time-stamps
+    - Note-taking with ~org-mode~, scheduling with SM
+  + *Incremental reading of PDFs* via ~org-noter~ and ~pdftools~
 
 - Bridging functions between SMA, SM, and Emacs creating possibilities for:
-  + Helm fuzzy lookup of elements based on their element-id
+  + Emacs completion-style fuzzy lookup of elements based on their element-id
   + Org-mode card building, much like [[https://github.com/louietan/anki-editor][anki-editor]]
-  + *Incremental video via mpv*, allowing for ~lua~ script based generation of gifs, extractions of subs.
-  + *Incremental writing of email with ~mu4e~!*
-  + *Incremental literate programming* with org-mode and SM's algorithm!
 
-
-* Installation
 :PROPERTIES:
-:CREATED:  [2020-11-19 Thu 22:48]
-:ID:       c5e3d6cf-81c6-47cf-9bf3-eff77b6a5270
 :END:
-This guide is meant as a 0-to-working playbook. Parts of it tangle to scripts and Elisp config files that may be opinionated and platform specific. One day it might exist as a Melpa package but for now should be treated as a walk-through.
 
-The first hurdle is getting a working installation of SM18.
-We'll be using allesivs [[https://github.com/alessivs/supermemo-wine][supermemo-wine]] .verb for the installation of SM18.
-
-Cloning in the verbs:
-#+begin_src sh
-cd ~/Templates/sm
-git clone https://github.com/alessivs/supermemo-wine.git
 #+end_src
 
-Make sure we have the correct wine version: https://dl.winehq.org/wine/source/5.x/
-
-#+begin_src sh
-wine --version
-#+end_src
-
-#+RESULTS:
-: wine-5.2
-
-#+begin_src sh :mkdirp yes :results silent
-cd ~/Templates/sm/
-curl -O https://dl.winehq.org/wine/source/5.x/wine-5.2.tar.xz
-#+end_src
-
-After installation of (the [[https://github.com/Winetricks/winetricks/issues/1593][correct]] version) Wine and Winetricks we can setup the =wineprefix= and install.
-Something about the ~:dir sudo~ syntax isn't working
-#+begin_src sh :dir /sudo::/vrika
-cd ~/Templates/sm/
-tar -xf wine-5.2.tar.xz
-cd /wine-5.2
-./configure
-make
-sudo make install
-#+end_src
-
-#+begin_src sh
-env WINEARCH=win32 sh winetricks arch=32 prefix=supermemo18
-sh winetricks prefix=supermemo18 ~/Templates/sm/supermemo-wine/verbs/supermemo18.verb
-#+end_src
-
-#+RESULTS:
 
 * Setup SM window management
 :PROPERTIES:
 :CREATED:  [2020-10-09 Fri 18:15]
 :ID:       5f96c370-eb26-4117-a7d8-43793e465c9d
 :END:
+
 By identifying and naming different SuperMemo window buffers, we can have a reliable way to target those buffers with text streams. Specifically, we can target a buffer with a simulated keypress, affording us a kind of poor-man's API by way of scripting window movement and key-chords in an orchistrated way.
 
 ** Capturing buffers
@@ -121,6 +80,7 @@ We can test if our regex captures a given buffer:
 :CREATED:  [2021-09-23 Thu 13:15]
 :ID:       523441d5-46f3-45e4-9900-c9ce786dd9f7
 :END:
+
 We'll start with the outlier first as its the most important window. Normally, SuperMemo will start with the first scheduled item of the day loaded into the elements window. The element name bleeds into the =WM_TITLE= variable and since we can't predict which element would be presented first on any given day, we will have to use a work around to get a stable title.
 
 The following makes use of Supermemo's ability to set a constant element via the bla bla menu. While this was originally intended to display quotes or the like it works nicely for us as the same text will be shown via =WM_TITLE= and by extension by in the =exwm-title= variable.
@@ -206,6 +166,7 @@ The below now works by hooking into the stable =exwm-instance-name=
 :CREATED:  [2021-10-02 Sat 11:25]
 :ID:       fe2492e4-5d72-481b-8c9b-2b8358055ea7
 :END:
+
 A cleaner approach than multiple ~when~ statements is to store the target =buffer-name= and =exwm-title= regex's as key . value pairs, respectively [fn:1].
 
 I should probably be writing this as =cons= and not using backquotes.
