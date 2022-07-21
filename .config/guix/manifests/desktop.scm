@@ -21,14 +21,19 @@
    "font-iosevka-aile"
    "font-abattis-cantarell"
    "font-dejavu"
-   "font-google-noto"
    "font-gnu-freefont"
    "font-liberation"
    "font-awesome"
    "font-google-material-design-icons"
+   "font-google-roboto"
    "gs-fonts"
    
+   ;;; Japanese Fonts
+   "font-google-noto"
+   "font-adobe-source-han-sans"
+   "font-ipa-mj-mincho"
    "dunst"
+   "font-ipa-ex"
    "libnotify"  ; For notify-send
    
    "polybar"
@@ -39,7 +44,11 @@
    
    "nyxt"
    
+   "pinentry"
+   "pinentry-tty"
+   "emacs-pinentry"
    "password-store"
+   "cryptsetup"
    
    "alsa-utils"
    "pavucontrol"
@@ -56,12 +65,15 @@
    "gst-plugins-ugly"
    "gst-libav"
    "libva-utils"
+   "ffmpeg"
    
    "feh"
    "gimp"
    "scrot"
    
    "emacs-pdf-tools"
+   "emacs-vterm"
+   "libvterm"
    
    "syncthing"
    "syncthing-gtk"
@@ -70,7 +82,7 @@
    
    "system-config-printer"
    
-   "compton"
+   "picom"
    "redshift"
    "gucharmap"
    "fontmanager"

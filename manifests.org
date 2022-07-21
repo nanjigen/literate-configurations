@@ -1,0 +1,124 @@
+#+TITLE: Guix Manifests
+
+* Development
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       491302fe-ea9b-4b91-a2f3-a0444ac56845
+:END:
+
+Development related packages
+#+begin_src scheme :tangle ~/.config/guix/manifests/development.scm :noweb yes
+(specifications->manifest
+ '("autoconf"
+   "automake"
+   "cmake"
+   "make"
+;   "dotnet@3"
+   "gcc-toolchain"
+   "glib"
+   "make"
+   "pkg-config"
+   "texinfo"
+   "llvm"
+   "lld"
+   "file"
+
+   ;; Python
+   "python-pip"
+   "python-xlib"
+   "python2"
+   "python2-dbus"
+   ;; "python2-pygobject"
+
+   "guile3" ;;TODO should this be guile3?
+
+   "curl"
+   "virt-manager"
+
+   ;; Emacs related
+
+   "emacs-native-comp"
+   "fd"
+   "ripgrep"
+   "emacs-editorconfig"
+   "editorconfig-core-c"
+   "sbcl"
+   "ledger"
+   "xclip"
+   "aspell"
+   "aspell-dict-en"
+   "pinentry-emacs"
+   "vterm-emacs"
+   ))
+#+end_src
+
+* Audio
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       fb1cdaa3-16fa-4fc8-88bd-53f996b7a359
+:END:
+#+begin_src scheme :tangle ~/.config/guix/manifests/audio.scm :noweb yes
+(specifications->manifest
+ '("ardour"
+   "carla"
+   ))
+
+#+end_src
+
+* Video
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       8ccb92ba-5cdc-4bb7-90c4-1654401653a7
+:END:
+#+begin_src scheme :tangle ~/.config/guix/manifests/video.scm :noweb yes
+(specifications->manifest
+ '("obs"
+   "obs-websocket"
+   "ffmpeg"
+   "kdenlive"))
+
+#+end_src
+
+* Translation
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       8b2aeb25-3778-4566-9b42-00bcaa7c10cc
+:END:
+#+begin_src scheme :tangle ~/.config/guix/manifests/translation.scm :noweb yes
+(specifications->manifest
+ '("fcitx5"
+   "fcitx5-configtool"
+   "fcitx5-gtk"
+   "goldendict"
+   "ibus"
+   "ibus-anthy"))
+#+end_src
+
+* scholar
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       00d5b8e7-f7f7-4eaf-b10d-173f3d783977
+:END:
+#+begin_src scheme :tangle ~/.config/guix/manifests/learning.scm :noweb yes
+(specifications->manifest
+ '("anki"
+   "calibre"
+   "dot2tex"
+   "texlive"
+   "lualatex"
+   "imagemagick"))
+#+end_src
+
+* Games
+:PROPERTIES:
+:CREATED:  [2022-07-14 Thu 10:20]
+:ID:       a7478f95-d396-42c1-a914-e197bde1b64d
+:END:
+#+begin_src scheme :tangle ~/.config/guix/manifests/games.scm :noweb yes
+
+(specifications->manifest
+ '("aisleriot"
+   "gnome-mahjongg"
+   "steam"))
+
+#+end_src

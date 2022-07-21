@@ -1,7 +1,9 @@
 (specifications->manifest
  '("autoconf"
    "automake"
-   "dotnet@3"
+   "cmake"
+   "make"
+;   "dotnet@3"
    "gcc-toolchain"
    "glib"
    "make"
@@ -16,10 +18,25 @@
    "python-xlib"
    "python2"
    "python2-dbus"
-   "python2-pygobject"
+   ;; "python2-pygobject"
 
-   "guile"
+   "guile3" ;;TODO should this be guile3?
 
    "curl"
    "virt-manager"
+
+   ;; Emacs related
+
+   "emacs-native-comp"
+   "fd"
+   "ripgrep"
+   "emacs-editorconfig"
+   "editorconfig-core-c"
+   "sbcl"
+   "ledger"
+   "xclip"
+   "aspell"
+   "aspell-dict-en"
+   "pinentry-emacs"
+   "vterm-emacs"
    ))
