@@ -670,18 +670,34 @@ Let's start with fontification and other org ricing.
                 ("CANCELLED" :foreground "#ff5555" :weight bold)))))
 #+end_src
 
-*** TODO find where are org line numbers being disabled
+*** org-sticky-header
+:PROPERTIES:
+:CREATED:  [2021-09-23 Thu 10:53]
+:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
+:END:
+Another alphapapa package, this is really useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
+
+#+begin_src elisp :noweb yes :noweb-ref org-sticky-header
+(use-package! org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq org-sticky-header-full-path 'full
+        org-sticky-header-outline-path-separator " › "))
+#+end_src
+
+*** NEXT find where are org line numbers being disabled
 :PROPERTIES:
 :CREATED:  [2022-02-25 Fri 18:34]
 :ID:       15c4b3a2-042f-4b99-aac8-2ff344378504
 :END:
+
 Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
 Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
 #+begin_src elisp :tangle no
 ;; (setq org-mode-hook #'display-line-numbers-mode)
 #+end_src
 
-*** org-sticky-header
+*** org-appear
 :PROPERTIES:
 :CREATED:  [2021-09-23 Thu 10:53]
 :ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
@@ -694,6 +710,14 @@ Another alphapapa package, this is extremely useful for maintaining context when
   (setq org-sticky-header-full-path 'full
         org-sticky-header-outline-path-separator " › "))
 
+Setup org-appear to toggle org syntax and other markers automatically when cursor is on line. I also like auto-revealing links so it is set below.
+
+#+begin_src elisp :noweb-ref org-appear
+(use-package! org-appear
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'org-appear-mode)
+  (setq org-appear-autolinks t))
 #+end_src
 
 ** org-org

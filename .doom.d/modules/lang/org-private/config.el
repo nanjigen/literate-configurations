@@ -63,10 +63,22 @@
                 ("HOLD" :foreground "#a0522d" :weight bold)
                 ("CANCELLED" :foreground "#ff5555" :weight bold)))))
 
-(after! org
-(setq org-agenda-files "~/org/agenda.org")
+(use-package! org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq org-sticky-header-full-path 'full
+        org-sticky-header-outline-path-separator " › "))
 
-;;TODO set refile to only projects?
+(use-package! org-appear
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'org-appear-mode)
+  (setq org-appear-autolinks t))
+
+
+(after! org
+  (setq org-agenda-files "~/org/agenda.org")
+  ;;TODO set refile to only projects?
   ;; Set refile targets
   (setq org-refile-use-outline-path 'file              ; Show full paths for refiling
         org-outline-path-complete-in-steps nil)        ; Refile in a single go
