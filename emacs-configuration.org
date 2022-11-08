@@ -455,12 +455,8 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
                      :sasl-password (lambda (&rest _) (+pass-get-secret "comms/irc"))
                      :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese"))))
 
-  ;; (set-irc-server! "irc.libera.chat"
-  ;;   '(:tls t
-  ;;     :port 6697
-  ;;     :nick "vrika"
-  ;;     :sasl-password my-nickserver-password
-  ;;     :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese")))
+(after! tramp
+  <<tramp-remote-guix>>)
 
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -497,14 +493,18 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! focus)
 (package! burly)
 (package! undo-tree)
-(package! helm-posframe)
+;; (package! helm-posframe)
+(package! counsel) ;; for `counsel-linux-app'
 (package! ivy-posframe)
+(package! lispy)
+(package! lispyville)
 (package! ranger)
 (package! mpv)
 (package! emms)
 (package! polymode)
 (package! tldr)
-(package! guix)
+(package! nix-mode)
+(package! sly :pin "ea83bbf0b3e1a20ab172fde42a196b7b8cf0812c")
 (package! poke-line :recipe
   (:host github
    :repo "RyanMillerC/poke-line"))
@@ -515,8 +515,10 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
   (:host github
    :repo "rndusr/subed"
    :files ("subed/*.el")))
+(package! bookmark+ :recipe
+  (:host github
+   :repo "emacsmirror/bookmark-plus"))
 ;; (package! emms-player-mpv-jp-radios)
-;; (package! auth-pass)
 #+end_src
 
 ** Variables
