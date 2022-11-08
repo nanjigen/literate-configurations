@@ -446,8 +446,14 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
               secret))
         (error "Password not found for %S" params))))
 
-  ;; (defun my-nickserv-password (server)
-  ;;   (my-fetch-password :user "vrika" :host "irc.libera.chat"))
+(after! circe
+  (set-irc-server! "irc.libera.chat"
+                   `(:tls t
+                     :port 6697
+                     :nick "nanjigen"
+                     :sasl-username ,(+pass-get-user "irc/libera.chat")
+                     :sasl-password (lambda (&rest _) (+pass-get-secret "comms/irc"))
+                     :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese"))))
 
   ;; (set-irc-server! "irc.libera.chat"
   ;;   '(:tls t

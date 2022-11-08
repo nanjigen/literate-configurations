@@ -170,15 +170,14 @@
               secret))
         (error "Password not found for %S" params))))
 
-  ;; (defun my-nickserv-password (server)
-  ;;   (my-fetch-password :user "vrika" :host "irc.libera.chat"))
-
-  ;; (set-irc-server! "irc.libera.chat"
-  ;;   '(:tls t
-  ;;     :port 6697
-  ;;     :nick "vrika"
-  ;;     :sasl-password my-nickserver-password
-  ;;     :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese")))
+(after! circe
+  (set-irc-server! "irc.libera.chat"
+                   `(:tls t
+                     :port 6697
+                     :nick "nanjigen"
+                     :sasl-username ,(+pass-get-user "irc/libera.chat")
+                     :sasl-password (lambda (&rest _) (+pass-get-secret "comms/irc"))
+                     :channels ("#emacs" "#lisp" "#lispgames" "#guix" "#japanese"))))
 
 (after! tramp
     ;; Make sure we work on remote guixsd machines :)
