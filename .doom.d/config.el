@@ -35,6 +35,8 @@
 (setq display-battery-mode nil)
 
 
+(load-file "~/.doom.d/per-system-settings.el") ;; TODO Not sure if this does anything here
+
 (setq org-directory "~/org/")
 (setq user-home-directory "~/")
 (setq ispell-dictionary "en")
@@ -42,6 +44,9 @@
 ;; Bookmarks file location
 (setq bookmark-default-file "~/org/bookmarks")
 (setq bookmark-save-flag 1) ;; save after every change
+
+(use-package! bookmark+
+  :after bookmark)
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
@@ -71,9 +76,6 @@
 ;; TODO lsp enhancements:
 ;; (setq lsp-idle-delay 0.500
 ;;       lsp-log-io nil) ; if set to true can cause a performance hit
-
-;; (after! persp-mode
-;; (add-hook 'exwm-mode #'doom-mark-buffer-as-real-h))
 
 (use-package! undo-tree
   :config
@@ -113,37 +115,10 @@
   (add-to-list 'focus-mode-to-thing '(writeroom-mode . paragraph)))
 ;; (add-hook 'write-room-mode-hook #'line-number-mode-hook)
 
-;; (use-package! helm-posframe
-;;   :after helm
-;;   :custom-face (internal-border ((t (:background "#c678dd"))))
-;;   :config
-;; (setq helm-posframe-poshandler 'posframe-poshandler-frame-center)
-;; (setq helm-posframe-parameters '((parent-frame nil)
-;;                                  (left-fringe . 10)
-;;                                  (right-fringe . 10)))
-;; (helm-posframe-enable)
-;; )
-
-;; (use-package! ivy-posframe
-;;   :after ivy
-;;   :custom-face (internal-border ((t (:background "#c678dd"))))
-;;   :config
-;; (setq ivy-posframe-poshandler 'posframe-poshandler-frame-center)
-;; (setq ivy-posframe-parameters '((parent-frame nil)
-;;                                  (left-fringe . 10)
-;;                                  (right-fringe . 10)))
-;; (ivy-posframe-mode 1)
-;; )
-
-
-
 (load! "+mail")
 
 (setq nanjigen/mail-enabled (member system-name '("umbreon" "espeon")))
 (setq nanjigen/mu4e-inbox-query nil)
-  ;; (when nanjigen/mail-enabled
-    ;; (require 'dw-mail)
-    ;; )
 
 ;; File handling
 (use-package! openwith
@@ -152,7 +127,7 @@
                                (list (openwith-make-extension-regexp
                                  '("mpg" "mpeg" "mp3" "mp4" "m4v"
                                    "avi" "wmv" "wav" "mov" "flv"
-                                   "ogm" "ogg" "mkv" "webm"))
+                                   "ogm" "ogg" "mkv" "webm" "webp"))
                                 "mpv"
                                 '(file))
 

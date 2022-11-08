@@ -240,6 +240,8 @@ Generic settings and themeing
 
 <<doom-rice>>
 
+(load-file "~/.doom.d/per-system-settings.el") ;; TODO Not sure if this does anything here
+
 (setq org-directory "~/org/")
 (setq user-home-directory "~/")
 (setq ispell-dictionary "en")
@@ -247,6 +249,9 @@ Generic settings and themeing
 ;; Bookmarks file location
 (setq bookmark-default-file "~/org/bookmarks")
 (setq bookmark-save-flag 1) ;; save after every change
+
+(use-package! bookmark+
+  :after bookmark)
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
@@ -271,9 +276,6 @@ Generic settings and themeing
 ;; TODO lsp enhancements:
 ;; (setq lsp-idle-delay 0.500
 ;;       lsp-log-io nil) ; if set to true can cause a performance hit
-
-;; (after! persp-mode
-;; (add-hook 'exwm-mode #'doom-mark-buffer-as-real-h))
 
 #+end_src
 
@@ -341,7 +343,7 @@ Undo related settings
 https://github.com/tumashu/vertico-posframe
 
 posframe for ivy and helm
-#+begin_src elisp
+#+begin_src elisp :tangle no
 ;; (use-package! helm-posframe
 ;;   :after helm
 ;;   :custom-face (internal-border ((t (:background "#c678dd"))))
@@ -367,7 +369,7 @@ posframe for ivy and helm
 #+end_src
 
 Begin experimenting with lookup
-#+begin_src elisp
+#+begin_src elisp :tangle no
 #+end_src
 
 *** Mail drop-in
@@ -380,11 +382,8 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 #+begin_src elisp
 (load! "+mail")
 
-(setq nanjigen/mail-enabled (member system-name '("umbreon" "espeon")))
+(setq nanjigen/mail-enabled (member (system-name) '("umbreon" "espeon")))
 (setq nanjigen/mu4e-inbox-query nil)
-  ;; (when nanjigen/mail-enabled
-    ;; (require 'dw-mail)
-    ;; )
 
 #+end_src
 
@@ -401,7 +400,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
                                (list (openwith-make-extension-regexp
                                  '("mpg" "mpeg" "mp3" "mp4" "m4v"
                                    "avi" "wmv" "wav" "mov" "flv"
-                                   "ogm" "ogg" "mkv" "webm"))
+                                   "ogm" "ogg" "mkv" "webm" "webp"))
                                 "mpv"
                                 '(file))
 
