@@ -4,7 +4,7 @@
   (map-merge
     'list
     '((desktop/dpi . 180)
-      (desktop/background . "~/Pictures/Backgrounds/deskwall.jpg")
+      (desktop/background . "deskwall.jpg")
       (polybar/height . 35)
 ;; (setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
       (polybar/font-0-size . 18)
@@ -26,9 +26,4 @@
         (dunst/font-size . 14)
         (dunst/max-icon-size . 64)
         (vimb/default-zoom . 150)))
-    
-    (when (equal system-name "flareon")
-      '((desktop/dpi . 240)
-        (polybar/height . 40)
-        (vimb/default-zoom . 200)))
     ))

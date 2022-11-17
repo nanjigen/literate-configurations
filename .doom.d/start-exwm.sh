@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# Source .profile for common environment vars
-. ~/.profile
-
 # Disable access control for the current user
 xhost +SI:localuser:$USER
+
+# Source .profile for common environment vars
+. ~/.profile
 
 # Make Java applications aware this is a non-reparenting window manager
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -18,7 +18,7 @@ fi
 xsettingsd &
 
 # Enable screen compositing
-compton &
+picom &
 
 # Turn off the system bell
 xset -b
