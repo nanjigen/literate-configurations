@@ -20,23 +20,13 @@ A large portion of my mu4e config is taken from [[https://github.com/lepisma/rog
 #+begin_src elisp
 ;;; $DOOMDIR/+mail.el -*- lexical-binding: t; -*-
 
-;; (org-link-set-parameters "mu4e" :follow #'org-mu4e-open :store
-;; #'org-mu4e-store-link)
-
-(use-package! org-mu4e
-  :after mu4e)
-;; configure email
-
-
-;; (map! :localleader
-;;       :map mu4e-compose-mode-map
-;;       :desc "Attach file" "a" 'mml-attach-file
-;;       :desc "Send message" "s" 'message-send-and-exit)
 #+end_src
 
 We use ~:defer~ here so that we can give the mail address secrets to load later on.
 
 #+begin_src elisp
+
+;; configure email
 (use-package! mu4e
   :defer 20
   :init
@@ -45,14 +35,14 @@ We use ~:defer~ here so that we can give the mail address secrets to load later 
         mu4e-update-interval (* 10 60)
         message-kill-buffer-on-exit t
         ;; mu4e-headers-auto-update nil ; no refresh cos lose current filter
-        mu4e-change-filenames-when-moving t ; Preferred for mbsync according to man page.)
-
+        mu4e-change-filenames-when-moving t ; Preferred for mbsync according to man page.
+        )
         ;; Don't bother me with context on startup
         ;; mu4e-context-policy nil
 
         ;; Attachments
         ;; Use Ivy for mu4e completions (maildir folders, etc)
-        (setq mu4e-completing-read-function #'ivy-completing-read)
+        (setq mu4e-completing-read-function #'completing-read)
         ;; mu4e-attachment-dir "~/Downloads"
         ;; mu4e-save-multiple-attachments-without-asking t
         ;; mu4e-compose-signature-auto-include nil)
@@ -63,15 +53,55 @@ We use ~:defer~ here so that we can give the mail address secrets to load later 
   (setq message-yank-empty-prefix "")
   (setq message-indentation-spaces 4)
   (setq message-cite-reply-position 'above)
-  (setq  message-citation-line-format "On %Y-%m-%d at %R %Z, %f wrote...")
+  #+end_src
+
+  Impress my Japanese colleagues with correct time stamps
+  #+begin_src elisp
+  (setq message-citation-line-format "On %Y-%m-%d at %R %Z, %f wrote...") ;;TODO Make this cooler
+  #+end_src
+
+Use “[[https://en.wikipedia.org/wiki/Date_and_time_notation_in_Japan][Japanese]]” date format in header view:
+  #+begin_src elisp
+  ;; (setq mu4e-headers-date-format "%Y年/%m月/%d日")
+  (setq mu4e-headers-date-format "%Y/%m/%d"
+        mu4e-headers-time-format "⧖ %H:%M")
+
+(setq mu4e-headers-fields
+      '((:flags . 6)
+        (:account-stripe . 2)
+        (:from-or-to . 20)
+        (:folder . 6)
+        (:recipnum . 2)
+        (:subject . 80)
+        (:human-date . 8))
+      mu4e-headers-results-limit 1000
+      mu4e-index-cleanup t)
+
+(defvar +mu4e-header--folder-colors nil)
+(appendq! mu4e-header-info-custom
+          '((:folder .
+             (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+              (lambda (msg)
+                (+mu4e-colorize-str
+                 (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                 '+mu4e-header--folder-colors))))))
 
   :config
 
+(map! :localleader
+      :map mu4e-compose-mode-map
+      :desc "Attach file" "a" 'mml-attach-file
+      :desc "Send message" "s" 'message-send-and-exit)
+#+end_src
+
+It's also nice to avoid accidentally sending emails with the wrong account. If
+we can send from the address in the ~To~ field, let's do that. Opening a prompt
+otherwise also seems sensible.
+
+#+begin_src elisp
   ;; SMTP stuff
-  (setq send-mail-function 'smtpmail-send-it
-        ;; message-send-mail-function 'message-send-mail-with-sendmail
-        ;; substitute sendmail with msmtp
-        ;; sendmail-program "msmtp"
+  (setq send-mail-function #'smtpmail-send-it
+        message-send-mail-function 'message-send-mail-with-sendmail
         ;; allow setting account through email header
         message-sendmail-extra-arguments '("--read-envelope-from")
         message-sendmail-f-is-evil t)

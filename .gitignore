@@ -11,3 +11,4 @@ config.*
 !manifests.org
 !snippets.org
 !supermemo_config.org
+/Documents/
