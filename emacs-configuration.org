@@ -17,14 +17,11 @@ Core files for a doom config. The installation script will identify these and in
 :PROPERTIES:
 :CREATED:  [2020-12-03 Thu 11:16]
 :ID:       c155e8b5-b80f-4dc2-864a-1c9a57c03608
-:header-args: :noweb yes :tangle .doom.d/init.el
 :END:
 
 Base packages with Doom defaults
-#+begin_src elisp
-  ;;; init.el -*- lexical-binding: t; -*-
-
-  (doom! :input
+#+begin_src elisp :noweb-ref doom-init
+         :input
          ;;chinese
          ;;japanese
 
@@ -38,6 +35,7 @@ Base packages with Doom defaults
 
          :desktop
          exwm
+
 #+end_src
 
 #+begin_src elisp :noweb-ref doom-init
@@ -66,16 +64,17 @@ Base packages with Doom defaults
          window-select     ; visually switch windows
          workspaces        ; tab emulation, persistence & separate workspaces
          zen               ; distraction-free coding or writing
+
 #+end_src
 
-#+begin_src elisp
+#+begin_src elisp :noweb-ref doom-init
          :editor
          (evil +everywhere); come to the dark side, we have cookies
          file-templates    ; auto-snippets for empty files
          fold              ; (nigh) universal code folding
          (format +onsave)  ; automated prettiness
          ;;god               ; run Emacs commands without modifier keys
-         ;;lispy             ; vim for lisp, for people who don't like vim
+         ;;lispy             ; vim for lisp, for people who don't like vim ;; TODO
          ;;multiple-cursors  ; editing in many places at once
          ;;objed             ; text object editing for the innocent
          ;;parinfer          ; turn lisp into python, sort of
@@ -129,7 +128,7 @@ Base packages with Doom defaults
          ;;upload            ; map local to remote projects via ssh/ftp
 #+end_src
 
-#+begin_src elisp
+#+begin_src elisp :noweb-ref doom-init
          :lang
          ;;agda              ; types of types of types of types...
          ;;assembly          ; assembly for fun or debugging
@@ -200,7 +199,7 @@ Base packages with Doom defaults
          yaml                         ; JSON, but readable
 
          :email
-         (mu4e +org)
+         (:if (executable-find "mu") (mu4e +org +gmail))
          ;;notmuch
          ;;(wanderlust +gmail)
 
@@ -212,9 +211,22 @@ Base packages with Doom defaults
 
          :config
          ;;literate
-         (default +bindings +smartparens))
-
+         (default +bindings +smartparens)
 #+end_src
+
+*** NEXT Fix the doom! call being multiplied on each line
+:PROPERTIES:
+:CREATED:  [2022-12-15 Thu 16:31]
+:ID:       f5728664-29d0-451c-99e6-d6107c240c6a
+:END:
+
+e.g. ~(doom! <doom-init>>)~ doesn't work
+#+begin_src elisp :noweb yes :tangle .doom.d/init.el
+  ;;; init.el -*- lexical-binding: t; -*-
+
+  (doom!
+   <<doom-init>>)
+   #+end_src
 
 ** config
 :PROPERTIES:
