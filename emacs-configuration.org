@@ -557,7 +557,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 :ID:       440d64be-53c3-4a18-a170-690cbfbb8d6f
 :END:
 
-#+BEGIN_SRC elisp :noweb-ref org-packages :tangle .doom.d/modules/lang/org-private/packages.el
+#+BEGIN_SRC elisp :tangle .doom.d/modules/lang/org-private/packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; desktop/lang/org-private/packages.el
 
@@ -579,6 +579,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! org-noter-pdftools)
 (package! org-sidebar)
 (package! org-sticky-header)
+(package! company-org-block)
 (package! org-media-note :recipe
   (:host github
    :repo "yuchen-lea/org-media-note"))
@@ -608,24 +609,31 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! abridge-diff)
 #+END_SRC
 
-** PROJECT org ricing
+** PROJECT org ricing                                              :@computer:
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:30]
 :ID:       0af5adb9-5c1c-4899-bc92-22dd9c70b1f2
 :END:
 
 Let's start with fontification and other org ricing.
+
+*** TODO Affix archive.org files with year
+:PROPERTIES:
+:CREATED:  [2022-09-21 Wed 15:27]
+:ID:       de6eb1ed-156e-4f4b-b620-8806546f10fd
+:END:
 #+begin_src elisp :noweb-ref org-ricing
-;;; lang/org-private/config.el -*- lexical-binding: t; -*-
-
-;; org mode
-(after! org
-  :init
   (setq org-archive-location (concat org-directory "archive/archive.org::* From %s"))
+#+end_src
 
+#+begin_src elisp :noweb-ref org-ricing
   :config
   (setq org-superstar-headline-bullets-list '("› "))
   (setq org-fancy-priorities-mode nil) ;; needed for understanding fine-grained priority
+
+#+end_src
+
+#+begin_src elisp :noweb-ref org-ricing
   (setq org-startup-indented t
         org-clock-idle-time 5
         ;; org-bullets-bullet-list '("› ")
@@ -636,7 +644,7 @@ Let's start with fontification and other org ricing.
         org-fontify-whole-heading-line t
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
-        org-catch-invisible-edits 'show-and-error
+        org-fold-catch-invisible-edits 'show-and-error
         org-cycle-separator-lines 0
         org-tags-column -79
         org-modules '(org-habit
@@ -669,8 +677,6 @@ Let's start with fontification and other org ricing.
         ;; org-habit-show-all-today t)
         )
 
- (setq org-sticky-header-full-path 't)
-
   (setq org-todo-keyword-faces
         (quote (("TODO" :foreground "#ffb86c" :weight bold)
                 ("NEXT" :foreground "#8be9fd" :weight bold)
@@ -679,7 +685,12 @@ Let's start with fontification and other org ricing.
                 ("PROJECT" :foreground "#0189cc" :weight bold)
                 ("WAITING" :foreground "#f8f8f2" :weight bold)
                 ("HOLD" :foreground "#a0522d" :weight bold)
-                ("CANCELLED" :foreground "#ff5555" :weight bold)))))
+                ("CANCELLED" :foreground "#ff5555" :weight bold))))
+
+<<org-sticky-header>>
+
+<<org-appear>>
+
 #+end_src
 
 *** org-sticky-header
@@ -711,16 +722,9 @@ Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poo
 
 *** org-appear
 :PROPERTIES:
-:CREATED:  [2021-09-23 Thu 10:53]
-:ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
+:CREATED:  [2022-07-22 Fri 09:41]
+:ID:       34245716-bdd1-4d8d-afa1-f999084a5910
 :END:
-Another alphapapa package, this is extremely useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
-#+begin_src elisp
-(use-package! org-sticky-header
-  :hook (org-mode . org-sticky-header-mode)
-  :config
-  (setq org-sticky-header-full-path 'full
-        org-sticky-header-outline-path-separator " › "))
 
 Setup org-appear to toggle org syntax and other markers automatically when cursor is on line. I also like auto-revealing links so it is set below.
 
@@ -1949,11 +1953,22 @@ With a prefix ARG, remove start location."
 
 Finally putting everything together:
 #+begin_src elisp :tangle .doom.d/modules/lang/org-private/config.el
-<<org-ricing>>
+;;; lang/org-private/config.el -*- lexical-binding: t; -*-
+
+;; org mode
+(after! org
+  :init
+<<org-ricing>>)
 
 <<org-org>>
 
+<<org-agenda>>
+
+<<org-super-agenda>>
+
 <<org-literate>>
+
+<<org-incremental-config>>
 
 <<org-academic>>
 
@@ -1962,7 +1977,6 @@ Finally putting everything together:
 <<org-noter config>>
 
 (load! "+org-media-note.el")
-(load! "+org-protocol.el")
 #+end_src
 
 ** TODO autohide drawers
