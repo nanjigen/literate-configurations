@@ -686,11 +686,6 @@ Let's start with fontification and other org ricing.
                 ("WAITING" :foreground "#f8f8f2" :weight bold)
                 ("HOLD" :foreground "#a0522d" :weight bold)
                 ("CANCELLED" :foreground "#ff5555" :weight bold))))
-
-<<org-sticky-header>>
-
-<<org-appear>>
-
 #+end_src
 
 *** org-sticky-header
@@ -971,25 +966,49 @@ Use ~org-ql~ to generate custom agenda commands.
             ((org-ql-block-header "Orphaned Tasks")))))))
 #+end_src
 
-*** calfw
+*** PROJECT Calendar
 :PROPERTIES:
 :CREATED:  [2022-03-04 Fri 14:24]
 :ID:       1ba88fe2-ea52-4676-b031-53e0049abaa8
 :END:
 
-#+BEGIN_SRC elisp :noweb-ref org-org
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")  ; org-agenda source
-    ;; (cfw:org-create-file-source "cal" "/path/to/cal.org" "Cyan")  ; other org source
-    ;; (cfw:cal-create-source "Orange") ; diary source
-    ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
-    ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
-   )))
+#+begin_src elisp :noweb-yes :noweb-ref org-packages
+(package! calfw)
+(package! org-caldav)
+(package! org-gcal)
+#+end_src
 
+#+BEGIN_SRC elisp :noweb-ref org-org
+(use-package! calfw
+  :config
+
+  (defun my-open-calendar ()
+    (interactive)
+    (cfw:open-calendar-buffer
+     :contents-sources
+     (list
+      (cfw:org-create-source "Green")  ; org-agenda source
+      ;; (cfw:org-create-file-source "cal" "/path/to/cal.org" "Cyan")  ; other org source
+      ;; (cfw:cal-create-source "Orange") ; diary source
+      ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+      ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
+      ))))
+#+END_SRC
+
+Make this and my mail secrets load at a better time?
+https://github.com/dengste/org-caldav/issues/25
+#+BEGIN_SRC elisp :noweb-ref org-org
+(use-package! org-caldav
+  :defer incrementally
+  :config
+  (setq org-caldav-calendars
+        '((:calendar-id "transl-general" :files ("~/org/general-cal.org"))))
+  (setq org-caldav-url (auth-source-pass-get "site" "secrets/org-caldav-baikal-link"))
+  (setq org-caldav-calendar-id "transl-general")
+  ;; (setq org-caldav-files (concat org-directory "general-cal.org"))
+  (setq org-caldav-inbox '("~/org/general-cal.org"))
+  (setq org-caldav-files '("~/org/general-cal.org"))
+  (setq org-icalendar-timezone "Asia/Tokyo"))
 #+END_SRC
 
 ** PROJECT Move from ~org-depend~ to ~org-edna~
