@@ -574,7 +574,6 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! org-web-tools)
 (package! org-super-agenda)
 (package! org-edna)
-(package! org-superstar)
 (package! org-pdftools)
 (package! org-noter-pdftools)
 (package! org-sidebar)
@@ -609,7 +608,7 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 (package! abridge-diff)
 #+END_SRC
 
-** PROJECT org ricing                                              :@computer:
+** PROJECT org ricing :@computer:
 :PROPERTIES:
 :CREATED:  [2020-11-17 Tue 10:30]
 :ID:       0af5adb9-5c1c-4899-bc92-22dd9c70b1f2
@@ -617,19 +616,24 @@ My mail configuration is stored in [[file:Mail.org][Mail.org]].  We merely requi
 
 Let's start with fontification and other org ricing.
 
-*** TODO Affix archive.org files with year
+*** NEXT move to org-modern
 :PROPERTIES:
-:CREATED:  [2022-09-21 Wed 15:27]
-:ID:       de6eb1ed-156e-4f4b-b620-8806546f10fd
+:CREATED:  [2022-07-07 Thu 12:49]
+:ID:       5b875956-6c4e-453f-8c6d-d04db3be3b60
+:TRIGGER:  chain-find-next(NEXT,from-current,priority-up,effort-down)
 :END:
+
+Fontifying =org-mode= buffers with =org-modern=: https://github.com/minad/org-modern
+#+begin_src elisp :noweb-ref org-packages
+(package! org-modern)
+#+end_src
+
 #+begin_src elisp :noweb-ref org-ricing
   (setq org-archive-location (concat org-directory "archive/archive.org::* From %s"))
 #+end_src
 
 #+begin_src elisp :noweb-ref org-ricing
   :config
-  (setq org-superstar-headline-bullets-list '("› "))
-  (setq org-fancy-priorities-mode nil) ;; needed for understanding fine-grained priority
 
 #+end_src
 
