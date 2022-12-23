@@ -628,8 +628,12 @@ Fontifying =org-mode= buffers with =org-modern=: https://github.com/minad/org-mo
 (package! org-modern)
 #+end_src
 
+Declare some custom faces for use with modern:
 #+begin_src elisp :noweb-ref org-ricing
-  (setq org-archive-location (concat org-directory "archive/archive.org::* From %s"))
+(custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 #+end_src
 
 #+begin_src elisp :noweb-ref org-ricing
