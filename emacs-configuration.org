@@ -739,13 +739,8 @@ spell-check face ignore list
         org-fontify-quote-and-verse-blocks t
         org-fold-catch-invisible-edits 'show-and-error
         org-cycle-separator-lines 0
-        org-tags-column -79
-        org-modules '(org-habit
-                      org-eshell
-                      org-bookmark))
- ;; org-bibtex
- ;; org-docview
- ;; org-info
+        org-tags-column -79)
+
  (setq org-image-actual-width (/ (display-pixel-width) 3))
 
   (add-hook 'org-mode-hook (lambda ()
@@ -786,6 +781,7 @@ spell-check face ignore list
 :CREATED:  [2021-09-23 Thu 10:53]
 :ID:       c1be4df6-691a-44f6-ba79-43cb80e67107
 :END:
+
 Another alphapapa package, this is really useful for maintaining context when at some nth-level of indentation or visually distant from the last header text.
 
 #+begin_src elisp :noweb yes :noweb-ref org-sticky-header
@@ -794,18 +790,6 @@ Another alphapapa package, this is really useful for maintaining context when at
   :config
   (setq org-sticky-header-full-path 'full
         org-sticky-header-outline-path-separator " › "))
-#+end_src
-
-*** NEXT find where are org line numbers being disabled
-:PROPERTIES:
-:CREATED:  [2022-02-25 Fri 18:34]
-:ID:       15c4b3a2-042f-4b99-aac8-2ff344378504
-:END:
-
-Line numbers just aren't as useful in org-mode files. For one, they are less often going to refer to positions of code, and because of folding indentation can get a bit long in the tooth, making visibility harder.
-Also, it may make scrolling [[https://www.reddit.com/r/emacs/comments/gaub11/poor_scrolling_performance_in_doom_emacs/fp2v5jd/?utm_source=reddit&utm_medium=web2x&context=3][faster]].
-#+begin_src elisp :tangle no
-;; (setq org-mode-hook #'display-line-numbers-mode)
 #+end_src
 
 *** org-appear
@@ -833,24 +817,39 @@ Setup org-appear to toggle org syntax and other markers automatically when curso
 Next we'll build the organisational aspect of org-mode.
 #+begin_src elisp :noweb-ref org-org
 (after! org
-(setq org-agenda-files "~/org/agenda.org")
-
-;;TODO set refile to only projects?
+  ;;TODO set refile to only projects?
   ;; Set refile targets
   (setq org-refile-use-outline-path 'file              ; Show full paths for refiling
         org-outline-path-complete-in-steps nil)        ; Refile in a single go
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-completion-use-ido nil)
-  (setq org-refile-targets '(("~/org/next.org" :level . 0)
+
+  (setq org-refile-targets `(("~/org/next.org" :level . 0)
                              ("~/org/work.org" :maxlevel . 2)
                              ("~/org/personal.org" :maxlevel . 3)
+                             (,(directory-files-recursively "~/org/org-brain/projects" (rx ".org" eos)) :maxlevel . 3)
                              ("~/org/wiki/thesis.org" :maxlevel . 3)
                              ("~/org/import.org" :maxlevel . 2)
                              ("~/org/incubation.org" :maxlevel . 1)
                              ("~/org/someday.org" :maxlevel . 2)
+                             ("~/org/play.org" :maxlevel . 2)
                              ("~/org/read.org" :maxlevel . 2)
                              ("~/org/watch.org" :maxlevel . 2)))
 
+  (advice-add #'org-olpath-completing-read :around
+              (lambda (&rest args)
+                (minibuffer-with-setup-hook
+                    (lambda () (setq-local completion-styles '(basic)))
+                  (apply args))))
+  (setq org-refile-allow-creating-parent-entries 'confirm)
+
+  (setq org-completion-use-ido nil) ;; FIXME What is this?
+
+  (setq org-modules '(org-habit
+                      org-eshell
+                      org-bookmark))
+  ;; org-bibtex
+  ;; org-docview
+  ;; org-info
+#+end_src
   ;; Org-contacts
   (setq org-contacts-files '("~/org/contacts.org"))
 
