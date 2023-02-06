@@ -305,9 +305,7 @@ Generic settings and themeing
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; TODO having issues with pass and 'no secrect key'
-;; (setq user-full-name "Daniel"
-;;       user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
+<<doom-credentials>>
 
 <<doom-rice>>
 
@@ -3675,18 +3673,31 @@ Tool for managing shepherd from Emacs
 :ID:       0a15f0ec-cf61-4b25-ad85-875ab0174866
 :END:
 
-#+begin_src elisp
-(use-package! password-store
-  :config
-  (setq auth-sources '(password-store
-                       "~/.authinfo.gpg")))
+#+begin_src elisp :noweb-ref doom-credentials
 
-                                        ;(use-package! auth-source-pass)
-                                        ;(auth-source-pass-enable)
+(use-package! pinentry
+  :init
+  (require 'epa-file)
+  (unless (featurep 'epa)
+    (epa-file-enable))
+  ;; Enable loopback so that pinentry will pop up in emacs
+  (setq epa-pinentry-mode 'loopback)
+  (setq epg-pinentry-mode 'loopback)
+  (setenv "GPG_AGENT_INFO" nil)  ;; use emacs pinentry
+  (setq auth-sources
+        '((:source
+           "~/.authinfo"
+           "~/.emacs.d/.local/state/authinfo.gpg"
+           "~/.authinfo.gpg")))
+  :config
+  (setq auth-source-debug t)
+  (setq epg-gpg-program "gpg")  ;; not necessary
+  (pinentry-start))
+
+(setq user-full-name "Daniel"
+      user-mail-address (auth-source-pass-get "user" "email/personal/hotmail"))
 
 #+end_src
-
-TODO Use [[https://github.com/DamienCassou/auth-password-store][auth-source-pass]]?
 
 * PROJECT setup elfeed                                              :@computer:
 :PROPERTIES:
