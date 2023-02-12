@@ -912,6 +912,13 @@ Next we'll build the organisational aspect of org-mode.
   ;; org-bibtex
   ;; org-docview
   ;; org-info
+  #+end_src
+
+make scratch org-mode by default
+#+begin_src elisp :noweb-ref org-org
+(setq initial-major-mode 'org-mode)
+#+end_src
+
 #+end_src
   ;; Org-contacts
   (setq org-contacts-files '("~/org/contacts.org"))
