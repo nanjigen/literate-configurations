@@ -469,6 +469,52 @@ df8pOmunD3YfDAh1cL5xgU8sglrCbGPUa5tq3sYKEYz+3K5cZHk2m+5Q1TnpwaXV
 pOTjsyuRxNFVdiTIwHhM5KkobkHlZF1sk5NKC24=
 =iG1Z
 -----END PGP MESSAGE-----
+
+* msmtp
+:PROPERTIES:
+:CREATED:  [2023-01-06 Fri 14:48]
+:ID:       70bc980b-88fc-4f6e-9837-6cf7e8cb7848
+:END:
+https://wiki.archlinux.org/title/Msmtp
+https://macowners.club/posts/email-emacs-mu4e-macos/
+
+#+begin_src conf :tangle .msmtprc :tangle-mode (identity #o0600)
+# Set default values for all following accounts.
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+# Translation
+account        translation
+host           smtp.mailbox.org
+tls_starttls   off
+port           465
+from           translation@danielotto.jp
+user           translation@danielotto.jp
+passwordeval   "pass email/work/translating | head -n1"
+
+# Personal
+account        personal
+host           smtp.office365.com
+port           587
+from           dm.otto@hotmail.com
+user           dm.otto@hotmail.com
+passwordeval   "pass email/personal/hotmail | head -n1"
+
+# # A freemail service
+# account        fastmail
+# host           smtp.fastmail.com
+# port           465
+# from           username@fastmail.com
+# user           username@fastmail.com
+# tls_starttls   off
+# password       app-specific-password
+
+# Set a default account
+account default : translation
+#+end_src
 * Installing mu4e on a new machine
 :PROPERTIES:
 :CREATED:  [2020-08-03 Mon 17:53]
@@ -533,6 +579,8 @@ mbsync -Va
   (specifications->manifest
    '("mu"
      "isync"
-     "emacs-mu4e"))
+     "emacs-mu4e"
+     ;; "emacs-org-msg"
+     "msmtp"))
 
 #+end_src
