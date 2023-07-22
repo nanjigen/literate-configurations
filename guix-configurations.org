@@ -61,8 +61,8 @@ Base configuration shared by my main working guix machines. Not included here ar
 
 Any configuration that derives from =base-operating-system= must invoke =guix system= in a specific way to ensure it gets loaded correctly (notice the lack of ~sudo~ with the ~-E~ option, justification [[https://github.com/daviwil/dotfiles/issues/11#issue-1065516777][here]]):
 
-#+begin_src sh
-sudo guix system -L .config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
+#+begin_src sh :eval no
+sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
 #+end_src
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
