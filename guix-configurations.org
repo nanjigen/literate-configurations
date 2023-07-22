@@ -66,6 +66,7 @@ sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.confi
 #+end_src
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
+#+begin_src scheme :tangle .config/guix/systems/base-system.scm :results silent
 
 ;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
@@ -106,6 +107,10 @@ sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.confi
 #+end_src
 
 *** Screen brightness
+:PROPERTIES:
+:CREATED:  [2022-07-02 Sat 16:07]
+:ID:       aa6b3b93-d089-4e58-8cb7-271844864693
+:END:
 Add a =udev= rule to enable members of the =video= group to control screen brightness.
 
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm
@@ -150,8 +155,12 @@ Override the default =%desktop-services= to add the =udev= backlight configurati
 #+end_src
 
 *** libinput driver
+:PROPERTIES:
+:CREATED:  [2022-07-02 Sat 16:07]
+:ID:       aa712ada-4c97-4eeb-9b47-68fd433ee9c9
+:END:
 Use the =libinput= driver for all input devices since it's a bit more modern than the default.
-#+begin_src scheme :tangle .config/guix/systems/base-system.scm
+#+begin_src scheme :tangle .config/guix/systems/base-system.scm :results silent
 
 (define %xorg-libinput-config
   "Section \"InputClass\"
@@ -176,8 +185,12 @@ EndSection
 #+end_src
 
 *** fcitx5-mozc via nix
+:PROPERTIES:
+:CREATED:  [2022-07-02 Sat 16:07]
+:ID:       eb77b237-68e3-4e05-b13f-11ea615eb690
+:END:
 Until =fcitx5-mozc= module is completed, use ~nix~ for Japanese input
-#+begin_src scheme :tangle .config/guix/systems/base-system.scm
+#+begin_src scheme :tangle no :eval no
 
 (define %nix-input-methods
 "{
@@ -200,9 +213,13 @@ Until =fcitx5-mozc= module is completed, use ~nix~ for Japanese input
 #+end_src
 
 *** Base operating system
+:PROPERTIES:
+:CREATED:  [2022-07-02 Sat 16:07]
+:ID:       3ec8c913-ec73-43eb-9933-9f4e765d7741
+:END:
 Define the =base-operating-system= which will be inherited by all machine configurations.
 
-#+begin_src scheme :tangle .config/guix/systems/base-system.scm
+#+begin_src scheme :tangle .config/guix/systems/base-system.scm :results silent
 (define-public base-operating-system
   (operating-system
    (host-name "umbreon")
@@ -344,7 +361,7 @@ Some settings need to be customized on a per-system basis without tweaking indiv
 
 I also define a function called =dw/system-settings-get= which can retrieve these settings appropriately.
 
-#+begin_src emacs-lisp :tangle .doom.d/per-system-settings.el :noweb yes
+#+begin_src emacs-lisp :tangle .doom.d/per-system-settings.el :noweb yes :eval no
 
 (require 'map) ;; Needed for map-merge
 
@@ -372,7 +389,7 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 :END:
 
 =espeon= is a desktop that I use for most of my writing, gaming and hacking at home.
-#+begin_src scheme :tangle .config/guix/systems/espeon.scm
+#+begin_src scheme :tangle .config/guix/systems/espeon.scm :results silent
 
 ;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
@@ -406,7 +423,7 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 *System Settings*
 
-#+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep ""
+#+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep "" :results silent
 
 (when (equal system-name "espeon"))
 
@@ -419,7 +436,7 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 :END:
 
 =umbreon= is a ThinkPad T530.
-#+begin_src scheme :tangle .config/guix/systems/umbreon.scm
+#+begin_src scheme :tangle .config/guix/systems/umbreon.scm :results silent
 ;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
 (define-module (umbreon)
@@ -464,7 +481,7 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 **** TODO Have tearfree conf used in secondary config
 Often a problem on older Intel-based laptops, I get screen tearing on my T530. To remedy this we need to use an Xorg configuration located in etc/X11/xorg.conf.d/20-intel.conf~. The [[https://wiki.archlinux.org/title/Intel_graphics#Xorg_configuration][classic entry]] in the Arch Wiki for reference.
 
-#+begin_src scheme :tangle .config/guix/systems/umbreon.scm
+#+begin_src scheme :tangle no
 (define %xorg-tearfree-config
    "Section \"Device\""
    "  Identifier \"Intel Graphics\""
@@ -476,7 +493,7 @@ Often a problem on older Intel-based laptops, I get screen tearing on my T530. T
 #+end_src
 *System Settings*
 
-#+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep ""
+#+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep "" :eval no
 
 (when (equal system-name "umbreon")
   '((desktop/dpi . 130)
@@ -505,9 +522,8 @@ Eventually this will also run ~cuirass~ and build local substitutions.
   #:use-module (base-system)
   #:use-module (gnu))
 
-(operating-system
- (inherit base-operating-system)
- (host-name "flareon")
+#+begin_src scheme :tangle .config/guix/systems/jolteon.scm :results silent
+;; This is a lightweight install environment meant to prep new hardware for a btrfs + GUIX install.
 
  (mapped-devices
   (list (mapped-device
