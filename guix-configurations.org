@@ -501,53 +501,107 @@ Often a problem on older Intel-based laptops, I get screen tearing on my T530. T
     (vimb/default-zoom . 150)))
 
 #+end_src
-
-*** flareon
+*** jolteon
 :PROPERTIES:
-:CREATED:  [2020-12-21 Mon 12:10]
-:ID:       b36266ce-8625-4bd9-826e-1f1d5abddf97
+:CREATED:  [2022-07-19 Tue 15:03]
+:ID:       2a10bc8a-5f47-429c-b926-4994ddbff7b9
+:BRAIN_FRIENDS: homelab
 :END:
-=flareon= is my home server. It runs borgmatic and some torrent services.
-Eventually this will also run ~cuirass~ and build local substitutions.
-#+begin_src scheme :tangle .config/guix/systems/flareon.scm
-;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
-(define-module (flareon)
-  #:use-module (base-system)
-  #:use-module (gnu))
+~jolteon~ is a lightweight system for ensuring a minimal install environment. It assumes (and can create) a ~btrfs~ system and is useful for a 1st time install on new hardware (unpartitioned disks and the like).
 
 #+begin_src scheme :tangle .config/guix/systems/jolteon.scm :results silent
 ;; This is a lightweight install environment meant to prep new hardware for a btrfs + GUIX install.
 
- (mapped-devices
-  (list (mapped-device
-         (source (uuid "091b8ad5-efb3-4c5b-8370-7db99c404a30"))
-         (target "system-root")
-         (type luks-device-mapping))))
+(use-modules (gnu) (gnu system nss))
+(use-service-modules desktop)
+(use-package-modules bootloaders certs emacs emacs-xyz ratpoison suckless wm
+                     xorg)
 
- (file-systems (cons*
-                (file-system
-                 (device (file-system-label "system-root"))
-                 (mount-point "/")
-                 (type "ext4")
-                 (dependencies mapped-devices))
-                (file-system
-                 (device "/dev/nvme0n1p1")
-                 (mount-point "/boot/efi")
-                 (type "vfat"))
-                %base-file-systems)))
+(operating-system
+  (host-name "jolteon")
+  (timezone "Asia/Tokyo")
+  (locale "en_AU.utf8")
 
 #+end_src
 
-*System Settings*
+This is the part of the configuration that differs from my usual installs as I target efi in a more basic way
+#+begin_src scheme :tangle .config/guix/systems/jolteon.scm :results silent
+  ;; Use the UEFI variant of GRUB with the EFI System
+  ;; Partition mounted on /boot/efi.
+  (bootloader (bootloader-configuration
+                (bootloader grub-efi-bootloader)
+                (target "/boot/efi")))
 
-#+begin_src emacs-lisp :noweb-ref system-settings :noweb-sep ""
+(define jolteon-mapped-devices
+  (list (mapped-device
+         (source (uuid "f7b741ae-b37a-4039-90cc-65f03544e38f"))
+         (target "enc")
+         (type luks-device-mapping))
+     ;; (mapped-device
+     ;;       (source
+     ;;         (uuid "bcb4634f-0be7-4819-a463-fe64ecc43998"))
+     ;;       (target "cryptswap")
+     ;;       (type luks-device-mapping))
+        ))
 
-(when (equal system-name "flareon")
-  '((desktop/dpi . 240)
-    (polybar/height . 40)
-    (vimb/default-zoom . 200)))
+(define jolteon-file-systems
+  (append
+    (map (match-lambda
+           ((subvol . mount-point)
+            (file-system
+              (type "btrfs")
+              (device "/dev/mapper/enc")
+              (mount-point mount-point)
+              (options (format #f "autodefrag,compress=zstd,ssd_spread,space_cache=v2,subvol=~a" subvol))
+              (dependencies umbreon-mapped-devices))))
+         '((root . "/")
+           (boot . "/boot")
+           (gnu  . "/gnu")
+           (home . "/home")
+           (data . "/data")
+           (log  . "/var/log")
+           (@snapshots  . "/@snapshots")))
+    (list
+     (file-system
+       (mount-point "/boot/efi")
+       (type "vfat")
+       (device (uuid "05E5-9DF1" 'fat32))))
+    %base-file-systems))
 
+(users (cons (user-account
+                 (name "nanjigen")
+                 (comment "Daniel Otto")
+                 (group "users")
+                 (home-directory "/home/nanjigen")
+                 (supplementary-groups '("wheel"     ;; sudo
+                                         "netdev"    ;; network devices
+                                         "kvm"
+                                         "tty"
+                                         "input"
+                                         "lp"        ;; control bluetooth devices
+                                         "audio"     ;; control audio devices
+                                         "video")))  ;; control video devices
+
+                %base-user-accounts))
+
+  ;; Add a bunch of window managers; we can choose one at
+  ;; the log-in screen with F1.
+  (packages (append (list
+                     ;; window manager
+                     dmenu emacs emacs-exwm emacs-desktop-environment
+                     ;; terminal emulator
+                     xterm
+                     ;; for HTTPS access
+                     nss-certs)
+                    %base-packages))
+
+  ;; Use the "desktop" services, which include the X11
+  ;; log-in service, networking with NetworkManager, and more.
+  (services %desktop-services)
+
+  ;; Allow resolution of '.local' host names with mDNS.
+  (name-service-switch %mdns-host-lookup-nss))
 #+end_src
 
 ** USB Installation Image
