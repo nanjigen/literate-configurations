@@ -1,6 +1,6 @@
 #+TITLE: Guix System Configuration
 #+BRAIN_PARENTS: system
-#+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args :mkdirp yes :session *guix-system-conf*
 
 Literate configurations for a fully declarative Guix system.
 
@@ -223,7 +223,7 @@ Define the =base-operating-system= which will be inherited by all machine config
 (define-public base-operating-system
   (operating-system
    (host-name "umbreon")
-   (timezone "Japan/Tokyo")
+   (timezone "Asia/Tokyo")
    (locale "en_AU.utf8") ;; TODO how to include more than one locale?
 
    ;; Use non-free Linux and firmware
