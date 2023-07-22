@@ -501,6 +501,121 @@ Often a problem on older Intel-based laptops, I get screen tearing on my T530. T
     (vimb/default-zoom . 150)))
 
 #+end_src
+*** flareon
+:PROPERTIES:
+:CREATED:  [2023-07-22 Sat 14:09]
+:ID:       f8720ffa-de88-4f3f-8c94-7e6d9ee79c2c
+:END:
+
+~flareon~ is an Asus Aspire Black that was damaged in a car accident, leading to LCD panel and chassis damage that renders the built-in screen useless. It generally serves as a backup desktop/server with an external screen.
+
+The main configuration theme that revolves around this machine is the descrete NVIDA 960M graphics card which requires proprietary drivers to run at full efficiency.
+
+#+begin_src scheme :tangle .config/guix/systems/flareon.scm :results silent
+(define-module (flareon)
+  #:use-module (base-system)
+  #:use-module (gnu)
+  #:use-module (ice-9 match)
+  #:use-module (nongnu packages linux)
+  #:use-module (nongnu packages nvidia))
+
+(operating-system
+  (inherit base-operating-system)
+  (host-name "flareon")
+  (kernel linux-5.15)  ; linux-5.15 for the working Nvidia 470 driver.
+  (kernel-loadable-modules (list nvidia-module))
+  ;; Blacklisting Nouveau so Intel i915 will be used (works better atm).
+  (kernel-arguments
+   (append (list (string-append "modprobe.blacklist=bluetooth,btrtl,btintel,"
+                                "btcm,btusb,nouveau,pcspkr")
+                 "cpufreq.default_governor=powersave"
+                 "mem_sleep_default=deep"  ; slightly lower power draw
+                 "nvidia.NVreg_RegistryDwords=\"OverrideMaxPerf=0x0\"")
+           ;; Docker "cannot find cgroup mount destination: unknown"
+                                        ;"systemd.unified_cgroup_hierarchy=false")
+           %default-kernel-arguments)
+  (firmware (list linux-firmware sof-firmware))
+  (packages (append
+             (map specification->package
+                  '("cpupower" "curl" "dmenu" "docker-compose"
+                    "dxvk" "file" "fontconfig" "glibc-locales"
+                    "inxi" "lshw" "lsof" "mc" "mesa-utils" "nss-certs" ;"ovmf" "rsync"
+                    "vulkan-tools" "w3m" "xauth" "xdpyinfo" "xev" "xkill"
+                    "xrandr" "xset" "xterm" "xz"
+                    "ncurses"))
+             %base-packages))
+  (services
+   (append (list (pam-limits-service
+                  ;; For Lutris / Wine esync
+                  (list (pam-limits-entry "*" 'hard 'nofile 524288)))
+                 ;; (simple-service 'resolv.conf etc-service-type
+                 ;;                 (list `("resolv.conf" ,etc-resolv-config)))
+                 (udev-rules-service 'nvidia-gpu nvidia-driver)
+                 ;; (extra-special-file "/bin/bash" (file-append bash "/bin/bash"))
+                 ;; Might hopefully make running 3rd-party binaries easier,
+                 ;; but might also break stuff. (Things that `conda` installs,
+                 ;; or binaries in an AppImage.)
+                 ;; (extra-special-file "/lib64/ld-linux-x86-64.so.2"
+                 ;;              (file-append glibc "/lib/ld-linux-x86-64.so.2"))
+                 ;; `rsync` and `ssh` are so Ansible won't shit itself
+                 ;; This can't go into a `guix shell` manifest since Ansible
+                 ;; checks for hardcoded paths.
+                 ;; (extra-special-file "/usr/bin/rsync"
+                 ;;                     (file-append rsync "/bin/rsync"))
+                 ;; (extra-special-file "/usr/bin/ssh"
+                 ;;                     (file-append openssh "/bin/ssh"))
+                                        ;(extra-special-file "/usr/share/OVMF/OVMF_CODE.fd"
+                                        ;           (file-append ovmf "/share/firmware/ovmf_x64.bin"))
+                                        ;(extra-special-file "/usr/share/OVMF/OVMF_VARS.fd"
+                                        ;                    "/home/brainrot/vms/OVMF_VARS.fd")
+                 (set-xorg-configuration
+                  (xorg-configuration
+                   (modules (cons* nvidia-driver %default-xorg-modules))
+                                        ;(server (transform xorg-server))
+                   ;; If `nvidia` comes second, the desktop on the external
+                   ;; screen will be slow as ass. (Browsers mainly.)
+                                        ;(drivers '("nvidia" "modesetting"))
+                   ;; Trying this for a while since starting slow apps with
+                   ;; `DRI_PRIME=1` works.
+                   (drivers '("modesetting" "nvidia"))
+                   (keyboard-layout keyboard-layout)))
+                                        ;%desktop-services))
+                 ;; (modify-services %desktop-services
+                 ;;   (delete bluetooth-service)
+                                        ;(delete pulseaudio-service-type)  ; someday, please god
+                 (modify-services %desktop-services
+      (guix-service-type config => (guix-configuration
+                                    (inherit config)
+                                    (substitute-urls
+                                     (append (list "https://substitutes.nonguix.org")
+                                             %default-substitute-urls))
+                                    (authorized-keys
+                                     (append (list (local-file "./signing-key.pub"))
+                                             %default-authorized-guix-keys))))
+      (elogind-service-type config =>
+                            (elogind-configuration (inherit config)
+                                                   (handle-lid-switch-external-power 'suspend)))
+      (network-manager-service-type config =>
+                                    (network-manager-configuration (inherit config)
+                                                                   (vpn-plugins (list network-manager-openvpn)))))
+                 %desktop-services)))
+   (bootloader
+    (bootloader-configuration
+     (bootloader grub-bootloader)
+     (target "/dev/sda")
+     (keyboard-layout keyboard-layout)))
+   (swap-devices
+    (list (uuid "5695793a-706b-49c9-993d-122ca418a882")))
+   (file-systems
+    (cons* (file-system
+             (mount-point "/")
+             (device
+              (uuid "0567315a-abec-4ecc-8d09-b8de47aa29b0"
+                    'ext4))
+             (type "ext4"))
+           %base-file-systems)))
+#+end_src
+
 *** jolteon
 :PROPERTIES:
 :CREATED:  [2022-07-19 Tue 15:03]
