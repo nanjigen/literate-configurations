@@ -541,11 +541,44 @@ The main configuration theme that revolves around this machine is the descrete N
   #:use-module (gnu)
   #:use-module (ice-9 match)
   #:use-module (nongnu packages linux)
-  #:use-module (nongnu packages nvidia))
+  #:use-module (nongnu packages nvidia)
+  #:use-module (nongnu system linux-initrd))
+
+(use-service-modules nix)
+(use-service-modules desktop xorg)
+(use-package-modules certs)
+(use-package-modules shells)
+
+(define %my-desktop-services
+  (modify-services %desktop-services
+    (guix-service-type config => (guix-configuration
+                                  (inherit config)
+                                  (substitute-urls
+                                   (append (list "https://substitutes.nonguix.org")
+                                           %default-substitute-urls))
+                                  (authorized-keys
+                                   (append (list (local-file "./signing-key.pub"))
+                                           %default-authorized-guix-keys))))
+    (elogind-service-type config =>
+                          (elogind-configuration (inherit config)
+                                                 (handle-lid-switch-external-power 'suspend)))
+    (network-manager-service-type config =>
+                                  (network-manager-configuration (inherit config)
+                                                                 (vpn-plugins (list network-manager-openvpn))))))
 
 (operating-system
-  (inherit base-operating-system)
+  (locale "en_AU.utf8")
+  (timezone "Asia/Tokyo")
+  (keyboard-layout (keyboard-layout "au"))
   (host-name "flareon")
+  (users (cons* (user-account
+                 (name "vrika")
+                 (comment "Daniel")
+                 (group "users")
+                 (home-directory "/home/vrika")
+                 (supplementary-groups
+                  '("wheel" "netdev" "audio" "video")))
+                %base-user-accounts))
   (kernel linux-5.15)  ; linux-5.15 for the working Nvidia 470 driver.
   (kernel-loadable-modules (list nvidia-module))
   ;; Blacklisting Nouveau so Intel i915 will be used (works better atm).
@@ -557,87 +590,84 @@ The main configuration theme that revolves around this machine is the descrete N
                  "nvidia.NVreg_RegistryDwords=\"OverrideMaxPerf=0x0\"")
            ;; Docker "cannot find cgroup mount destination: unknown"
                                         ;"systemd.unified_cgroup_hierarchy=false")
-           %default-kernel-arguments)
+           %default-kernel-arguments))
+  (initrd microcode-initrd)
   (firmware (list linux-firmware sof-firmware))
   (packages (append
              (map specification->package
-                  '("cpupower" "curl" "dmenu" "docker-compose"
-                    "dxvk" "file" "fontconfig" "glibc-locales"
-                    "inxi" "lshw" "lsof" "mc" "mesa-utils" "nss-certs" ;"ovmf" "rsync"
+                  '("brightnessctl" "cpupower" "curl" "dmenu" "docker-compose"
+                    "dxvk" "file" "flameshot" "font-dejavu" "font-terminus"
+                    "fontconfig" "glibc-locales"
+                    "i3-wm" "i3blocks" "i3lock" "i3status"
+                    "inxi" "lshw"
+                    "lsof" "mc" "mesa-utils" "nss-certs" ;"ovmf"
+                    "rsync"
                     "vulkan-tools" "w3m" "xauth" "xdpyinfo" "xev" "xkill"
                     "xrandr" "xset" "xterm" "xz"
-                    "ncurses"))
+                    "ncurses"    ; for `clear`
+                    "vim-full")) ; for `+clipboard`
              %base-packages))
+
   (services
-   (append (list (pam-limits-service
-                  ;; For Lutris / Wine esync
-                  (list (pam-limits-entry "*" 'hard 'nofile 524288)))
-                 ;; (simple-service 'resolv.conf etc-service-type
-                 ;;                 (list `("resolv.conf" ,etc-resolv-config)))
-                 (udev-rules-service 'nvidia-gpu nvidia-driver)
-                 ;; (extra-special-file "/bin/bash" (file-append bash "/bin/bash"))
-                 ;; Might hopefully make running 3rd-party binaries easier,
-                 ;; but might also break stuff. (Things that `conda` installs,
-                 ;; or binaries in an AppImage.)
-                 ;; (extra-special-file "/lib64/ld-linux-x86-64.so.2"
-                 ;;              (file-append glibc "/lib/ld-linux-x86-64.so.2"))
-                 ;; `rsync` and `ssh` are so Ansible won't shit itself
-                 ;; This can't go into a `guix shell` manifest since Ansible
-                 ;; checks for hardcoded paths.
-                 ;; (extra-special-file "/usr/bin/rsync"
-                 ;;                     (file-append rsync "/bin/rsync"))
-                 ;; (extra-special-file "/usr/bin/ssh"
-                 ;;                     (file-append openssh "/bin/ssh"))
+   (cons* (pam-limits-service
+           ;; For Lutris / Wine esync
+           (list (pam-limits-entry "*" 'hard 'nofile 524288)))
+          ;; (screen-locker-service i3lock "i3lock")
+          ;; (simple-service 'resolv.conf etc-service-type
+          ;;                 (list `("resolv.conf" ,etc-resolv-config)))
+          (udev-rules-service 'nvidia-gpu nvidia-driver)
+          ;; (extra-special-file "/bin/bash" (file-append bash "/bin/bash"))
+          ;; Might hopefully make running 3rd-party binaries easier,
+          ;; but might also break stuff. (Things that `conda` installs,
+          ;; or binaries in an AppImage.)
+          ;; (extra-special-file "/lib64/ld-linux-x86-64.so.2"
+          ;;              (file-append glibc "/lib/ld-linux-x86-64.so.2"))
+          ;; `rsync` and `ssh` are so Ansible won't shit itself
+          ;; This can't go into a `guix shell` manifest since Ansible
+          ;; checks for hardcoded paths.
+          ;; (extra-special-file "/usr/bin/rsync"
+          ;;                     (file-append rsync "/bin/rsync"))
+          ;; (extra-special-file "/usr/bin/ssh"
+          ;;                     (file-append openssh "/bin/ssh"))
                                         ;(extra-special-file "/usr/share/OVMF/OVMF_CODE.fd"
                                         ;           (file-append ovmf "/share/firmware/ovmf_x64.bin"))
                                         ;(extra-special-file "/usr/share/OVMF/OVMF_VARS.fd"
                                         ;                    "/home/brainrot/vms/OVMF_VARS.fd")
-                 (set-xorg-configuration
-                  (xorg-configuration
-                   (modules (cons* nvidia-driver %default-xorg-modules))
+          (set-xorg-configuration
+           (xorg-configuration
+            (modules (cons* nvidia-driver %default-xorg-modules))
                                         ;(server (transform xorg-server))
-                   ;; If `nvidia` comes second, the desktop on the external
-                   ;; screen will be slow as ass. (Browsers mainly.)
+            ;; If `nvidia` comes second, the desktop on the external
+            ;; screen will be slow as ass. (Browsers mainly.)
                                         ;(drivers '("nvidia" "modesetting"))
-                   ;; Trying this for a while since starting slow apps with
-                   ;; `DRI_PRIME=1` works.
-                   (drivers '("modesetting" "nvidia"))
-                   (keyboard-layout keyboard-layout)))
+            ;; Trying this for a while since starting slow apps with
+            ;; `DRI_PRIME=1` works.
+            (drivers '("modesetting" "nvidia"))
+                                        ;(drivers '("modesetting"))
+            (keyboard-layout keyboard-layout)))
                                         ;%desktop-services))
-                 ;; (modify-services %desktop-services
-                 ;;   (delete bluetooth-service)
+          ;; (modify-services %desktop-services
+          ;;   (delete bluetooth-service)
                                         ;(delete pulseaudio-service-type)  ; someday, please god
-                 (modify-services %desktop-services
-      (guix-service-type config => (guix-configuration
-                                    (inherit config)
-                                    (substitute-urls
-                                     (append (list "https://substitutes.nonguix.org")
-                                             %default-substitute-urls))
-                                    (authorized-keys
-                                     (append (list (local-file "./signing-key.pub"))
-                                             %default-authorized-guix-keys))))
-      (elogind-service-type config =>
-                            (elogind-configuration (inherit config)
-                                                   (handle-lid-switch-external-power 'suspend)))
-      (network-manager-service-type config =>
-                                    (network-manager-configuration (inherit config)
-                                                                   (vpn-plugins (list network-manager-openvpn)))))
-                 %desktop-services)))
-   (bootloader
-    (bootloader-configuration
-     (bootloader grub-bootloader)
-     (target "/dev/sda")
-     (keyboard-layout keyboard-layout)))
-   (swap-devices
-    (list (uuid "5695793a-706b-49c9-993d-122ca418a882")))
-   (file-systems
-    (cons* (file-system
-             (mount-point "/")
-             (device
-              (uuid "0567315a-abec-4ecc-8d09-b8de47aa29b0"
-                    'ext4))
-             (type "ext4"))
-           %base-file-systems)))
+          (remove (lambda (service)
+                    (eq? (service-kind service) gdm-service-type))
+                  %my-desktop-services)))
+
+  (bootloader
+   (bootloader-configuration
+    (bootloader grub-bootloader)
+    (target "/dev/sda")
+    (keyboard-layout keyboard-layout)))
+  (swap-devices
+   (list (uuid "5695793a-706b-49c9-993d-122ca418a882")))
+  (file-systems
+   (cons* (file-system
+            (mount-point "/")
+            (device
+             (uuid "0567315a-abec-4ecc-8d09-b8de47aa29b0"
+                   'ext4))
+            (type "ext4"))
+          %base-file-systems)))
 #+end_src
 
 *** jolteon
