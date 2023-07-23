@@ -435,47 +435,71 @@ I also define a function called =dw/system-settings-get= which can retrieve thes
 
 (define-module (umbreon)
   #:use-module (base-system)
-  #:use-module (gnu))
+  #:use-module (ice-9 match)
+  #:use-module (gnu)
+  #:use-module (nongnu packages linux))
+
+<<umbreon-storage>>
 
 (operating-system
   (inherit base-operating-system)
   (host-name "umbreon")
+  (mapped-devices umbreon-mapped-devices)
+  (file-systems umbreon-file-systems)
 
   (append (list (service xorg-configuration
                          (xorg-configuration
                           (extra-config (list %xorg-libinput-config)))))
           %desktop-services)
 
-  (mapped-devices
-   (list (mapped-device
-          (source
-           (uuid "602818e7-ce42-4532-a3fb-66c60472db3b"))
-          (target "cryptroot")
-          (type luks-device-mapping))
-         (mapped-device
-          (source
-           (uuid "06ba3493-7137-4c68-a351-677d0ece80fd"))
-          (target "crypthome")
-          (type luks-device-mapping))))
-  (file-systems
-   (cons* (file-system
-            (mount-point "/")
-            (device "/dev/mapper/cryptroot")
-            (type "ext4")
-            (dependencies mapped-devices))
-          (file-system
-            (mount-point "/home")
-            (device "/dev/mapper/crypthome")
-            (type "ext4")
-            (dependencies mapped-devices))
-          %base-file-systems)))
+  (swap-devices
+   (list
+    (swap-space
+     (target "/dev/mapper/cryptswap")
+     (dependencies umbreon-mapped-devices)))))
+#+end_src
 
+#+begin_src scheme :noweb-ref umbreon-storage :results silent
+(define umbreon-mapped-devices
+  (list (mapped-device
+         (source (uuid "f7b741ae-b37a-4039-90cc-65f03544e38f"))
+         (target "enc")
+         (type luks-device-mapping))
+        (mapped-device
+         (source
+          (uuid "bcb4634f-0be7-4819-a463-fe64ecc43998"))
+         (target "cryptswap")
+         (type luks-device-mapping))))
+
+(define umbreon-file-systems
+  (append
+   (map (match-lambda
+          ((subvol . mount-point)
+           (file-system
+            (type "btrfs")
+            (device "/dev/mapper/enc")
+            (mount-point mount-point)
+            (options (format #f "autodefrag,compress=zstd,ssd_spread,space_cache=v2,subvol=~a" subvol))
+            (dependencies umbreon-mapped-devices))))
+        '((root . "/")
+          (boot . "/boot")
+          (gnu  . "/gnu")
+          (home . "/home")
+          (data . "/data")
+          (log  . "/var/log")
+          (@snapshots  . "/@snapshots")))
+   (list
+    (file-system
+     (mount-point "/boot/efi")
+     (type "vfat")
+     (device (uuid "05E5-9DF1" 'fat32))))
+   %base-file-systems))
 #+end_src
 
 **** TODO Have tearfree conf used in secondary config
 Often a problem on older Intel-based laptops, I get screen tearing on my T530. To remedy this we need to use an Xorg configuration located in etc/X11/xorg.conf.d/20-intel.conf~. The [[https://wiki.archlinux.org/title/Intel_graphics#Xorg_configuration][classic entry]] in the Arch Wiki for reference.
 
-#+begin_src scheme :tangle no
+#+begin_src scheme :noweb-ref xorg-tearfree-config :results silent
 (define %xorg-tearfree-config
    "Section \"Device\""
    "  Identifier \"Intel Graphics\""
