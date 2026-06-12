@@ -7,15 +7,16 @@
 :END:
 
 Development related packages
-#+begin_src scheme :tangle ~/.config/guix/manifests/development.scm :noweb yes
+#+begin_src scheme :tangle .config/guix/manifests/development.scm :noweb yes
 (specifications->manifest
  '("autoconf"
    "automake"
    "cmake"
    "make"
+   "grep"
 ;   "dotnet@3"
    "gcc-toolchain"
-   "glib"
+   ;; "glib"
    "make"
    "pkg-config"
    "texinfo"

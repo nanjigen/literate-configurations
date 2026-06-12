@@ -880,10 +880,13 @@ fi
 
 for profile in $profiles; do
   # Remove the path and file extension, if any
-  profileName=$(basename $profile)
-  profileName="${profile%.*}"
+  # 1. Get the base filename (e.g., "video.scm")
+  base_filename=$(basename "$profile")
+  
+  # 2. Strip the .scm extension to get the clean profile name (e.g., "video")
+  profileName="${base_filename%.scm}"
   profilePath="$GUIX_EXTRA_PROFILES/$profileName"
-  manifestPath=$HOME/.config/guix/manifests/$profile.scm
+  manifestPath=$HOME/.config/guix/manifests/$profileName.scm
 
   if [ -f $manifestPath ]; then
     echo
