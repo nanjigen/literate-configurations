@@ -1,9 +1,10 @@
 #+BRAIN_PARENTS: system
 #+TITLE: Doom Emacs Configuration
 #+PROPERTY: header-args :mkdirp yes
+#+FILETAGS: incremental
 #+auto_tangle: nil
 
-Doom is currently used because of its OOB vim focus and performance. Eventually I'd like to build a EFS config but that would consume a lot of time.
+Literate configuration based on the Doom emacs distribution.
 
 * Main doom config
 :PROPERTIES:
@@ -294,6 +295,8 @@ literate
 :header-args: :tangle .doom.d/config.el :noweb yes
 :END:
 
+General settings that find their way into doom's =config.el=
+
 *** base
 :PROPERTIES:
 :CREATED:  [2022-07-05 Tue 13:47]
@@ -302,12 +305,17 @@ literate
 
 Generic settings and themeing
 
-#+begin_src elisp
+#+begin_src elisp :tangle .doom.d/config.el
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 <<doom-credentials>>
 
 <<doom-rice>>
+
+<<exec-path>>
+
+(defun nanjigen/system-settings-get (setting)
+  (alist-get setting nanjigen/system-settings))
 
 (load-file "~/.doom.d/per-system-settings.el") ;; TODO Not sure if this does anything here
 
@@ -322,8 +330,7 @@ Generic settings and themeing
 (use-package! bookmark+
   :after bookmark)
 
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
+<<eww-custom>>
 
 (setq scrot-local-path "~/Pictures/screenshots")
 (setq eww-download-directory "~/Downloads/eww")
@@ -332,6 +339,16 @@ Generic settings and themeing
 
 (setq tab-bar-mode t)
 (setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode org-mode))
+
+(use-package! vterm
+  :config
+<<vterm>>)
+
+<<japanese-input>>
+
+<<osm>>
+
+<<kubernetes>>
 
 <<frame transparency>>
 

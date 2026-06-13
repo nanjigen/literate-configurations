@@ -15,12 +15,12 @@ Desktop configuration mostly lifted from daviwil, needing some edits
 Load system-specific settings from =.emacs.d/per-system-settings.el= and unpack relevant values into blocks so that they can be used in configuration file blocks.  These settings are configured in [[file:Systems.org::*Per-System Settings][Systems.org]].
 
 #+NAME: system-settings
-#+begin_src emacs-lisp :session system-settings
+#+begin_src emacs-lisp
 (load-file "~/.doom.d/per-system-settings.el")
 #+end_src
 
 #+NAME: get-setting
-#+begin_src emacs-lisp :var name="nil" :session system-settings
+#+begin_src emacs-lisp :var name="nil"
 (nanjigen/system-settings-get (intern name))
 #+end_src
 
@@ -412,7 +412,7 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 
 I use [[https://github.com/polybar/polybar][Polybar]] to display a panel at the top of the primary screen to display my current EXWM workspace, CPU usage and temperature, battery status, time, and system tray.  It uses some custom hooks back into Emacs via =emacsclient=.
 
-#+begin_src conf :tangle ~/.config/polybar/config :noweb yes
+#+begin_src conf :tangle ~/.config/polybar/config.ini :noweb yes
 
 ; Docs: https://github.com/polybar/polybar
 ;==========================================================
