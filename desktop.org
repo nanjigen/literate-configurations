@@ -51,10 +51,11 @@ Xft/HintStyle "hintnone"
 I also have to do an extra step to make sure Emacs can find the font path from the "desktop" profile.
 
 #+begin_src xml :tangle .config/fontconfig/fonts.conf
-<?xml version='1.0'?>
-<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-<fontconfig>
+<!-- <?xml version='1.0'?> -->
+<!-- <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd"> -->
+<!-- <fontconfig> -->
 
+<fontconfig>
 <!-- Default font (no fc-match pattern) -->
  <match>
   <edit mode="prepend" name="family">
@@ -153,12 +154,14 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 "arc-icon-theme"
 "matcha-theme"
 "hicolor-icon-theme"
-"gnome-icon-theme"
+"adwaita-icon-theme"
 "gnome-backgrounds"
 "papirus-icon-theme"
 "breeze-icons"
 
 ;; Fonts
+"font-nerd-symbols" ;; Symbols Nerd Font Mono
+"font-ibm-plex"
 "font-fira-code"
 "font-fira-mono"
 "font-jetbrains-mono"
@@ -168,10 +171,11 @@ I also have to do an extra step to make sure Emacs can find the font path from t
 "font-dejavu"
 "font-gnu-freefont"
 "font-liberation"
+"font-overpass"
 "font-awesome"
 "font-google-material-design-icons"
 "font-google-roboto"
-"gs-fonts"
+"font-ghostscript"
 
 ;;; Japanese Fonts
 "font-google-noto"
