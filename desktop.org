@@ -760,7 +760,6 @@ Elisp functions for managing desktop from emacs.
 
 #+end_src
 
-
 * Automatic Disk Mounting with Udiskie
 :PROPERTIES:
 :CREATED:  [2021-09-22 Wed 13:54]
@@ -784,12 +783,18 @@ The file =~/.config/mimeapps.list= configures default applications for various c
 #+begin_src conf :tangle ~/.config/mimeapps.list
 
   [Default Applications]
-  text/html=firefox.desktop
-  x-scheme-handler/http=firefox.desktop
-  x-scheme-handler/https=firefox.desktop
-  x-scheme-handler/about=firefox.desktop
-  x-scheme-handler/unknown=firefox.desktop
+  text/plain=emacsclient.desktop
+  text/html=emacsclient.desktop
+  text/htm=emacsclient.desktop
+  x-scheme-handler/http=emacsclient.desktop
+  x-scheme-handler/https=emacsclient.desktop
+  x-scheme-handler/about=emacsclient.desktop
+  x-scheme-handler/unknown=emacsclient.desktop
   x-scheme-handler/org-protocol=org-protocol.desktop
+  x-scheme-handler/mail=emacsmail.desktop
+  application/doc=libreoffice-writer.desktop
+  application/htm=emacsclient.desktop
+  application/docx=libreoffice-writer.desktop
   application/pdf=emacsclient.desktop;mupdf.desktop;libreoffice-draw.desktop
 
 #+end_src
