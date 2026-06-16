@@ -647,17 +647,21 @@ fi
 :ID:       e0ffad02-0ae8-4b82-a66b-897c5aeae524
 :END:
 
+Elisp functions for managing desktop from emacs.
+
 #+begin_src emacs-lisp :tangle ~/.doom.d/modules/desktop/exwm/+desktop.el
 
-(defun nanjigen/run-xmodmap ()
+(defun nanjigen/run-setxkbmap ()
   (interactive)
-  (start-process-shell-command "xmodmap" nil "xmodmap ~/.dotfiles/.config/i3/Xmodmap"))
+  (start-process-shell-command "setxkbmap"
+                               nil
+                               "setxkbmap -layout us -option 'caps:swapescape'"))
 
 (defun nanjigen/update-wallpapers ()
   (interactive)
   (start-process-shell-command
    "feh" nil
-   (format "feh --bg-scale ~/.dotfiles/backgrounds/%s" (alist-get 'desktop/background nanjigen/system-settings))))
+   (format "feh --bg-scale ~/Pictures/backgrounds/%s" (alist-get 'desktop/background nanjigen/system-settings))))
 
 (setq nanjigen/panel-process nil)
 (defun nanjigen/kill-panel ()
