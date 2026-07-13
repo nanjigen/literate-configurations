@@ -95,18 +95,20 @@ Development related packages
    "ibus-anthy"))
 #+end_src
 
-* scholar
+* scholarly
 :PROPERTIES:
 :CREATED:  [2022-07-14 Thu 10:20]
 :ID:       00d5b8e7-f7f7-4eaf-b10d-173f3d783977
 :END:
-#+begin_src scheme :tangle ~/.config/guix/manifests/learning.scm :noweb yes
+#+begin_src scheme :tangle .config/guix/manifests/academic.scm :noweb yes
 (specifications->manifest
  '("anki"
    "calibre"
    "dot2tex"
-   "texlive"
-   "lualatex"
+   "praat"
+   ;; "texlive-bin"
+   ;; "texlive-scheme-full"
+   ;; "texlive-base"
    "imagemagick"))
 #+end_src
 

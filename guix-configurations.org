@@ -1,6 +1,6 @@
 #+TITLE: Guix System Configuration
 #+BRAIN_PARENTS: system
-#+PROPERTY: header-args :mkdirp yes :session *guix-system-conf*
+#+PROPERTY: header-args :mkdirp yes :session *guix-system-conf* :noweb yes
 
 Literate configurations for a fully declarative Guix system.
 
@@ -62,24 +62,33 @@ Base configuration shared by my main working guix machines. Not included here ar
 Any configuration that derives from =base-operating-system= must invoke =guix system= in a specific way to ensure it gets loaded correctly (notice the lack of ~sudo~ with the ~-E~ option, justification [[https://github.com/daviwil/dotfiles/issues/11#issue-1065516777][here]]):
 
 #+begin_src sh :eval no
-sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm
+sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.config/guix/systems/umbreon.scm #TODO change this to detect system
 #+end_src
 
-#+begin_src scheme :tangle .config/guix/systems/base-system.scm
+** base services
+:PROPERTIES:
+:CREATED:  [2023-07-01 Sat 13:32]
+:ID:       ba3d46ee-d8e0-41de-ba75-dd8c5b9a6eb1
+:END:
+
 #+begin_src scheme :tangle .config/guix/systems/base-system.scm :results silent
 
 ;; NOTE: This file is generated from .dotfiles/System.org.  Please see commentary there.
 
-(define-module (base-system)
+(define-module (systems base-system)
   #:use-module (gnu)
+  #:use-module (gnu system locale)
   #:use-module (srfi srfi-1)
-  #:use-module (gnu system nss)
+  ; #:use-module (gnu system nss)
   #:use-module (gnu services pm)
   #:use-module (gnu services cups)
   #:use-module (gnu services desktop)
-  #:use-module (gnu services docker)
+  #:use-module (gnu services sddm)
+  ; #:use-module (gnu services docker)
   #:use-module (gnu services networking)
+  #:use-module (gnu services file-sharing)
   #:use-module (gnu services virtualization)
+  #:use-module (gnu services security-token)
   #:use-module (gnu packages wm)
   #:use-module (gnu packages cups)
   #:use-module (gnu packages gtk)
@@ -91,16 +100,19 @@ sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.confi
   #:use-module (gnu packages mtools)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages audio)
+  #:use-module (gnu packages android)
+  #:use-module (gnu system shadow)
   #:use-module (gnu packages gnuzilla)
   #:use-module (gnu packages pulseaudio)
   #:use-module (gnu packages web-browsers)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages package-management)
   #:use-module (nongnu packages linux)
-  #:use-module (nongnu system linux-initrd))
+  #:use-module (nongnu system linux-initrd)
+  #:export (base-system))
 
 (use-service-modules nix)
-(use-service-modules desktop xorg)
+(use-service-modules linux desktop xorg)
 (use-package-modules certs)
 (use-package-modules shells)
 
