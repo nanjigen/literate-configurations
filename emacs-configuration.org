@@ -33,6 +33,7 @@ Base packages with Doom defaults
  +childframe)           ; the ultimate code completion backend
 ;; helm              ; the *other* search engine for love and life
 (vertico
+ +childframe
  +icons)
 ;;ido               ; the other *other* search engine...
 ;; ivy               ; a search engine for love and life
@@ -47,7 +48,7 @@ exwm
 #+begin_src elisp
 ;;deft              ; notational velocity for Emacs
 doom              ; what makes DOOM look the way it does
-doom-dashboard    ; a nifty splash screen for Emacs
+dashboard    ; a nifty splash screen for Emacs
 doom-quit         ; DOOM quit-message prompts when you quit Emacs
 (emoji +unicode)             ; 🙂
 ;;fill-column       ; a `fill-column' indicator
@@ -82,7 +83,7 @@ fold              ; (nigh) universal code folding
  +onsave)  ; automated prettiness
 ;;god               ; run Emacs commands without modifier keys
 ;;lispy             ; vim for lisp, for people who don't like vim ;; TODO
-;;multiple-cursors  ; editing in many places at once
+multiple-cursors  ; editing in many places at once
 ;;objed             ; text object editing for the innocent
 ;;parinfer          ; turn lisp into python, sort of
 ;;rotate-text       ; cycle region at point between text candidates
@@ -106,6 +107,7 @@ vc                ; version-control and Emacs, sitting in a tree
 eshell            ; a consistent, cross-platform shell (WIP)
 ;;shell             ; a terminal REPL for Emacs
 ;;term              ; terminals in Emacs
+ghostel
 vterm             ; another terminals in Emacs
 #+end_src
 
@@ -122,7 +124,7 @@ grammar           ; tasing grammar mistake every you make
 ;;ansible
 ;;debugger          ; FIXME stepping through code, to help you add bugs
 ;;direnv
-;;docker
+docker
 ;; editorconfig      ; let someone else argue about tabs vs spaces
 ;; ein               ; tame Jupyter notebooks with emacs
 (eval
@@ -140,8 +142,8 @@ pass              ; password manager for nerds
 pdf               ; pdf enhancements
 ;;prodigy           ; FIXME managing external services & code builders
 ;;rgb               ; creating color strings
-;;terraform         ; infrastructure as code
-;;tmux              ; an API for interacting with tmux
+terraform         ; infrastructure as code
+;; tmux              ; an API for interacting with tmux
 ;;upload            ; map local to remote projects via ssh/ftp
 #+end_src
 
@@ -155,7 +157,7 @@ tty                          ; improve the terminal Emacs experience
 ;;agda              ; types of types of types of types...
 ;;assembly          ; assembly for fun or debugging
 ;;cc                ; C/C++/Obj-C madness
-;;clojure           ; java with a lisp
+clojure           ; java with a lisp
 common-lisp       ; if you've seen one lisp, you've seen them all
 ;;coq               ; proofs-as-programs
 ;;crystal           ; ruby at the speed of c
@@ -190,7 +192,7 @@ markdown          ; writing docs for people to ignore
  +brain           ; make your brain huge with org-mode
  +dragndrop       ; drag & drop files/images into org buffers
  ;;+hugo            ; use Emacs for hugo blogging
- +jupyter        ; ipython/jupyter support for babel
+ ;; +jupyter        ; ipython/jupyter support for babel
  +journal
  +pretty
  +noter           ; Keeps notes in sync with a document.
@@ -202,7 +204,8 @@ org-private
 ;;php               ; perl's insecure younger brother
 plantuml          ; diagrams for confusing people more
 ;;purescript        ; javascript, but functional
-python            ; beautiful is better than ugly
+(python            ; beautiful is better than ugly
+ +conda)
 ;;qt                ; the 'cutest' gui framework ever
 ;;racket            ; a DSL for DSLs
 ;;rest              ; Emacs as a REST client
@@ -213,7 +216,8 @@ python            ; beautiful is better than ugly
 ;;(scheme            ; a fully conniving family of lisps
 ;; +guile
 ;; +kawa)
-sh                ; she sells {ba,z,fi}sh shells on the C xor
+(sh ; she sells {ba,z,fi}sh shells on the C xor
+ +powershell)
 ;;solidity          ; do you need a blockchain? No.
 ;;swift             ; who asked for emoji variables?
 ;;terra             ; Earth and Moon in alignment for performance.
@@ -223,7 +227,7 @@ yaml                         ; JSON, but readable
 
 #+name: doom-email
 #+begin_src elisp :noweb-ref doom-init
-(:if (executable-find "mu") (mu4e +org +gmail))
+;; (:if (executable-find "mu") (mu4e +org +gmail))
 #+end_src
 
 #+name: doom-app
