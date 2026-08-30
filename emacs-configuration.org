@@ -247,7 +247,7 @@ literate
 #+begin_src elisp :noweb yes :tangle .doom.d/init.el
   ;;; init.el -*- lexical-binding: t; -*-
 
-(setq +literate-config-file "~/org/org-brain/projects/literate-configurations/emacs-configuration.org")
+(setq +literate-config-file "~/org/projects/literate-configurations/emacs-configuration.org")
 
 (doom! :input
        <<doom-input>>
@@ -343,6 +343,7 @@ Generic settings and themeing
 
 (setq tab-bar-mode t)
 (setq doom-modeline-continuous-word-count-modes '(Tex-Pdf markdown-mode org-mode))
+(use-package! hide-mode-line)
 
 (use-package! vterm
   :config
@@ -358,6 +359,8 @@ Generic settings and themeing
 
 <<poke-line>>
 
+<<ai>>
+
 ;; If this isn't set EXWM quadruples its memory usage
 (setq gc-cons-threshold 100000000)
 ;; Data read from process - default too low for lsp
@@ -367,6 +370,7 @@ Generic settings and themeing
 ;; (setq lsp-idle-delay 0.500
 ;;       lsp-log-io nil) ; if set to true can cause a performance hit
 
+<<consult-config>>
 #+end_src
 
 *** undo
@@ -374,8 +378,9 @@ Generic settings and themeing
 :CREATED:  [2022-07-13 Wed 08:27]
 :ID:       7e3b4cce-ab0a-431e-88d5-24ee0ca816e5
 :END:
+
 Undo related settings
-#+begin_src elisp
+#+begin_src elisp :tangle .doom.d/config.el
 (use-package! undo-tree
   :config
   (global-undo-tree-mode)
@@ -399,7 +404,7 @@ Undo related settings
 :ID:       088f83b2-e037-48da-8a2d-a58155db6c1d
 :END:
 
-#+begin_src elisp
+#+begin_src elisp :tangle .doom.d/config.el
 (setq +zen-text-scale 0.6)
 
 (after! writeroom-mode
@@ -430,6 +435,7 @@ Undo related settings
 :CREATED:  [2022-07-13 Wed 08:27]
 :ID:       10549b3f-c454-4399-b54c-16e6a3b77ba5
 :END:
+
 https://github.com/tumashu/vertico-posframe
 
 posframe for ivy and helm
