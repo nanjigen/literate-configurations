@@ -240,8 +240,12 @@ Define the =base-operating-system= which will be inherited by all machine config
 (define-public base-operating-system
   (operating-system
    (host-name "umbreon")
-   (timezone "Asia/Tokyo")
+   (timezone "Africa/Johannesburg")
    (locale "en_AU.utf8") ;; TODO how to include more than one locale?
+   (locale-definitions
+    (append %default-locale-definitions
+            (list (locale-definition (name "en_US.UTF-8") (source "en_US"))
+                  (locale-definition (name "ja_JP.UTF-8") (source "ja_JP")))))
 
    ;; Use non-free Linux and firmware
    (kernel linux)
