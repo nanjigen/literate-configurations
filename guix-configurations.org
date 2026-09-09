@@ -12,20 +12,25 @@ Literate configurations for a fully declarative Guix system.
 
 Guix supports the concept of [[https://guix.gnu.org/manual/en/html_node/Channels.html#Channels][channels]] which basically amount to Git repositories which contain Guix package definitions that can be installed on your machine.  Aside from the =%default-channels= list, I also use the [[https://gitlab.com/nonguix/nonguix][Nonguix]] channel to install packages that aren't included with Guix by default like the non-free Linux kernel.
 
-#+begin_src scheme :tangle .config/guix/channels.scm
-(list (channel
-       (name 'channel-n)
-       (branch "develop")
-       (url "file:///home/nanjigen/org/projects/channel-n"))
-      (channel
-       (name 'flat)
-       (url "https://github.com/flatwhatson/guix-channel.git")
-       (introduction
+#+begin_src scheme :tangle .config/guix/channels.scm :results no
+(list
+ ;; (channel
+ ;;       (name 'channel-n)
+ ;;       (branch "develop")
+ ;;       (url "file:///home/nanjigen/org/projects/channel-n"))
+      ;; (channel
+      ;;  (name 'channel-q)
+      ;;  (url "https://github.com/SqrtMinusOne/channel-q"))
+    (channel
+    (name 'ajattix)
+    (url "https://git.ajattix.org/hashirama/ajattix.git")
+    (branch "main")
+    (introduction
         (make-channel-introduction
-         "33f86a4b48205c0dc19d7c036c85393f0766f806"
-         (openpgp-fingerprint
-          "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
-      (channel
+        "5f1904f1a514b89b2d614300d8048577aa717617"
+        (openpgp-fingerprint
+            "F164 709E 5FC7 B32B AEC7  9F37 1F2E 76AC E3F5 31C8"))))
+    (channel
        (name 'nonguix)
        (url "https://gitlab.com/nonguix/nonguix")
        ;; Enable signature verification:
@@ -231,7 +236,7 @@ Until =fcitx5-mozc= module is completed, use ~nix~ for Japanese input
 :END:
 Define the =base-operating-system= which will be inherited by all machine configurations.
 
-#+begin_src scheme :tangle .config/guix/systems/base-system.scm :results silent
+#+begin_src scheme :noweb yes :tangle .config/guix/systems/base-system.scm :results silent
 (define-public base-operating-system
   (operating-system
    (host-name "umbreon")
