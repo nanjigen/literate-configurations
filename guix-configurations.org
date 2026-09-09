@@ -93,6 +93,7 @@ sudo guix system --cores=$(nproc) -L ~/.config/guix/systems reconfigure ~/.confi
   #:use-module (gnu services networking)
   #:use-module (gnu services file-sharing)
   #:use-module (gnu services virtualization)
+  #:use-module (gnu services docker)
   #:use-module (gnu services security-token)
   #:use-module (gnu packages wm)
   #:use-module (gnu packages cups)
@@ -281,11 +282,13 @@ Define the =base-operating-system= which will be inherited by all machine config
                  (supplementary-groups '("wheel"     ;; sudo
                                          "netdev"    ;; network devices
                                          "kvm"
+                                         "libvirt"  ;; managing QEMU/KVM VMs without sudo
+                                         "docker"   ;; 'docker' commands without sudo
                                          "tty"
                                          "input"
-                                         "docker"
+                                         "adbusers"
                                          "realtime"  ;; Enable realtime scheduling
-                                         "lp"        ;; control bluetooth devices
+                                         "lp"        ;; control line printers
                                          "audio"     ;; control audio devices
                                          "video")))  ;; control video devices
 
